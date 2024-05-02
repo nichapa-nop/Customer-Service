@@ -1,10 +1,22 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { AccountResponse, UpdateAccountResponse } from 'src/utils/utils.response.dto';
 
-export class CreateAccountResponseBodyDTO {
+export class AccountResponseBodyDTO {
     @ApiProperty()
-    firstName: string;
+    accountDetail: AccountResponse;
+}
 
+export class UpdateAccountResponseBodyDTO {
     @ApiProperty()
-    LastName: string;
+    updateAccountDetail: UpdateAccountResponse;
+}
+
+export class GetAccountListResponseBodyDTO {
+    @ApiProperty({ type: AccountResponse, isArray: true })
+    accounts: AccountResponse[];
+}
+
+export class LoginUserResponseBodyDTO {
+    @ApiProperty()
+    accessToken: string;
 }

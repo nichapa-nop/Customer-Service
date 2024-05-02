@@ -1,15 +1,29 @@
-// import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
-// export class AccountResponse {
-//     @ApiProperty()
-//     firstName: string;
+export class AccountResponse {
+    @ApiProperty()
+    firstName: string;
 
-//     @ApiProperty()
-//     lastName: string;
+    @ApiProperty()
+    lastName: string;
 
-//     @ApiProperty()
-//     email: string;
+    @ApiProperty()
+    email: string;
 
-//     @ApiProperty()
-//     password: string;
-// }
+    @ApiProperty()
+    password: string;
+
+    // @ApiProperty()
+    // createDate: Date;
+}
+
+export class UpdateAccountResponse {
+    @ApiProperty()
+    firstName: string;
+
+    @ApiProperty()
+    lastName: string;
+
+    @ApiProperty()
+    email: string;
+}

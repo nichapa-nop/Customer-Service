@@ -13,4 +13,20 @@ export class AccountService {
     public save(account: AccountEntity) {
         return this.accountRepository.save(account);
     }
+
+    public getAll(): Promise<AccountEntity[]> {
+        return this.accountRepository.find();
+    }
+
+    public getByUuid(uuid: string) {
+        return this.accountRepository.findOneBy({ uuid });
+    }
+
+    public getByEmail(email: string) {
+        return this.accountRepository.findOneBy({ email });
+    }
+
+    public delete(uuid: string) {
+        return this.accountRepository.delete({ uuid });
+    }
 }
