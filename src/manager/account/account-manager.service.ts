@@ -33,7 +33,7 @@ export class AccountManagerService {
             email: body.email,
             password: await hash(body.password, 10),
             createdBy: body.createdBy,
-            accessToken: uuidV4(),
+            verifyToken: uuidV4(),
         });
         let createAccount = await this.accountService.save(newAccount);
         this.emailService.postMail({
@@ -42,7 +42,7 @@ export class AccountManagerService {
             subject: 'please verify the email',
             text: `To verify your email please follow the url ${
                 configService.getConfig().serverEndpoint
-            }/v1/verify-email/${newAccount.accessToken}`,
+            }/v1/verify-email/${newAccount.verifyToken}`,
         });
         try {
             return { accountDetail: createAccount.toResponse() };

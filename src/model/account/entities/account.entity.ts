@@ -37,7 +37,7 @@ export class AccountEntity {
         type: 'varchar',
         nullable: true,
     })
-    accessToken: string;
+    verifyToken: string;
 
     @CreateDateColumn({ type: 'timestamp' })
     createAt: Date;
@@ -45,17 +45,17 @@ export class AccountEntity {
     @UpdateDateColumn({ type: 'timestamp' })
     updatedAt: Date;
 
-    @Column({
-        type: 'varchar',
-        nullable: true,
-    })
-    createdBy?: string;
+    // @Column({
+    //     type: 'varchar',
+    //     nullable: true,
+    // })
+    // createdBy?: string;
 
-    @Column({
-        type: 'varchar',
-        nullable: true,
-    })
-    updatedBy?: string;
+    // @Column({
+    //     type: 'varchar',
+    //     nullable: true,
+    // })
+    // updatedBy?: string;
 
     @Column({
         type: 'enum',
@@ -78,15 +78,13 @@ export class AccountEntity {
         this.lastName = params.lastName;
         this.email = params.email;
         this.password = params.password;
-        this.createdBy = params.createdBy;
-        this.accessToken = params.accessToken;
+        this.verifyToken = params.verifyToken;
     }
 
     public update(params: UpdateAccountParams) {
         this.firstName = params.firstName;
         this.lastName = params.lastName;
         this.email = params.email;
-        this.updatedBy = params.updatedBy;
     }
 }
 
@@ -96,7 +94,7 @@ export interface CreateAccountParams {
     email: string;
     password: string;
     createdBy: string;
-    accessToken: string;
+    verifyToken: string;
 }
 
 export interface UpdateAccountParams {
