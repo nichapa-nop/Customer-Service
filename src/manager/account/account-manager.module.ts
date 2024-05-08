@@ -3,9 +3,18 @@ import { AccountModule } from 'src/model/account/account.module';
 import { AccountManagerService } from './account-manager.service';
 import { JwtModule } from '@nestjs/jwt';
 import { SendMailModule } from 'src/service/mailer/mailer.module';
+import configService from 'src/config/config.service';
 
 @Module({
-    imports: [AccountModule, JwtModule, SendMailModule],
+    imports: [
+        AccountModule,
+        JwtModule.register({
+            global: true,
+            secret: configService.getConfig().jwtConstants,
+            signOptions: { expiresIn: '24h' },
+        }),
+        SendMailModule,
+    ],
     providers: [AccountManagerService],
     exports: [AccountManagerService],
 })

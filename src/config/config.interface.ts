@@ -3,13 +3,15 @@ export interface ConfigSchema {
     clientSecret: string;
     serverEndpoint: string;
     database: DatabaseConfig;
+    jwtExpiration: number;
+    jwtConstants: string;
 }
 
 export interface DatabaseConfig {
-    type: any
-    host: string
-    port: number
-    username: string
-    password: string
-    database: string
+    type: any;
+    host: string;
+    port: number;
+    username: string;
+    password: string;
+    database: string;
 }

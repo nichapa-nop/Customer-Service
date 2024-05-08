@@ -106,7 +106,8 @@ export class AccountManagerService {
             throw new ForbiddenException('Password was incorrector it does not exist.');
         }
         const payload = { uuid: currentAccount.uuid, email: currentAccount.email };
-        return { payload };
+        let accessToken = await this.jwtService.signAsync(payload);
+        return { accessToken };
     }
 
     public async verifyToken(token: string) {

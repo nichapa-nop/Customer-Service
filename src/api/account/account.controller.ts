@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Res } from '@nestjs/common';
-import { ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AccountManagerService } from 'src/manager/account/account-manager.service';
 import {
     CreateAccountRequestBodyDTO,
@@ -14,6 +14,8 @@ import {
     LoginUserResponseBodyDTO,
     UpdateAccountResponseBodyDTO,
 } from './dto/account.response.dto';
+import configService from 'src/config/config.service';
+import { Response } from 'express';
 
 @ApiTags('Account Management')
 @Controller()
@@ -30,6 +32,7 @@ export class AccountApiController {
     @Get('/v1/account')
     @HttpCode(200)
     @ApiResponse({ type: GetAccountListResponseBodyDTO })
+    @ApiBearerAuth()
     public async getAllAccount() {
         return await this.accountManagerservice.getAllAccount();
     }
@@ -37,6 +40,7 @@ export class AccountApiController {
     @Get('/v1/account/:uuid')
     @HttpCode(200)
     @ApiResponse({ type: AccountResponseBodyDTO })
+    @ApiBearerAuth()
     public async getAccount(@Param() param: AccountRequestParamDTO) {
         return await this.accountManagerservice.getAccount(param);
     }
@@ -44,6 +48,7 @@ export class AccountApiController {
     @Put('/v1/account/:uuid')
     @HttpCode(200)
     @ApiResponse({ type: UpdateAccountResponseBodyDTO })
+    @ApiBearerAuth()
     public async updateAccount(
         @Param() param: AccountRequestParamDTO,
         @Body() body: UpdateAccountRequestBodyDTO
@@ -52,6 +57,7 @@ export class AccountApiController {
     }
 
     @Delete('/v1/account/:uuid')
+    @ApiBearerAuth()
     public async deleteAccount(@Param() param: AccountRequestParamDTO) {
         return await this.accountManagerservice.deleteAccount(param);
     }
@@ -69,5 +75,17 @@ export class AccountApiController {
     @ApiOkResponse({ type: LoginUserResponseBodyDTO })
     public async login(@Body() body: LoginUserRequestBodyDTO, @Res() res: Response): Promise<void> {
         const response = await this.accountManagerservice.loginAccount(body);
+        console.log(response);
+        const expires = new Date();
+        expires.setMilliseconds(expires.getMilliseconds() + configService.getConfig().jwtExpiration);
+        res.status(200)
+            .cookie('access-token', response.accessToken, {
+                secure: true,
+                httpOnly: true,
+                expires,
+                sameSite: true,
+            })
+            .send(response);
+        // console.log(res.getHeaders());
     }
 }

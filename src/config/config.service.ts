@@ -5,10 +5,12 @@ const config: ConfigSchema = {
     serverEndpoint: _.get('serverEndpoint'),
     clientId: _.get('clientId'),
     clientSecret: _.get('clientSecret'),
-    database: _.get('database')
+    database: _.get('database'),
+    jwtExpiration: _.get('jwtExpiration'),
+    jwtConstants: _.get('jwtConstants'),
 };
 
-function updateConfig() { }
+function updateConfig() {}
 
 function getConfig() {
     return config;

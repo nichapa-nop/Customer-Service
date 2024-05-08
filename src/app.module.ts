@@ -1,8 +1,9 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { ApiModule } from './api/api.module';
 import { DataStoreModule } from './store/store.module';
 import configService from './config/config.service';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { AuthenticationMiddleware } from './middleware/authentication/authentication.middleware';
 
 process.env.CLIENT_ID = configService.getConfig().clientId;
 
@@ -16,8 +17,18 @@ process.env.CLIENT_ID = configService.getConfig().clientId;
         {
             provide: 'CLIENT_SECRET',
             useValue: configService.getConfig().clientSecret,
-        }
+        },
     ],
 })
-export class AppModule {
+export class AppModule implements NestModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer
+            .apply(AuthenticationMiddleware)
+            .exclude(
+                { path: '/v1/verify-email/:verifyToken', method: RequestMethod.GET },
+                { path: '/v1/login', method: RequestMethod.POST },
+                { path: '/v1/account', method: RequestMethod.POST }
+            )
+            .forRoutes('*');
+    }
 }
