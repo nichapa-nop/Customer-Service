@@ -26,29 +26,29 @@ export class AccountManagerService {
 
     public async createNewAccount(body: CreateAccountRequestBodyDTO): Promise<AccountResponseBodyDTO> {
         let newAccount = new AccountEntity();
-        // let accessToken = await this.jwtService;
+        let email = await this.accountService.getByEmail(body.email);
+        if (!email) {
+            newAccount.create({
+                firstName: body.firstName,
+                lastName: body.lastName,
+                email: body.email,
+                password: await hash(body.password, 10),
+                createdBy: body.createdBy,
+                verifyToken: uuidV4(),
+            });
+            let createAccount = await this.accountService.save(newAccount);
+            this.emailService.postMail({
+                to: createAccount.email,
+                from: 'no-reply <noreply.testnoreply@gmail.com>',
+                subject: 'Please Verify Your Email',
+                text: `To verify your email please follow the url ${
+                    configService.getConfig().serverEndpoint
+                }/v1/verify-email/${newAccount.verifyToken}`,
+            });
 
-        newAccount.create({
-            firstName: body.firstName,
-            lastName: body.lastName,
-            email: body.email,
-            password: await hash(body.password, 10),
-            createdBy: body.createdBy,
-            verifyToken: uuidV4(),
-        });
-        let createAccount = await this.accountService.save(newAccount);
-        this.emailService.postMail({
-            to: createAccount.email,
-            from: 'no.nichapa_st@tni.ac.th',
-            subject: 'please verify the email',
-            text: `To verify your email please follow the url ${
-                configService.getConfig().serverEndpoint
-            }/v1/verify-email/${newAccount.verifyToken}`,
-        });
-        try {
             return { accountDetail: createAccount.toResponse() };
-        } catch (e) {
-            throw e;
+        } else {
+            throw new ForbiddenException('Email is already exist.');
         }
     }
 
