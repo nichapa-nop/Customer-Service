@@ -2,7 +2,6 @@ import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/c
 import { ApiModule } from './api/api.module';
 import { DataStoreModule } from './store/store.module';
 import configService from './config/config.service';
-import { APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthenticationMiddleware } from './middleware/authentication/authentication.middleware';
 
 process.env.CLIENT_ID = configService.getConfig().clientId;

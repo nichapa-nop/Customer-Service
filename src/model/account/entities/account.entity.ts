@@ -45,18 +45,6 @@ export class AccountEntity {
     @UpdateDateColumn({ type: 'timestamp' })
     updatedAt: Date;
 
-    // @Column({
-    //     type: 'varchar',
-    //     nullable: true,
-    // })
-    // createdBy?: string;
-
-    // @Column({
-    //     type: 'varchar',
-    //     nullable: true,
-    // })
-    // updatedBy?: string;
-
     @Column({
         type: 'enum',
         enum: AccountStatus,

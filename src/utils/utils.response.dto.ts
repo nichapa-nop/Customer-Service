@@ -18,9 +18,6 @@ export class AccountResponse {
 
     @ApiProperty()
     verifyToken: string;
-
-    // @ApiProperty()
-    // createDate: Date;
 }
 
 export class UpdateAccountResponse {
