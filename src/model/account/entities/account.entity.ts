@@ -66,10 +66,12 @@ export class AccountEntity {
 
     public toResponse(): AccountResponse {
         return {
+            uuid: this.uuid,
             firstName: this.firstName,
             lastName: this.lastName,
             email: this.email,
             password: this.password,
+            verifyToken: this.verifyToken,
         };
     }
 

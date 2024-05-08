@@ -29,4 +29,8 @@ export class AccountService {
     public delete(uuid: string) {
         return this.accountRepository.delete({ uuid });
     }
+
+    public getByToken(verifyToken: string) {
+        return this.accountRepository.findOneBy({ verifyToken });
+    }
 }

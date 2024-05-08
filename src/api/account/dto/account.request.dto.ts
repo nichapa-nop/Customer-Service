@@ -30,7 +30,7 @@ export class CreateAccountRequestBodyDTO {
     @ApiProperty()
     @IsOptional()
     @IsString()
-    accessToken: string;
+    verifyToken: string;
 }
 
 export class UpdateAccountRequestBodyDTO {
@@ -72,4 +72,10 @@ export class LoginUserRequestBodyDTO {
     @IsDefined()
     @IsString()
     password: string;
+}
+
+export class VerifyTokenRequestParamDTO {
+    @ApiProperty()
+    // @IsString()
+    verifyToken: string;
 }

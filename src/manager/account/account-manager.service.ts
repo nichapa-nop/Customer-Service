@@ -1,4 +1,5 @@
-import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, ServiceUnavailableException } from '@nestjs/common';
+import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from 'bcrypt';
 import {
@@ -6,13 +7,13 @@ import {
     AccountRequestParamDTO,
     LoginUserRequestBodyDTO,
     UpdateAccountRequestBodyDTO,
+    VerifyTokenRequestParamDTO,
 } from 'src/api/account/dto/account.request.dto';
 import { AccountResponseBodyDTO, UpdateAccountResponseBodyDTO } from 'src/api/account/dto/account.response.dto';
 import configService from 'src/config/config.service';
 import { AccountService } from 'src/model/account/account.service';
-import { AccountEntity } from 'src/model/account/entities/account.entity';
+import { AccountEntity, AccountStatus } from 'src/model/account/entities/account.entity';
 import { SendMailService } from 'src/service/mailer/mailer.service';
-import { AccountResponse, UpdateAccountResponse } from 'src/utils/utils.response.dto';
 import { v4 as uuidV4 } from 'uuid';
 
 @Injectable()
@@ -106,5 +107,20 @@ export class AccountManagerService {
         }
         const payload = { uuid: currentAccount.uuid, email: currentAccount.email };
         return { payload };
+    }
+
+    public async verifyToken(token: string) {
+        // let currentToken = await this.accountService.getByUuid(verifyToken);
+        let currentToken = await this.accountService.getByToken(token);
+        if (!currentToken) {
+            throw new BadRequestException('Token was incorrect.');
+        }
+        if (currentToken.status == AccountStatus.ACTIVE) {
+            throw new BadRequestException('Account is already active.');
+        } else {
+            currentToken.status = AccountStatus.ACTIVE;
+            currentToken.verifyToken = null;
+            return await this.accountService.save(currentToken);
+        }
     }
 }

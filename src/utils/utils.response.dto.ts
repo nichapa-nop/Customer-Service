@@ -2,6 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class AccountResponse {
     @ApiProperty()
+    uuid: string;
+
+    @ApiProperty()
     firstName: string;
 
     @ApiProperty()
@@ -12,6 +15,9 @@ export class AccountResponse {
 
     @ApiProperty()
     password: string;
+
+    @ApiProperty()
+    verifyToken: string;
 
     // @ApiProperty()
     // createDate: Date;

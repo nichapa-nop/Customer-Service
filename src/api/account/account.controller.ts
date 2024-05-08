@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Res } from '@nestjs/common';
 import { ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AccountManagerService } from 'src/manager/account/account-manager.service';
 import {
@@ -6,6 +6,7 @@ import {
     AccountRequestParamDTO,
     LoginUserRequestBodyDTO,
     UpdateAccountRequestBodyDTO,
+    VerifyTokenRequestParamDTO,
 } from './dto/account.request.dto';
 import {
     AccountResponseBodyDTO,
@@ -13,7 +14,6 @@ import {
     LoginUserResponseBodyDTO,
     UpdateAccountResponseBodyDTO,
 } from './dto/account.response.dto';
-import { AccountResponse, UpdateAccountResponse } from 'src/utils/utils.response.dto';
 
 @ApiTags('Account Management')
 @Controller()
@@ -54,6 +54,14 @@ export class AccountApiController {
     @Delete('/v1/account/:uuid')
     public async deleteAccount(@Param() param: AccountRequestParamDTO) {
         return await this.accountManagerservice.deleteAccount(param);
+    }
+
+    @Get('/v1/verify-email/:verifyToken')
+    @HttpCode(200)
+    @ApiOkResponse()
+    public async verifyToken(@Param() param: VerifyTokenRequestParamDTO) {
+        console.log(param);
+        return await this.accountManagerservice.verifyToken(param.verifyToken);
     }
 
     @Post('/v1/login')
