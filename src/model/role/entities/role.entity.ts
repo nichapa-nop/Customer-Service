@@ -1,3 +1,4 @@
+import { RoleResponse } from 'src/utils/utils.response.dto';
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('role')
@@ -43,6 +44,16 @@ export class RoleEntity {
         this.roleName = params.roleName;
         this.priority = params.priority;
         this.updatedBy = params.updatedBy;
+    }
+
+    public toResponse(): RoleResponse {
+        return {
+            uuid: this.uuid,
+            roleName: this.roleName,
+            priority: this.priority,
+            createdBy: this.createdBy,
+            updatedBy: this.updatedBy,
+        };
     }
 }
 

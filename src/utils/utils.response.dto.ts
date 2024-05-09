@@ -30,3 +30,20 @@ export class UpdateAccountResponse {
     @ApiProperty()
     email: string;
 }
+
+export class RoleResponse {
+    @ApiProperty()
+    uuid: string;
+
+    @ApiProperty()
+    roleName: string;
+
+    @ApiProperty()
+    priority: number;
+
+    @ApiProperty()
+    createdBy: string;
+
+    @ApiProperty()
+    updatedBy: string;
+}

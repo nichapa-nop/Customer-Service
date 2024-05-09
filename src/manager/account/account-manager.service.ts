@@ -14,6 +14,7 @@ import configService from 'src/config/config.service';
 import { AccountService } from 'src/model/account/account.service';
 import { AccountEntity, AccountStatus } from 'src/model/account/entities/account.entity';
 import { SendMailService } from 'src/service/mailer/mailer.service';
+import { generateRandomString } from 'src/utils/utils.function';
 import { v4 as uuidV4 } from 'uuid';
 
 @Injectable()
@@ -32,7 +33,7 @@ export class AccountManagerService {
                 firstName: body.firstName,
                 lastName: body.lastName,
                 email: body.email,
-                password: await hash(body.password, 10),
+                // password: await hash(body.password, 10),
                 createdBy: body.createdBy,
                 verifyToken: uuidV4(),
             });
@@ -105,22 +106,35 @@ export class AccountManagerService {
         if (!comparePass) {
             throw new ForbiddenException('Password was incorrector it does not exist.');
         }
+        if (currentAccount.status !== AccountStatus.ACTIVE) {
+            throw new ForbiddenException('Permission Denied.');
+        }
         const payload = { uuid: currentAccount.uuid, email: currentAccount.email };
         let accessToken = await this.jwtService.signAsync(payload);
         return { accessToken };
     }
 
-    public async verifyToken(token: string) {
+    public async verifyAccount(token: string) {
         // let currentToken = await this.accountService.getByUuid(verifyToken);
         let currentToken = await this.accountService.getByToken(token);
         if (!currentToken) {
             throw new BadRequestException('Token was incorrect.');
         }
-        if (currentToken.status == AccountStatus.ACTIVE) {
+        if (currentToken.status === AccountStatus.ACTIVE) {
             throw new BadRequestException('Account is already active.');
         } else {
             currentToken.status = AccountStatus.ACTIVE;
             currentToken.verifyToken = null;
+            // password: await hash(body.password, 10),
+            let generatedPassword = generateRandomString(10);
+            console.log(generatedPassword);
+            currentToken.password = await hash(generatedPassword, 10);
+            this.emailService.postMail({
+                to: currentToken.email,
+                from: 'no-reply <noreply.testnoreply@gmail.com>',
+                subject: 'Temporary Password',
+                text: `Your Account is Activate!\nYour temporary password: ${generatedPassword}`,
+            });
             return await this.accountService.save(currentToken);
         }
     }

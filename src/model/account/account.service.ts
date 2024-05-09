@@ -33,4 +33,8 @@ export class AccountService {
     public getByToken(verifyToken: string) {
         return this.accountRepository.findOneBy({ verifyToken });
     }
+
+    public randomString(lenght) {
+        return Math.random().toString(36).substring(2, lenght);
+    }
 }

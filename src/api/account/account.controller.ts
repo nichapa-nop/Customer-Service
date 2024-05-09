@@ -67,7 +67,7 @@ export class AccountApiController {
     @ApiOkResponse()
     public async verifyToken(@Param() param: VerifyTokenRequestParamDTO) {
         console.log(param);
-        return await this.accountManagerservice.verifyToken(param.verifyToken);
+        return await this.accountManagerservice.verifyAccount(param.verifyToken);
     }
 
     @Post('/v1/login')

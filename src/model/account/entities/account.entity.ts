@@ -30,6 +30,8 @@ export class AccountEntity {
 
     @Column({
         type: 'varchar',
+        nullable: true,
+        default: null,
     })
     password: string;
 
@@ -79,7 +81,6 @@ export class AccountEntity {
         this.firstName = params.firstName;
         this.lastName = params.lastName;
         this.email = params.email;
-        this.password = params.password;
         this.verifyToken = params.verifyToken;
         this.createdBy = params.createdBy;
     }
@@ -96,7 +97,6 @@ export interface CreateAccountParams {
     firstName: string;
     lastName: string;
     email: string;
-    password: string;
     createdBy: string;
     verifyToken: string;
 }
