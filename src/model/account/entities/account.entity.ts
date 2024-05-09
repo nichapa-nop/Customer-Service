@@ -40,10 +40,22 @@ export class AccountEntity {
     verifyToken: string;
 
     @CreateDateColumn({ type: 'timestamp' })
-    createAt: Date;
+    createdAt: Date;
+
+    @Column({
+        type: 'varchar',
+        nullable: true,
+    })
+    createdBy: string;
 
     @UpdateDateColumn({ type: 'timestamp' })
     updatedAt: Date;
+
+    @Column({
+        type: 'varchar',
+        nullable: true,
+    })
+    updatedBy: string;
 
     @Column({
         type: 'enum',
@@ -69,12 +81,14 @@ export class AccountEntity {
         this.email = params.email;
         this.password = params.password;
         this.verifyToken = params.verifyToken;
+        this.createdBy = params.createdBy;
     }
 
     public update(params: UpdateAccountParams) {
         this.firstName = params.firstName;
         this.lastName = params.lastName;
         this.email = params.email;
+        this.updatedBy = params.updatedBy;
     }
 }
 
