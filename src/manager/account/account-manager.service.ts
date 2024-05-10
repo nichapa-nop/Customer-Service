@@ -34,6 +34,7 @@ export class AccountManagerService {
                 lastName: body.lastName,
                 email: body.email,
                 // password: await hash(body.password, 10),
+                phoneNum: body.phoneNum,
                 createdBy: body.createdBy,
                 verifyToken: uuidV4(),
             });
@@ -80,6 +81,7 @@ export class AccountManagerService {
                 firstName: body.firstName,
                 lastName: body.lastName,
                 email: body.email,
+                phoneNum: body.phoneNum,
                 updatedBy: body.updatedBy,
             });
             return {

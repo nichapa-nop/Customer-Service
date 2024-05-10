@@ -14,6 +14,9 @@ export class AccountResponse {
     email: string;
 
     @ApiProperty()
+    phoneNum: string;
+
+    @ApiProperty()
     password: string;
 
     @ApiProperty()
@@ -29,6 +32,9 @@ export class UpdateAccountResponse {
 
     @ApiProperty()
     email: string;
+
+    @ApiProperty()
+    phoneNum: string;
 }
 
 export class RoleResponse {
@@ -43,6 +49,20 @@ export class RoleResponse {
 
     @ApiProperty()
     createdBy: string;
+
+    @ApiProperty()
+    updatedBy: string;
+}
+
+export class UpdateRoleResponse {
+    @ApiProperty()
+    uuid: string;
+
+    @ApiProperty()
+    roleName: string;
+
+    @ApiProperty()
+    priority: number;
 
     @ApiProperty()
     updatedBy: string;

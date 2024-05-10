@@ -30,6 +30,11 @@ export class AccountEntity {
 
     @Column({
         type: 'varchar',
+    })
+    phoneNum: string;
+
+    @Column({
+        type: 'varchar',
         nullable: true,
         default: null,
     })
@@ -72,6 +77,7 @@ export class AccountEntity {
             firstName: this.firstName,
             lastName: this.lastName,
             email: this.email,
+            phoneNum: this.phoneNum,
             password: this.password,
             verifyToken: this.verifyToken,
         };
@@ -81,6 +87,7 @@ export class AccountEntity {
         this.firstName = params.firstName;
         this.lastName = params.lastName;
         this.email = params.email;
+        this.phoneNum = params.phoneNum;
         this.verifyToken = params.verifyToken;
         this.createdBy = params.createdBy;
     }
@@ -89,6 +96,7 @@ export class AccountEntity {
         this.firstName = params.firstName;
         this.lastName = params.lastName;
         this.email = params.email;
+        this.phoneNum = params.phoneNum;
         this.updatedBy = params.updatedBy;
     }
 }
@@ -97,6 +105,7 @@ export interface CreateAccountParams {
     firstName: string;
     lastName: string;
     email: string;
+    phoneNum: string;
     createdBy: string;
     verifyToken: string;
 }
@@ -104,6 +113,7 @@ export interface CreateAccountParams {
 export interface UpdateAccountParams {
     firstName: string;
     lastName: string;
+    phoneNum: string;
     email: string;
     updatedBy: string;
 }

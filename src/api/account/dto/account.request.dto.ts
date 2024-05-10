@@ -20,6 +20,11 @@ export class CreateAccountRequestBodyDTO {
     @ApiProperty()
     @IsDefined()
     @IsString()
+    phoneNum: string;
+
+    @ApiProperty()
+    @IsDefined()
+    @IsString()
     password: string;
 
     @ApiProperty()
@@ -48,6 +53,11 @@ export class UpdateAccountRequestBodyDTO {
     @IsDefined()
     @IsEmail()
     email: string;
+
+    @ApiProperty()
+    @IsDefined()
+    @IsString()
+    phoneNum: string;
 
     @ApiProperty()
     @IsOptional()
