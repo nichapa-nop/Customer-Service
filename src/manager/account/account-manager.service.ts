@@ -7,11 +7,14 @@ import {
     AccountRequestParamDTO,
     LoginUserRequestBodyDTO,
     UpdateAccountRequestBodyDTO,
+    ResetPasswordRequestParamDTO,
 } from 'src/api/account/dto/account.request.dto';
 import { AccountResponseBodyDTO, UpdateAccountResponseBodyDTO } from 'src/api/account/dto/account.response.dto';
 import configService from 'src/config/config.service';
 import { AccountService } from 'src/model/account/account.service';
 import { AccountEntity, AccountStatus } from 'src/model/account/entities/account.entity';
+import { ResetPasswordEntity } from 'src/model/reset-pass/entities/reset-pass.entity';
+import { ResetPasswordService } from 'src/model/reset-pass/reset-pass.service';
 import { SendMailService } from 'src/service/mailer/mailer.service';
 import { generateRandomString } from 'src/utils/utils.function';
 import { v4 as uuidV4 } from 'uuid';
@@ -21,7 +24,8 @@ export class AccountManagerService {
     constructor(
         private readonly accountService: AccountService,
         private readonly jwtService: JwtService,
-        private readonly emailService: SendMailService
+        private readonly emailService: SendMailService,
+        private readonly resetPasswordService: ResetPasswordService
     ) {}
 
     public async createNewAccount(body: CreateAccountRequestBodyDTO): Promise<AccountResponseBodyDTO> {
@@ -138,18 +142,22 @@ export class AccountManagerService {
         }
     }
 
-    // public async resetPassword(param: resetPasswordRequestParamDTO) {
-    //     let currentEmail = await this.accountService.getByEmail(param.email);
-    //     let generatedToken = uuidV4();
-    //     // currentEmail.verifyToken =
-    //     this.emailService.postMail({
-    //         to: currentEmail.email,
-    //         from: 'no-reply <noreply.testnoreply@gmail.com>',
-    //         subject: 'Reset Password Link',
-    //         text: `To verify your email please follow the url\n
-    //             ${configService.getConfig().serverEndpoint}
-    //             /v1/reset-password/${currentEmail.} `,
-    //     });
-
-    // }
+    public async resetPassword(param: ResetPasswordRequestParamDTO) {
+        let currentEmail = await this.accountService.getByEmail(param.email);
+        let generatedToken = uuidV4();
+        // currentEmail.verifyToken =
+        let newResetPassword = new ResetPasswordEntity();
+        newResetPassword.resetPassToken = generatedToken;
+        newResetPassword.expiredAt = new Date(Date.now() + 60 * 60 * 1000);
+        newResetPassword.account = currentEmail;
+        await this.resetPasswordService.save(newResetPassword);
+        this.emailService.postMail({
+            to: currentEmail.email,
+            from: 'no-reply <noreply.testnoreply@gmail.com>',
+            subject: 'Reset Password Link',
+            text: `To verify your email please follow the url\n
+                ${configService.getConfig().serverEndpoint}
+                /v1/reset-password/${generatedToken} `,
+        });
+    }
 }

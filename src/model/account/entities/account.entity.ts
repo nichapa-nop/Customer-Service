@@ -1,5 +1,15 @@
+import { ResetPasswordEntity } from 'src/model/reset-pass/entities/reset-pass.entity';
 import { AccountResponse } from 'src/utils/utils.response.dto';
-import { Column, CreateDateColumn, Entity, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    OneToMany,
+    PrimaryColumn,
+    PrimaryGeneratedColumn,
+    Relation,
+    UpdateDateColumn,
+} from 'typeorm';
 
 export enum AccountStatus {
     VERIFIED = 'verified',
@@ -70,6 +80,9 @@ export class AccountEntity {
         default: AccountStatus.NOT_VERIFY,
     })
     status: AccountStatus;
+
+    @OneToMany(() => ResetPasswordEntity, (resetPassword) => resetPassword.account, { cascade: true })
+    resetPasswords: Relation<ResetPasswordEntity[]>;
 
     public toResponse(): AccountResponse {
         return {

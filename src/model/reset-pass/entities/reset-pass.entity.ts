@@ -1,5 +1,15 @@
+import { AccountEntity } from 'src/model/account/entities/account.entity';
 import { ResetPasswordResponse } from 'src/utils/utils.response.dto';
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+    Relation,
+    UpdateDateColumn,
+} from 'typeorm';
 
 export enum ResetPasswordStatus {
     PENDING = 'pending',
@@ -28,6 +38,10 @@ export class ResetPasswordEntity {
 
     @Column({ type: 'enum', enum: ResetPasswordStatus, default: ResetPasswordStatus.PENDING })
     status: ResetPasswordStatus;
+
+    @ManyToOne(() => AccountEntity, (account) => account.resetPasswords, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'accountUUID' })
+    account: Relation<AccountEntity>;
 
     public toResponse(): ResetPasswordResponse {
         return {
