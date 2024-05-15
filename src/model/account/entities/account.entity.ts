@@ -2,10 +2,10 @@ import { AccountResponse } from 'src/utils/utils.response.dto';
 import { Column, CreateDateColumn, Entity, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 export enum AccountStatus {
-    ACTIVE = 'active',
-    PENDING = 'pending',
+    VERIFIED = 'verified',
+    NOT_VERIFY = 'not verify',
     DELETED = 'deleted',
-    IN_ACTIVE = 'in_active',
+    DISABLED = 'disabled',
 }
 
 @Entity('account')
@@ -67,7 +67,7 @@ export class AccountEntity {
     @Column({
         type: 'enum',
         enum: AccountStatus,
-        default: AccountStatus.PENDING,
+        default: AccountStatus.NOT_VERIFY,
     })
     status: AccountStatus;
 

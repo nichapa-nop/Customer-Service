@@ -26,8 +26,8 @@ export class CreateRoleRequestBodyDTO {
 export class RoleRequestParamDTO {
     @ApiProperty()
     @IsDefined()
-    @IsUUID()
-    uuid: string;
+    @IsNumber()
+    id: number;
 }
 
 export class UpdateRoleRequestBodyDTO {

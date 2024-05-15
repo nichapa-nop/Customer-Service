@@ -7,7 +7,6 @@ import {
     AccountRequestParamDTO,
     LoginUserRequestBodyDTO,
     UpdateAccountRequestBodyDTO,
-    VerifyTokenRequestParamDTO,
 } from 'src/api/account/dto/account.request.dto';
 import { AccountResponseBodyDTO, UpdateAccountResponseBodyDTO } from 'src/api/account/dto/account.response.dto';
 import configService from 'src/config/config.service';
@@ -43,9 +42,8 @@ export class AccountManagerService {
                 to: createAccount.email,
                 from: 'no-reply <noreply.testnoreply@gmail.com>',
                 subject: 'Please Verify Your Email',
-                text: `To verify your email please follow the url ${
-                    configService.getConfig().serverEndpoint
-                }/v1/verify-email/${newAccount.verifyToken}`,
+                text: `To verify your email please follow the url\n 
+                    ${configService.getConfig().serverEndpoint}/v1/verify-email/${newAccount.verifyToken}`,
             });
 
             return { accountDetail: createAccount.toResponse() };
@@ -108,7 +106,7 @@ export class AccountManagerService {
         if (!comparePass) {
             throw new ForbiddenException('Password was incorrector it does not exist.');
         }
-        if (currentAccount.status !== AccountStatus.ACTIVE) {
+        if (currentAccount.status !== AccountStatus.VERIFIED) {
             throw new ForbiddenException('Permission Denied.');
         }
         const payload = { uuid: currentAccount.uuid, email: currentAccount.email };
@@ -122,11 +120,10 @@ export class AccountManagerService {
         if (!currentToken) {
             throw new BadRequestException('Token was incorrect.');
         }
-        if (currentToken.status === AccountStatus.ACTIVE) {
+        if (currentToken.status === AccountStatus.VERIFIED) {
             throw new BadRequestException('Account is already active.');
         } else {
-            currentToken.status = AccountStatus.ACTIVE;
-            currentToken.verifyToken = null;
+            currentToken.status = AccountStatus.VERIFIED;
             // password: await hash(body.password, 10),
             let generatedPassword = generateRandomString(10);
             console.log(generatedPassword);
@@ -140,4 +137,19 @@ export class AccountManagerService {
             return await this.accountService.save(currentToken);
         }
     }
+
+    // public async resetPassword(param: resetPasswordRequestParamDTO) {
+    //     let currentEmail = await this.accountService.getByEmail(param.email);
+    //     let generatedToken = uuidV4();
+    //     // currentEmail.verifyToken =
+    //     this.emailService.postMail({
+    //         to: currentEmail.email,
+    //         from: 'no-reply <noreply.testnoreply@gmail.com>',
+    //         subject: 'Reset Password Link',
+    //         text: `To verify your email please follow the url\n
+    //             ${configService.getConfig().serverEndpoint}
+    //             /v1/reset-password/${currentEmail.} `,
+    //     });
+
+    // }
 }

@@ -3,8 +3,8 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateCol
 
 @Entity('role')
 export class RoleEntity {
-    @PrimaryGeneratedColumn('uuid')
-    uuid: string;
+    @PrimaryGeneratedColumn()
+    id: number;
 
     @Column({
         type: 'varchar',
@@ -48,7 +48,7 @@ export class RoleEntity {
 
     public toResponse(): RoleResponse {
         return {
-            uuid: this.uuid,
+            id: this.id,
             roleName: this.roleName,
             priority: this.priority,
             createdBy: this.createdBy,

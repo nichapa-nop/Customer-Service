@@ -4,6 +4,7 @@ import { AccountManagerService } from './account-manager.service';
 import { JwtModule } from '@nestjs/jwt';
 import { SendMailModule } from 'src/service/mailer/mailer.module';
 import configService from 'src/config/config.service';
+import { RoleModule } from 'src/model/role/role.module';
 
 @Module({
     imports: [
@@ -14,6 +15,7 @@ import configService from 'src/config/config.service';
             signOptions: { expiresIn: '24h' },
         }),
         SendMailModule,
+        RoleModule,
     ],
     providers: [AccountManagerService],
     exports: [AccountManagerService],

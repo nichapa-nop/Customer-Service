@@ -39,7 +39,7 @@ export class UpdateAccountResponse {
 
 export class RoleResponse {
     @ApiProperty()
-    uuid: string;
+    id: number;
 
     @ApiProperty()
     roleName: string;
@@ -56,7 +56,7 @@ export class RoleResponse {
 
 export class UpdateRoleResponse {
     @ApiProperty()
-    uuid: string;
+    id: number;
 
     @ApiProperty()
     roleName: string;
@@ -66,4 +66,12 @@ export class UpdateRoleResponse {
 
     @ApiProperty()
     updatedBy: string;
+}
+
+export class ResetPasswordResponse {
+    @ApiProperty()
+    id: number;
+
+    @ApiProperty()
+    resetPassToken: string;
 }

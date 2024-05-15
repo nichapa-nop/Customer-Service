@@ -10,3 +10,8 @@ export class UpdateRoleResponseBodyDTO {
     @ApiProperty()
     updateRoleDetail: UpdateRoleResponse;
 }
+
+export class GetRoleListResponseBodyDTO {
+    @ApiProperty({ type: RoleResponse, isArray: true })
+    getRoleListDetail: RoleResponse[];
+}

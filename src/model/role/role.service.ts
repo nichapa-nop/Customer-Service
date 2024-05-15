@@ -18,12 +18,12 @@ export class RoleService {
         return this.roleRepository.find();
     }
 
-    public getByUuid(uuid: string) {
-        return this.roleRepository.findOneBy({ uuid });
+    public getByUuid(id: number) {
+        return this.roleRepository.findOneBy({ id });
     }
 
-    public delete(uuid: string) {
-        return this.roleRepository.delete({ uuid });
+    public delete(id: number) {
+        return this.roleRepository.delete({ id });
     }
 
     public getByName(roleName: string) {

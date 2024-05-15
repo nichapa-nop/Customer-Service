@@ -17,7 +17,8 @@ export class RoleManagerService {
                 priority: body.priority,
                 createdBy: body.createdBy,
             });
-            return { roleDetail: newRole.toResponse() };
+            let role = await this.roleService.save(newRole);
+            return { roleDetail: role.toResponse() };
         } else {
             throw new BadRequestException('This role is already exist.');
         }
@@ -31,7 +32,7 @@ export class RoleManagerService {
     }
 
     public async getRole(param: RoleRequestParamDTO) {
-        let role = await this.roleService.getByUuid(param.uuid);
+        let role = await this.roleService.getByUuid(param.id);
         if (!role) {
             throw new BadRequestException('UUID was incorrect or it does not exist.');
         }
@@ -42,9 +43,9 @@ export class RoleManagerService {
         param: RoleRequestParamDTO,
         body: UpdateRoleRequestBodyDTO
     ): Promise<UpdateRoleResponseBodyDTO> {
-        let currentRole = await this.roleService.getByUuid(param.uuid);
+        let currentRole = await this.roleService.getByUuid(param.id);
         if (!currentRole) {
-            throw new BadRequestException('UUID was incorrect or it does not exist.');
+            throw new BadRequestException('ID was incorrect or it does not exist.');
         } else {
             currentRole.update({
                 roleName: body.roleName,
@@ -58,11 +59,11 @@ export class RoleManagerService {
     }
 
     public async deleteRole(param: RoleRequestParamDTO) {
-        let currentRole = await this.roleService.getByUuid(param.uuid);
+        let currentRole = await this.roleService.getByUuid(param.id);
         if (!currentRole) {
             throw new BadRequestException('Role was incorrect or does not exist.');
         } else {
-            return await this.roleService.delete(param.uuid);
+            return await this.roleService.delete(param.id);
         }
     }
 }

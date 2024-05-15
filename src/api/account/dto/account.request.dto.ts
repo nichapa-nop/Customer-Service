@@ -89,3 +89,21 @@ export class VerifyTokenRequestParamDTO {
     // @IsString()
     verifyToken: string;
 }
+
+export class ResetPasswordRequestParamDTO {
+    @ApiProperty()
+    @IsDefined()
+    @IsEmail()
+    email: string;
+}
+
+export class ResetPasswordRequestBodyDTO {
+    @ApiProperty()
+    @IsDefined()
+    @IsEmail()
+    email: string;
+
+    @ApiProperty()
+    @IsString()
+    resetPassToken: string;
+}
