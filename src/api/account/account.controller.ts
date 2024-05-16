@@ -7,6 +7,9 @@ import {
     LoginUserRequestBodyDTO,
     UpdateAccountRequestBodyDTO,
     VerifyTokenRequestParamDTO,
+    ResetPasswordRequestBodyDTO,
+    AccountResetPassRequestParamDTO,
+    ConfirmResetPasswordRequestBodyDTO,
 } from './dto/account.request.dto';
 import {
     AccountResponseBodyDTO,
@@ -88,5 +91,22 @@ export class AccountApiController {
             })
             .send(response);
         // console.log(res.getHeaders());
+    }
+
+    @Post('/v1/reset-password')
+    @HttpCode(200)
+    @ApiOkResponse()
+    public async SendMailResetPassword(@Body() body: ResetPasswordRequestBodyDTO) {
+        return await this.accountManagerservice.sendMailResetPassword(body);
+    }
+
+    @Put('/v1/reset-password/:token')
+    @HttpCode(200)
+    @ApiOkResponse()
+    public async resetPassword(
+        @Body() body: ConfirmResetPasswordRequestBodyDTO,
+        @Param() param: AccountResetPassRequestParamDTO
+    ) {
+        return await this.accountManagerservice.resetPassword(param.token, body);
     }
 }

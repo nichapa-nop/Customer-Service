@@ -7,13 +7,15 @@ import {
     AccountRequestParamDTO,
     LoginUserRequestBodyDTO,
     UpdateAccountRequestBodyDTO,
-    ResetPasswordRequestParamDTO,
+    AccountResetPassRequestParamDTO,
+    ConfirmResetPasswordRequestBodyDTO,
+    ResetPasswordRequestBodyDTO,
 } from 'src/api/account/dto/account.request.dto';
 import { AccountResponseBodyDTO, UpdateAccountResponseBodyDTO } from 'src/api/account/dto/account.response.dto';
 import configService from 'src/config/config.service';
 import { AccountService } from 'src/model/account/account.service';
 import { AccountEntity, AccountStatus } from 'src/model/account/entities/account.entity';
-import { ResetPasswordEntity } from 'src/model/reset-pass/entities/reset-pass.entity';
+import { ResetPasswordEntity, ResetPasswordStatus } from 'src/model/reset-pass/entities/reset-pass.entity';
 import { ResetPasswordService } from 'src/model/reset-pass/reset-pass.service';
 import { SendMailService } from 'src/service/mailer/mailer.service';
 import { generateRandomString } from 'src/utils/utils.function';
@@ -142,8 +144,15 @@ export class AccountManagerService {
         }
     }
 
-    public async resetPassword(param: ResetPasswordRequestParamDTO) {
-        let currentEmail = await this.accountService.getByEmail(param.email);
+    public async sendMailResetPassword(body: ResetPasswordRequestBodyDTO) {
+        let currentEmail = await this.accountService.getByEmail(body.email);
+        if (!currentEmail) {
+            throw new ForbiddenException('Email was incorrect or it does not exist.');
+        }
+
+        if (currentEmail.status !== AccountStatus.VERIFIED) {
+            throw new ForbiddenException('Permission Denied.');
+        }
         let generatedToken = uuidV4();
         // currentEmail.verifyToken =
         let newResetPassword = new ResetPasswordEntity();
@@ -159,5 +168,27 @@ export class AccountManagerService {
                 ${configService.getConfig().serverEndpoint}
                 /v1/reset-password/${generatedToken} `,
         });
+        const payload = { uuid: currentEmail.uuid, email: currentEmail.email };
+        return { payload };
+    }
+
+    public async resetPassword(token: string, body: ConfirmResetPasswordRequestBodyDTO) {
+        let currentToken = await this.resetPasswordService.getByToken(token);
+        if (!currentToken) {
+            throw new BadRequestException('Token was incorrect.');
+        }
+        let now = new Date(Date.now());
+        if (now >= currentToken.expiredAt) {
+            currentToken.status = ResetPasswordStatus.EXPIRED;
+            throw new BadRequestException('Token was expire.');
+        }
+        if (currentToken.status === ResetPasswordStatus.COMPLETED) {
+            throw new BadRequestException('Token is already used.');
+        }
+        currentToken.status = ResetPasswordStatus.COMPLETED;
+        let currentAccount = currentToken.account;
+        currentAccount.password = await hash(body.password, 10);
+        await this.resetPasswordService.save(currentToken);
+        return await this.accountService.save(currentAccount);
     }
 }

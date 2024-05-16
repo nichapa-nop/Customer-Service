@@ -90,11 +90,11 @@ export class VerifyTokenRequestParamDTO {
     verifyToken: string;
 }
 
-export class ResetPasswordRequestParamDTO {
+export class AccountResetPassRequestParamDTO {
     @ApiProperty()
     @IsDefined()
-    @IsEmail()
-    email: string;
+    @IsString()
+    token: string;
 }
 
 export class ResetPasswordRequestBodyDTO {
@@ -102,8 +102,10 @@ export class ResetPasswordRequestBodyDTO {
     @IsDefined()
     @IsEmail()
     email: string;
+}
 
+export class ConfirmResetPasswordRequestBodyDTO {
     @ApiProperty()
     @IsString()
-    resetPassToken: string;
+    password: string;
 }

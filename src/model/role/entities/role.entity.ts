@@ -1,5 +1,15 @@
+import { AccountEntity } from 'src/model/account/entities/account.entity';
 import { RoleResponse } from 'src/utils/utils.response.dto';
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    JoinColumn,
+    OneToOne,
+    PrimaryGeneratedColumn,
+    Relation,
+    UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('role')
 export class RoleEntity {
@@ -33,6 +43,10 @@ export class RoleEntity {
         nullable: true,
     })
     updatedBy: string;
+
+    @OneToOne(() => AccountEntity, (account) => account.role, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'accountRole' })
+    account: Relation<AccountEntity>;
 
     public create(params: CreateRoleParams) {
         this.roleName = params.roleName;

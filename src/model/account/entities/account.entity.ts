@@ -1,11 +1,12 @@
 import { ResetPasswordEntity } from 'src/model/reset-pass/entities/reset-pass.entity';
+import { RoleEntity } from 'src/model/role/entities/role.entity';
 import { AccountResponse } from 'src/utils/utils.response.dto';
 import {
     Column,
     CreateDateColumn,
     Entity,
     OneToMany,
-    PrimaryColumn,
+    OneToOne,
     PrimaryGeneratedColumn,
     Relation,
     UpdateDateColumn,
@@ -13,7 +14,7 @@ import {
 
 export enum AccountStatus {
     VERIFIED = 'verified',
-    NOT_VERIFY = 'not verify',
+    NOT_VERIFY = 'not_verify',
     DELETED = 'deleted',
     DISABLED = 'disabled',
 }
@@ -84,6 +85,9 @@ export class AccountEntity {
     @OneToMany(() => ResetPasswordEntity, (resetPassword) => resetPassword.account, { cascade: true })
     resetPasswords: Relation<ResetPasswordEntity[]>;
 
+    @OneToOne(() => RoleEntity, (role) => role.account, { cascade: true })
+    role: Relation<RoleEntity>;
+
     public toResponse(): AccountResponse {
         return {
             uuid: this.uuid,
@@ -103,6 +107,10 @@ export class AccountEntity {
         this.phoneNum = params.phoneNum;
         this.verifyToken = params.verifyToken;
         this.createdBy = params.createdBy;
+    }
+
+    public updatePass(param: UpdatePassAccountParam) {
+        this.password = param.password;
     }
 
     public update(params: UpdateAccountParams) {
@@ -129,4 +137,8 @@ export interface UpdateAccountParams {
     phoneNum: string;
     email: string;
     updatedBy: string;
+}
+
+export interface UpdatePassAccountParam {
+    password: string;
 }

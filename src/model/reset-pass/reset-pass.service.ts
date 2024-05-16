@@ -13,4 +13,8 @@ export class ResetPasswordService {
     public save(reset: ResetPasswordEntity) {
         return this.resetPasswordRepository.save(reset);
     }
+
+    public getByToken(resetPassToken: string) {
+        return this.resetPasswordRepository.findOne({ where: { resetPassToken }, relations: { account: true } });
+    }
 }
