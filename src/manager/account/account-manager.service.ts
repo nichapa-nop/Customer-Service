@@ -164,9 +164,9 @@ export class AccountManagerService {
             to: currentEmail.email,
             from: 'no-reply <noreply.testnoreply@gmail.com>',
             subject: 'Reset Password Link',
-            text: `To verify your email please follow the url\n
-                ${configService.getConfig().serverEndpoint}
-                /v1/reset-password/${generatedToken} `,
+            text: `To verify your email please follow the url\n${
+                configService.getConfig().serverEndpoint
+            }/v1/reset-password/${generatedToken} `,
         });
         const payload = { uuid: currentEmail.uuid, email: currentEmail.email };
         return { payload };
@@ -180,7 +180,8 @@ export class AccountManagerService {
         let now = new Date(Date.now());
         if (now >= currentToken.expiredAt) {
             currentToken.status = ResetPasswordStatus.EXPIRED;
-            throw new BadRequestException('Token was expire.');
+            await this.resetPasswordService.save(currentToken);
+            throw new BadRequestException('Token is not exist.');
         }
         if (currentToken.status === ResetPasswordStatus.COMPLETED) {
             throw new BadRequestException('Token is already used.');
