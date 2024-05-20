@@ -1,10 +1,12 @@
 import { AccountEntity } from 'src/model/account/entities/account.entity';
+import { MenuEntity } from 'src/model/menu/entities/menu.entity';
 import { RoleResponse } from 'src/utils/utils.response.dto';
 import {
     Column,
     CreateDateColumn,
     Entity,
     JoinColumn,
+    ManyToMany,
     OneToMany,
     OneToOne,
     PrimaryGeneratedColumn,
@@ -49,6 +51,9 @@ export class RoleEntity {
     @JoinColumn({ name: 'accountRole' })
     account: AccountEntity[];
     // account: Relation<AccountEntity>;
+
+    @ManyToMany(() => MenuEntity, (menu) => menu.role, { cascade: true })
+    menu: Relation<MenuEntity[]>;
 
     public create(params: CreateRoleParams) {
         this.roleName = params.roleName;

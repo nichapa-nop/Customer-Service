@@ -1,3 +1,4 @@
+import { MenuEntity } from 'src/model/menu/entities/menu.entity';
 import { ResetPasswordEntity } from 'src/model/reset-pass/entities/reset-pass.entity';
 import { RoleEntity } from 'src/model/role/entities/role.entity';
 import { AccountResponse } from 'src/utils/utils.response.dto';
@@ -5,6 +6,7 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    ManyToMany,
     ManyToOne,
     OneToMany,
     OneToOne,

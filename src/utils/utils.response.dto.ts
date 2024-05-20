@@ -75,3 +75,17 @@ export class ResetPasswordResponse {
     @ApiProperty()
     resetPassToken: string;
 }
+
+export class MenuResponse {
+    @ApiProperty()
+    id: number;
+
+    @ApiProperty()
+    menuName: string;
+
+    @ApiProperty()
+    createBy: string;
+
+    @ApiProperty()
+    updateBy: string;
+}
