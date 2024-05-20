@@ -5,6 +5,7 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    ManyToOne,
     OneToMany,
     OneToOne,
     PrimaryGeneratedColumn,
@@ -85,8 +86,9 @@ export class AccountEntity {
     @OneToMany(() => ResetPasswordEntity, (resetPassword) => resetPassword.account, { cascade: true })
     resetPasswords: Relation<ResetPasswordEntity[]>;
 
-    @OneToOne(() => RoleEntity, (role) => role.account, { cascade: true })
-    role: Relation<RoleEntity>;
+    @ManyToOne(() => RoleEntity, (role) => role.account, { cascade: true })
+    role: RoleEntity;
+    // role: Relation<RoleEntity>;
 
     public toResponse(): AccountResponse {
         return {

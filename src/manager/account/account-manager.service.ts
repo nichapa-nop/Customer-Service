@@ -20,6 +20,8 @@ import { ResetPasswordService } from 'src/model/reset-pass/reset-pass.service';
 import { SendMailService } from 'src/service/mailer/mailer.service';
 import { generateRandomString } from 'src/utils/utils.function';
 import { v4 as uuidV4 } from 'uuid';
+import { RoleManagerService } from '../role/role-manager.service';
+import { RoleService } from 'src/model/role/role.service';
 
 @Injectable()
 export class AccountManagerService {
@@ -27,7 +29,8 @@ export class AccountManagerService {
         private readonly accountService: AccountService,
         private readonly jwtService: JwtService,
         private readonly emailService: SendMailService,
-        private readonly resetPasswordService: ResetPasswordService
+        private readonly resetPasswordService: ResetPasswordService,
+        private readonly roleService: RoleService
     ) {}
 
     public async createNewAccount(body: CreateAccountRequestBodyDTO): Promise<AccountResponseBodyDTO> {
@@ -43,6 +46,9 @@ export class AccountManagerService {
                 createdBy: body.createdBy,
                 verifyToken: uuidV4(),
             });
+            let role = await this.roleService.getByName('user'); // Adjust the role name as needed
+            newAccount.role = role; // Assign the role to the account
+            // newAccount.role = [];
             let createAccount = await this.accountService.save(newAccount);
             this.emailService.postMail({
                 to: createAccount.email,

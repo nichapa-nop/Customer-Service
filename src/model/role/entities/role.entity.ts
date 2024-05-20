@@ -5,6 +5,7 @@ import {
     CreateDateColumn,
     Entity,
     JoinColumn,
+    OneToMany,
     OneToOne,
     PrimaryGeneratedColumn,
     Relation,
@@ -44,9 +45,10 @@ export class RoleEntity {
     })
     updatedBy: string;
 
-    @OneToOne(() => AccountEntity, (account) => account.role, { onDelete: 'CASCADE' })
+    @OneToMany(() => AccountEntity, (account) => account.role, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'accountRole' })
-    account: Relation<AccountEntity>;
+    account: AccountEntity[];
+    // account: Relation<AccountEntity>;
 
     public create(params: CreateRoleParams) {
         this.roleName = params.roleName;
