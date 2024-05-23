@@ -52,7 +52,7 @@ export class RoleEntity {
     account: AccountEntity[];
     // account: Relation<AccountEntity>;
 
-    @ManyToMany(() => MenuEntity, (menu) => menu.role, { cascade: true })
+    @ManyToMany(() => MenuEntity, (menu) => menu.role, { onDelete: 'CASCADE' })
     menu: Relation<MenuEntity[]>;
 
     public create(params: CreateRoleParams) {

@@ -1,5 +1,5 @@
-import { AccountEntity } from 'src/model/account/entities/account.entity';
 import { RoleEntity } from 'src/model/role/entities/role.entity';
+import { MenuResponse } from 'src/utils/utils.response.dto';
 import {
     Column,
     CreateDateColumn,
@@ -11,7 +11,7 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('Menu')
+@Entity('menu')
 export class MenuEntity {
     @PrimaryGeneratedColumn()
     id: number;
@@ -41,15 +41,34 @@ export class MenuEntity {
     @JoinColumn({ name: 'roleMenu' })
     role: Relation<RoleEntity[]>;
 
-    public create(param: CreateMenuParams) {
-        this.menuName = param.menuName;
-        this.createdBy = param.createdBy;
-        this.updatedBy = param.updatedBy;
+    public toResponse(): MenuResponse {
+        return {
+            id: this.id,
+            menuName: this.menuName,
+            createdBy: this.createdBy,
+            updatedBy: this.updatedBy,
+        };
+    }
+
+    public create(params: CreateMenuParams) {
+        this.menuName = params.menuName;
+        this.createdBy = params.createdBy;
+        this.updatedBy = params.updatedBy;
+    }
+
+    public update(params: UpdateMenuParams) {
+        this.menuName = params.menuName;
+        this.updatedBy = params.updatedBy;
     }
 }
 
 export interface CreateMenuParams {
     menuName: string;
     createdBy: string;
+    updatedBy: string;
+}
+
+export interface UpdateMenuParams {
+    menuName: string;
     updatedBy: string;
 }

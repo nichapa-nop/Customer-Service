@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDefined, IsOptional, IsString } from 'class-validator';
+import { IsDefined, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateMenuRequestBodyDTO {
     @ApiProperty()
@@ -16,4 +16,30 @@ export class CreateMenuRequestBodyDTO {
     @IsOptional()
     @IsString()
     updatedBy: string;
+}
+
+export class UpdateMenuRequestBodyDTO {
+    @ApiProperty()
+    @IsDefined()
+    @IsString()
+    menuName: string;
+
+    @ApiProperty()
+    @IsDefined()
+    @IsString()
+    updatedBy: string;
+}
+
+export class MenuRequestParamDTO {
+    @ApiProperty()
+    @IsDefined()
+    @IsNumber()
+    id: number;
+}
+
+export class GetMenuByNameRequestParamDTO {
+    @ApiProperty()
+    @IsDefined()
+    @IsString()
+    menuName: string;
 }

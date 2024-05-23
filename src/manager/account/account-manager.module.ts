@@ -6,6 +6,7 @@ import { SendMailModule } from 'src/service/mailer/mailer.module';
 import configService from 'src/config/config.service';
 import { RoleModule } from 'src/model/role/role.module';
 import { ResetPasswordModule } from 'src/model/reset-pass/reset-pass.module';
+import { MenuModule } from 'src/model/menu/menu.module';
 
 @Module({
     imports: [
@@ -18,6 +19,7 @@ import { ResetPasswordModule } from 'src/model/reset-pass/reset-pass.module';
         SendMailModule,
         RoleModule,
         ResetPasswordModule,
+        MenuModule,
     ],
     providers: [AccountManagerService],
     exports: [AccountManagerService],

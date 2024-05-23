@@ -1,5 +1,9 @@
-import { BadRequestException, ForbiddenException, Injectable, ServiceUnavailableException } from '@nestjs/common';
-import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
+import {
+    BadRequestException,
+    ForbiddenException,
+    Injectable,
+    ServiceUnavailableException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from 'bcrypt';
 import {
@@ -7,20 +11,24 @@ import {
     AccountRequestParamDTO,
     LoginUserRequestBodyDTO,
     UpdateAccountRequestBodyDTO,
-    AccountResetPassRequestParamDTO,
     ConfirmResetPasswordRequestBodyDTO,
     ResetPasswordRequestBodyDTO,
 } from 'src/api/account/dto/account.request.dto';
-import { AccountResponseBodyDTO, UpdateAccountResponseBodyDTO } from 'src/api/account/dto/account.response.dto';
+import {
+    AccountResponseBodyDTO,
+    UpdateAccountResponseBodyDTO,
+} from 'src/api/account/dto/account.response.dto';
 import configService from 'src/config/config.service';
 import { AccountService } from 'src/model/account/account.service';
 import { AccountEntity, AccountStatus } from 'src/model/account/entities/account.entity';
-import { ResetPasswordEntity, ResetPasswordStatus } from 'src/model/reset-pass/entities/reset-pass.entity';
+import {
+    ResetPasswordEntity,
+    ResetPasswordStatus,
+} from 'src/model/reset-pass/entities/reset-pass.entity';
 import { ResetPasswordService } from 'src/model/reset-pass/reset-pass.service';
 import { SendMailService } from 'src/service/mailer/mailer.service';
 import { generateRandomString } from 'src/utils/utils.function';
 import { v4 as uuidV4 } from 'uuid';
-import { RoleManagerService } from '../role/role-manager.service';
 import { RoleService } from 'src/model/role/role.service';
 
 @Injectable()
@@ -33,7 +41,9 @@ export class AccountManagerService {
         private readonly roleService: RoleService
     ) {}
 
-    public async createNewAccount(body: CreateAccountRequestBodyDTO): Promise<AccountResponseBodyDTO> {
+    public async createNewAccount(
+        body: CreateAccountRequestBodyDTO
+    ): Promise<AccountResponseBodyDTO> {
         let newAccount = new AccountEntity();
         let email = await this.accountService.getByEmail(body.email);
         if (!email) {
@@ -43,6 +53,7 @@ export class AccountManagerService {
                 email: body.email,
                 // password: await hash(body.password, 10),
                 phoneNum: body.phoneNum,
+                type: body.type,
                 createdBy: body.createdBy,
                 verifyToken: uuidV4(),
             });
@@ -55,7 +66,9 @@ export class AccountManagerService {
                 from: 'no-reply <noreply.testnoreply@gmail.com>',
                 subject: 'Please Verify Your Email',
                 text: `To verify your email please follow the url\n 
-                    ${configService.getConfig().serverEndpoint}/v1/verify-email/${newAccount.verifyToken}`,
+                    ${configService.getConfig().serverEndpoint}/v1/verify-email/${
+                    newAccount.verifyToken
+                }`,
             });
 
             return { accountDetail: createAccount.toResponse() };
@@ -92,6 +105,7 @@ export class AccountManagerService {
                 lastName: body.lastName,
                 email: body.email,
                 phoneNum: body.phoneNum,
+                type: body.type,
                 updatedBy: body.updatedBy,
             });
             return {

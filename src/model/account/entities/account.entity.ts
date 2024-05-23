@@ -6,10 +6,8 @@ import {
     Column,
     CreateDateColumn,
     Entity,
-    ManyToMany,
     ManyToOne,
     OneToMany,
-    OneToOne,
     PrimaryGeneratedColumn,
     Relation,
     UpdateDateColumn,
@@ -20,6 +18,12 @@ export enum AccountStatus {
     NOT_VERIFY = 'not_verify',
     DELETED = 'deleted',
     DISABLED = 'disabled',
+}
+
+export enum CompanyType {
+    CDD = 'cdd',
+    HR = 'hr',
+    OTHER = 'other',
 }
 
 @Entity('account')
@@ -79,13 +83,26 @@ export class AccountEntity {
     updatedBy: string;
 
     @Column({
+        type: 'varchar',
+    })
+    companyName: string;
+
+    @Column({
+        type: 'enum',
+        enum: CompanyType,
+    })
+    type: CompanyType;
+
+    @Column({
         type: 'enum',
         enum: AccountStatus,
         default: AccountStatus.NOT_VERIFY,
     })
     status: AccountStatus;
 
-    @OneToMany(() => ResetPasswordEntity, (resetPassword) => resetPassword.account, { cascade: true })
+    @OneToMany(() => ResetPasswordEntity, (resetPassword) => resetPassword.account, {
+        cascade: true,
+    })
     resetPasswords: Relation<ResetPasswordEntity[]>;
 
     @ManyToOne(() => RoleEntity, (role) => role.account, { cascade: true })
@@ -100,6 +117,7 @@ export class AccountEntity {
             email: this.email,
             phoneNum: this.phoneNum,
             password: this.password,
+            type: this.type,
             verifyToken: this.verifyToken,
         };
     }
@@ -109,6 +127,7 @@ export class AccountEntity {
         this.lastName = params.lastName;
         this.email = params.email;
         this.phoneNum = params.phoneNum;
+        this.type = params.type;
         this.verifyToken = params.verifyToken;
         this.createdBy = params.createdBy;
     }
@@ -122,6 +141,7 @@ export class AccountEntity {
         this.lastName = params.lastName;
         this.email = params.email;
         this.phoneNum = params.phoneNum;
+        this.type = params.type;
         this.updatedBy = params.updatedBy;
     }
 }
@@ -131,6 +151,7 @@ export interface CreateAccountParams {
     lastName: string;
     email: string;
     phoneNum: string;
+    type: CompanyType;
     createdBy: string;
     verifyToken: string;
 }
@@ -140,6 +161,7 @@ export interface UpdateAccountParams {
     lastName: string;
     phoneNum: string;
     email: string;
+    type: CompanyType;
     updatedBy: string;
 }
 

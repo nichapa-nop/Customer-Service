@@ -20,6 +20,9 @@ export class AccountResponse {
     password: string;
 
     @ApiProperty()
+    type: string;
+
+    @ApiProperty()
     verifyToken: string;
 }
 
@@ -35,6 +38,9 @@ export class UpdateAccountResponse {
 
     @ApiProperty()
     phoneNum: string;
+
+    @ApiProperty()
+    type: string;
 }
 
 export class RoleResponse {
@@ -84,8 +90,8 @@ export class MenuResponse {
     menuName: string;
 
     @ApiProperty()
-    createBy: string;
+    createdBy: string;
 
     @ApiProperty()
-    updateBy: string;
+    updatedBy: string;
 }

@@ -22,6 +22,10 @@ export class MenuService {
         return this.menuRepository.findOneBy({ id });
     }
 
+    public getAll(): Promise<MenuEntity[]> {
+        return this.menuRepository.find();
+    }
+
     public delete(id: number) {
         return this.menuRepository.delete({ id });
     }
