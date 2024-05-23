@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { BusinessImpact, FeedbackCh, IncidentType, Platform, TicketStatus } from 'src/model/ticket/entities/ticket.entity';
 
 export class AccountResponse {
     @ApiProperty()
@@ -94,4 +95,31 @@ export class MenuResponse {
 
     @ApiProperty()
     updatedBy: string;
+}
+
+export class TicketResponse {
+    @ApiProperty()
+    id: number;
+
+    @ApiProperty()
+    ticketId: string;
+
+    @ApiProperty()
+    status: TicketStatus;
+
+    @ApiProperty()
+    platform: Platform;
+
+    @ApiProperty()
+    incidentType: IncidentType;
+
+    @ApiProperty()
+    businessImpact: BusinessImpact;
+    
+    @ApiProperty()
+    feedbackCh: FeedbackCh;
+
+    @ApiProperty()
+    ticketLink: string;
+
 }

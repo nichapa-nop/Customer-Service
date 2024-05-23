@@ -20,3 +20,4 @@ export class LoginUserResponseBodyDTO {
     @ApiProperty()
     accessToken: string;
 }
+

@@ -1,8 +1,8 @@
+import { TicketResponse } from 'src/utils/utils.response.dto';
 import {
     Column,
     CreateDateColumn,
     Entity,
-    PrimaryColumn,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
@@ -116,4 +116,55 @@ export class TicketEntity {
         type: 'varchar',
     })
     assignedBy: string;
+
+    public toResponse(): TicketResponse {
+        return {
+            id: this.id,
+            ticketId: this.ticketId,
+            status: this.status,
+            platform: this.platform,
+            incidentType: this.incidentType,
+            businessImpact: this.businessImpact,
+            feedbackCh: this.feedbackCh,
+            ticketLink: this.ticketLink
+        }
+    }
+
+    public create(params: CreateTicketParams) {
+        this.ticketId = params.ticketId;
+        this.status = params.status;
+        this.platform = params.platform;
+        this.incidentType = params.incidentType;
+        this.businessImpact = params.businessImpact;
+        this.feedbackCh = params.feedbackCh;
+        this.ticketLink = params.ticketLink;
+    }
+
+    public update(params: UpdateTicketParams) {
+        this.status = params.status;
+        this.platform = params.platform;
+        this.incidentType = params.incidentType;
+        this.businessImpact = params.businessImpact;
+        this.feedbackCh = params.feedbackCh;
+        this.ticketLink = params.ticketLink;
+    }
+}
+
+export interface CreateTicketParams {
+    ticketId : string;
+    status: TicketStatus;
+    platform: Platform;
+    incidentType: IncidentType;
+    businessImpact: BusinessImpact;
+    feedbackCh: FeedbackCh;
+    ticketLink: string;
+}
+
+export interface UpdateTicketParams {
+    status: TicketStatus;
+    platform: Platform;
+    incidentType: IncidentType;
+    businessImpact: BusinessImpact;
+    feedbackCh: FeedbackCh;
+    ticketLink: string;
 }
