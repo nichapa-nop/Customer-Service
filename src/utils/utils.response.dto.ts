@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BusinessImpact, FeedbackCh, IncidentType, Platform, TicketStatus } from 'src/model/ticket/entities/ticket.entity';
+import {
+    BusinessImpact,
+    FeedbackCh,
+    IncidentType,
+    Platform,
+    TicketStatus,
+} from 'src/model/ticket/entities/ticket.entity';
 
 export class AccountResponse {
     @ApiProperty()
@@ -115,11 +121,18 @@ export class TicketResponse {
 
     @ApiProperty()
     businessImpact: BusinessImpact;
-    
+
     @ApiProperty()
     feedbackCh: FeedbackCh;
 
     @ApiProperty()
     ticketLink: string;
+}
 
+export class TicketIdResponse {
+    @ApiProperty()
+    id: number;
+
+    @ApiProperty()
+    count: number;
 }
