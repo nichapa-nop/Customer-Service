@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TicketIdEntity } from './entities/ticket-id.entity';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 
 @Injectable()
 export class TicketIdService {
@@ -15,6 +15,6 @@ export class TicketIdService {
     }
 
     public getCount() {
-        return this.ticketIdRepository.findOne({});
+        return this.ticketIdRepository.find({ take: 1 });
     }
 }

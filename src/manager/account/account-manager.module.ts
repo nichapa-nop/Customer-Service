@@ -7,6 +7,7 @@ import configService from 'src/config/config.service';
 import { RoleModule } from 'src/model/role/role.module';
 import { ResetPasswordModule } from 'src/model/reset-pass/reset-pass.module';
 import { MenuModule } from 'src/model/menu/menu.module';
+import { TicketModule } from 'src/model/ticket/ticket.module';
 
 @Module({
     imports: [
@@ -20,6 +21,7 @@ import { MenuModule } from 'src/model/menu/menu.module';
         RoleModule,
         ResetPasswordModule,
         MenuModule,
+        TicketModule,
     ],
     providers: [AccountManagerService],
     exports: [AccountManagerService],

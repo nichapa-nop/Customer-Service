@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDefined, IsEmail, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsDefined, IsEmail, IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
 import { CompanyType } from 'src/model/account/entities/account.entity';
 
 export class CreateAccountRequestBodyDTO {
@@ -31,6 +31,11 @@ export class CreateAccountRequestBodyDTO {
     @ApiProperty()
     @IsDefined()
     @IsString()
+    companyName: string;
+
+    @ApiProperty()
+    @IsEnum(CompanyType)
+    @IsDefined()
     type: CompanyType;
 
     @ApiProperty()

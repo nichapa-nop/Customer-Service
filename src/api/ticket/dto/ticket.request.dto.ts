@@ -14,25 +14,34 @@ export class CreateTicketRequestBodyDTO {
     @IsString()
     ticketId: string;
 
+    // @ApiProperty()
+    // @IsDefined()
+    // @IsEnum(TicketStatus)
+    // status: TicketStatus;
+
     @ApiProperty()
-    @IsDefined()
-    status: TicketStatus;
+    @IsOptional()
+    @IsString()
+    assignTo: string;
 
     @ApiProperty()
     @IsDefined()
+    @IsEnum(Platform)
     platform: Platform;
 
     @ApiProperty()
     @IsDefined()
+    @IsEnum(IncidentType)
     incidentType: IncidentType;
 
     @ApiProperty()
     @IsDefined()
+    @IsEnum(BusinessImpact)
     businessImpact: BusinessImpact;
 
     @ApiProperty()
     @IsDefined()
-    @IsString()
+    @IsEnum(FeedbackCh)
     feedbackCh: FeedbackCh;
 
     @ApiProperty()
@@ -41,9 +50,9 @@ export class CreateTicketRequestBodyDTO {
     ticketLink: string;
 }
 
-export class TicketRequestBodyDTO {
-    // @ApiProperty()
-    // @IsOptional()
-    // @IsString()
-    // ticketLink: string;
+export class TicketRequestParamDTO {
+    @ApiProperty()
+    @IsDefined()
+    @IsString()
+    ticketId: string;
 }

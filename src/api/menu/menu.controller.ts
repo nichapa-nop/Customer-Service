@@ -9,7 +9,7 @@ import {
 } from './dto/menu.request';
 import { MenuManagerService } from 'src/manager/menu/menu-manager.service';
 
-@ApiTags('Menu Manager')
+@ApiTags('Menu Management')
 @Controller()
 @ApiBearerAuth()
 export class MenuApiController {

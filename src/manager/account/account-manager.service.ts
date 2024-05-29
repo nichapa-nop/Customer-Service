@@ -53,6 +53,7 @@ export class AccountManagerService {
                 email: body.email,
                 // password: await hash(body.password, 10),
                 phoneNum: body.phoneNum,
+                companyName: body.companyName,
                 type: body.type,
                 createdBy: body.createdBy,
                 verifyToken: uuidV4(),

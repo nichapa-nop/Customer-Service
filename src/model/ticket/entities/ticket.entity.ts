@@ -1,9 +1,14 @@
+import { AccountEntity } from 'src/model/account/entities/account.entity';
 import { TicketResponse } from 'src/utils/utils.response.dto';
 import {
     Column,
     CreateDateColumn,
     Entity,
+    JoinColumn,
+    ManyToOne,
+    OneToMany,
     PrimaryGeneratedColumn,
+    Relation,
     UpdateDateColumn,
 } from 'typeorm';
 
@@ -58,6 +63,13 @@ export class TicketEntity {
         default: TicketStatus.OPEN,
     })
     status: TicketStatus;
+
+    @ManyToOne(() => AccountEntity, (account) => account.tickets, {
+        onDelete: 'SET NULL',
+        nullable: true,
+    })
+    @JoinColumn({ name: 'assignTo' })
+    assignAccount: Relation<AccountEntity>;
 
     //status history
 
@@ -114,6 +126,7 @@ export class TicketEntity {
 
     @Column({
         type: 'varchar',
+        nullable: true,
     })
     assignedBy: string;
 
@@ -122,17 +135,19 @@ export class TicketEntity {
             id: this.id,
             ticketId: this.ticketId,
             status: this.status,
+            assignTo: this.assignAccount?.toResponse(),
             platform: this.platform,
             incidentType: this.incidentType,
             businessImpact: this.businessImpact,
             feedbackCh: this.feedbackCh,
-            ticketLink: this.ticketLink
-        }
+            ticketLink: this.ticketLink,
+        };
     }
 
     public create(params: CreateTicketParams) {
         this.ticketId = params.ticketId;
         this.status = params.status;
+        this.assignAccount = params.assignTo;
         this.platform = params.platform;
         this.incidentType = params.incidentType;
         this.businessImpact = params.businessImpact;
@@ -142,6 +157,7 @@ export class TicketEntity {
 
     public update(params: UpdateTicketParams) {
         this.status = params.status;
+        this.assignAccount = params.assignTo;
         this.platform = params.platform;
         this.incidentType = params.incidentType;
         this.businessImpact = params.businessImpact;
@@ -151,17 +167,20 @@ export class TicketEntity {
 }
 
 export interface CreateTicketParams {
-    ticketId : string;
-    status: TicketStatus;
+    ticketId: string;
+    // status: TicketStatus;
+    assignTo?: AccountEntity;
     platform: Platform;
     incidentType: IncidentType;
     businessImpact: BusinessImpact;
     feedbackCh: FeedbackCh;
     ticketLink: string;
+    status: TicketStatus;
 }
 
 export interface UpdateTicketParams {
     status: TicketStatus;
+    assignTo: AccountEntity;
     platform: Platform;
     incidentType: IncidentType;
     businessImpact: BusinessImpact;

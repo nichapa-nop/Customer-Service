@@ -19,12 +19,16 @@ export class TicketService {
         return this.ticketRepository.find();
     }
 
-    public delete(id: number) {
-        return this.ticketRepository.delete({ id });
+    public delete(ticketId: string) {
+        return this.ticketRepository.delete({ ticketId });
     }
 
     public getById(id: number) {
         return this.ticketRepository.findOneBy({ id });
+    }
+
+    public getByTicketId(ticketId: string) {
+        return this.ticketRepository.findOneBy({ ticketId });
     }
 
     public generateTicketId(count: number) {

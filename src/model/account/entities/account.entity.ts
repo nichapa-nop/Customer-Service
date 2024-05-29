@@ -1,6 +1,7 @@
 import { MenuEntity } from 'src/model/menu/entities/menu.entity';
 import { ResetPasswordEntity } from 'src/model/reset-pass/entities/reset-pass.entity';
 import { RoleEntity } from 'src/model/role/entities/role.entity';
+import { TicketEntity } from 'src/model/ticket/entities/ticket.entity';
 import { AccountResponse } from 'src/utils/utils.response.dto';
 import {
     Column,
@@ -109,6 +110,9 @@ export class AccountEntity {
     role: RoleEntity;
     // role: Relation<RoleEntity>;
 
+    @OneToMany(() => TicketEntity, (ticket) => ticket.assignAccount, { cascade: true })
+    tickets: Relation<TicketEntity[]>;
+
     public toResponse(): AccountResponse {
         return {
             uuid: this.uuid,
@@ -116,9 +120,10 @@ export class AccountEntity {
             lastName: this.lastName,
             email: this.email,
             phoneNum: this.phoneNum,
-            password: this.password,
+            // password: this.password,
+            companyName: this.companyName,
             type: this.type,
-            verifyToken: this.verifyToken,
+            // verifyToken: this.verifyToken,
         };
     }
 
@@ -127,6 +132,7 @@ export class AccountEntity {
         this.lastName = params.lastName;
         this.email = params.email;
         this.phoneNum = params.phoneNum;
+        this.companyName = params.companyName;
         this.type = params.type;
         this.verifyToken = params.verifyToken;
         this.createdBy = params.createdBy;
@@ -151,6 +157,7 @@ export interface CreateAccountParams {
     lastName: string;
     email: string;
     phoneNum: string;
+    companyName: string;
     type: CompanyType;
     createdBy: string;
     verifyToken: string;

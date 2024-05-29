@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { CompanyType } from 'src/model/account/entities/account.entity';
 import {
     BusinessImpact,
     FeedbackCh,
@@ -24,13 +25,10 @@ export class AccountResponse {
     phoneNum: string;
 
     @ApiProperty()
-    password: string;
+    companyName: string;
 
     @ApiProperty()
-    type: string;
-
-    @ApiProperty()
-    verifyToken: string;
+    type: CompanyType;
 }
 
 export class UpdateAccountResponse {
@@ -47,7 +45,7 @@ export class UpdateAccountResponse {
     phoneNum: string;
 
     @ApiProperty()
-    type: string;
+    type: CompanyType;
 }
 
 export class RoleResponse {
@@ -112,6 +110,9 @@ export class TicketResponse {
 
     @ApiProperty()
     status: TicketStatus;
+
+    @ApiProperty()
+    assignTo: AccountResponse;
 
     @ApiProperty()
     platform: Platform;
