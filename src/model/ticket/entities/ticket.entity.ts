@@ -122,7 +122,7 @@ export class TicketEntity {
     updatedBy: string;
 
     @UpdateDateColumn({ type: 'timestamp' })
-    assignedAt: string;
+    assignedAt: Date;
 
     @Column({
         type: 'varchar',

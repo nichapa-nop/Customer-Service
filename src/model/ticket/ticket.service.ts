@@ -28,7 +28,10 @@ export class TicketService {
     }
 
     public getByTicketId(ticketId: string) {
-        return this.ticketRepository.findOneBy({ ticketId });
+        return this.ticketRepository.findOne({
+            where: { ticketId },
+            relations: { assignAccount: true },
+        });
     }
 
     public generateTicketId(count: number) {

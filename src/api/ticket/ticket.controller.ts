@@ -1,7 +1,12 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TicketManagerService } from 'src/manager/ticket/ticket-manager.service';
-import { CreateTicketRequestBodyDTO, TicketRequestParamDTO } from './dto/ticket.request.dto';
+import {
+    CloseTicketRequestBodyDTO,
+    CreateTicketRequestBodyDTO,
+    TicketRequestParamDTO,
+    UpdateTicketRequestBodyDTO,
+} from './dto/ticket.request.dto';
 import { GetTicketListResponseBodyDTO, TicketResponseBodyDTO } from './dto/ticket.response';
 
 @ApiTags('Ticket Management')
@@ -30,7 +35,25 @@ export class TicketApiController {
         return await this.ticketManagerService.getTicket(param);
     }
 
-    @Delete('v1/ticket/:ticketId')
+    @Put('/v1/ticket/:ticketId')
+    @HttpCode(200)
+    public async updateTicket(
+        @Param() param: TicketRequestParamDTO,
+        @Body() body: UpdateTicketRequestBodyDTO
+    ) {
+        return await this.ticketManagerService.updateTicket(param, body);
+    }
+
+    @Put('/v1/closeticket/:ticketId')
+    @HttpCode(200)
+    public async closeTicket(
+        @Param() param: TicketRequestParamDTO,
+        @Body() body: CloseTicketRequestBodyDTO
+    ) {
+        return await this.ticketManagerService.closeTicket(param, body);
+    }
+
+    @Delete('/v1/ticket/:ticketId')
     @HttpCode(200)
     public async deleteTicket(@Param() param: TicketRequestParamDTO) {
         return await this.ticketManagerService.deleteTicket(param);

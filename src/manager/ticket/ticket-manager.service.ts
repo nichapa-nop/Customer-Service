@@ -1,7 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import {
+    CloseTicketRequestBodyDTO,
     CreateTicketRequestBodyDTO,
     TicketRequestParamDTO,
+    UpdateTicketRequestBodyDTO,
 } from 'src/api/ticket/dto/ticket.request.dto';
 import { TicketResponseBodyDTO } from 'src/api/ticket/dto/ticket.response';
 import { AccountService } from 'src/model/account/account.service';
@@ -32,6 +34,7 @@ export class TicketManagerService {
             }
             assignAccountEntity = assignedAccount;
             ticketStatus = TicketStatus.IN_PROGRESS;
+            newTicket.assignedAt = new Date(Date.now());
         }
         newTicket.create({
             ticketId: generateTicketId,
@@ -74,5 +77,44 @@ export class TicketManagerService {
         }
     }
 
-    public async updateTicket() {}
+    public async updateTicket(param: TicketRequestParamDTO, body: UpdateTicketRequestBodyDTO) {
+        let currentTicket = await this.ticketService.getByTicketId(param.ticketId);
+        if (!currentTicket) {
+            throw new BadRequestException('Ticket ID was incorrect or it does not exist.');
+        }
+
+        let assignedAccount = await this.accountService.getByUuid(body.assignTo);
+        let assignAccountEntity: AccountEntity;
+        if (body.assignTo) {
+            if (!assignedAccount) {
+                throw new BadRequestException('Assign account uuid was invalid');
+            }
+            assignAccountEntity = assignedAccount;
+            currentTicket.status = TicketStatus.IN_PROGRESS;
+            currentTicket.assignedAt = new Date(Date.now());
+            return await this.ticketService.save(currentTicket);
+        }
+
+        // if (param.status === TicketStatus.CLOSED) {
+        //     currentTicket.status = TicketStatus.CLOSED;
+        //     return await this.ticketService.save(currentTicket);
+        // }
+    }
+
+    public async closeTicket(param: TicketRequestParamDTO, body: CloseTicketRequestBodyDTO) {
+        let currentTicket = await this.ticketService.getByTicketId(param.ticketId);
+        if (!currentTicket) {
+            throw new BadRequestException('Ticket ID was incorrect or it does not exist.');
+        }
+        if (currentTicket.status !== TicketStatus.IN_PROGRESS) {
+            if (currentTicket.status === TicketStatus.CLOSED) {
+                throw new BadRequestException('Ticket is already closed.');
+            }
+            throw new BadRequestException('Permission Denied.');
+        }
+        if (body.status === TicketStatus.CLOSED) {
+            currentTicket.status = TicketStatus.CLOSED;
+            return await this.ticketService.save(currentTicket);
+        }
+    }
 }
