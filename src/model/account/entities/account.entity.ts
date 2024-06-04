@@ -1,12 +1,14 @@
 import { MenuEntity } from 'src/model/menu/entities/menu.entity';
 import { ResetPasswordEntity } from 'src/model/reset-pass/entities/reset-pass.entity';
 import { RoleEntity } from 'src/model/role/entities/role.entity';
+import { TicketCommentEntity } from 'src/model/ticket-comment/entities/ticket-comment.entity';
 import { TicketEntity } from 'src/model/ticket/entities/ticket.entity';
 import { AccountResponse } from 'src/utils/utils.response.dto';
 import {
     Column,
     CreateDateColumn,
     Entity,
+    ManyToMany,
     ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
@@ -112,6 +114,11 @@ export class AccountEntity {
 
     @OneToMany(() => TicketEntity, (ticket) => ticket.assignAccount, { cascade: true })
     tickets: Relation<TicketEntity[]>;
+
+    @OneToMany(() => TicketCommentEntity, (ticketcomment) => ticketcomment.accountOwner, {
+        cascade: true,
+    })
+    ticketComments: Relation<TicketCommentEntity[]>;
 
     public toResponse(): AccountResponse {
         return {

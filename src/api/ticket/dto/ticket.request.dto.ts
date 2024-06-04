@@ -1,6 +1,6 @@
 import { Optional } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDefined, IsEnum, IsOptional, IsString, IsUUID, isEnum } from 'class-validator';
+import { IsDefined, IsEnum, IsOptional, IsString, IsUUID, isEnum, isString } from 'class-validator';
 import {
     BusinessImpact,
     FeedbackCh,
@@ -49,6 +49,16 @@ export class CreateTicketRequestBodyDTO {
     @IsDefined()
     @IsString()
     ticketLink: string;
+
+    @ApiProperty()
+    @IsDefined()
+    @IsString()
+    topic: string;
+
+    @ApiProperty()
+    @IsDefined()
+    @IsString()
+    description: string;
 }
 
 export class TicketRequestParamDTO {
@@ -64,12 +74,10 @@ export class UpdateTicketRequestBodyDTO {
     @IsUUID()
     assignTo: string;
 
-    // @ApiProperty()
-
-    // @ApiProperty()
-    // @IsOptional()
-    // @IsString()
-    // ticketLink: string;
+    @ApiProperty()
+    @IsDefined()
+    @IsString()
+    comment: string;
 }
 
 export class CloseTicketRequestBodyDTO {

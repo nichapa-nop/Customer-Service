@@ -97,8 +97,22 @@ export class MenuResponse {
     @ApiProperty()
     createdBy: string;
 
+    // @ApiProperty()
+    // updatedBy: string;
+}
+
+export class TicketCommentResponse {
     @ApiProperty()
-    updatedBy: string;
+    id: number;
+
+    @ApiProperty()
+    comment: string;
+
+    @ApiProperty()
+    commentedAt: Date;
+
+    @ApiProperty()
+    commentedBy: AccountResponse;
 }
 
 export class TicketResponse {
@@ -128,6 +142,21 @@ export class TicketResponse {
 
     @ApiProperty()
     ticketLink: string;
+
+    @ApiProperty()
+    topic: string;
+
+    @ApiProperty()
+    description: string;
+
+    @ApiProperty()
+    createdAt: Date;
+
+    @ApiProperty()
+    createdBy: string;
+
+    @ApiProperty({ type: TicketCommentResponse, isArray: true })
+    comments: TicketCommentResponse[];
 }
 
 export class TicketIdResponse {

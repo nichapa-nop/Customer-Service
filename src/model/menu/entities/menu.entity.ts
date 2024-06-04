@@ -46,14 +46,13 @@ export class MenuEntity {
             id: this.id,
             menuName: this.menuName,
             createdBy: this.createdBy,
-            updatedBy: this.updatedBy,
+            // updatedBy: this.updatedBy,
         };
     }
 
     public create(params: CreateMenuParams) {
         this.menuName = params.menuName;
         this.createdBy = params.createdBy;
-        this.updatedBy = params.updatedBy;
     }
 
     public update(params: UpdateMenuParams) {
@@ -65,7 +64,6 @@ export class MenuEntity {
 export interface CreateMenuParams {
     menuName: string;
     createdBy: string;
-    updatedBy: string;
 }
 
 export interface UpdateMenuParams {

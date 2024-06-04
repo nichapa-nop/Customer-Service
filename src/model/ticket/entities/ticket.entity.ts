@@ -1,4 +1,5 @@
 import { AccountEntity } from 'src/model/account/entities/account.entity';
+import { TicketCommentEntity } from 'src/model/ticket-comment/entities/ticket-comment.entity';
 import { TicketResponse } from 'src/utils/utils.response.dto';
 import {
     Column,
@@ -103,6 +104,16 @@ export class TicketEntity {
     })
     ticketLink: string;
 
+    @Column({
+        type: 'varchar',
+    })
+    topic: string;
+
+    @Column({
+        type: 'varchar',
+    })
+    description: string;
+
     @CreateDateColumn({ type: 'timestamp' })
     createdAt: Date;
 
@@ -130,6 +141,11 @@ export class TicketEntity {
     })
     assignedBy: string;
 
+    @OneToMany(() => TicketCommentEntity, (ticketComment) => ticketComment.ticket, {
+        cascade: true,
+    })
+    ticketComments: Relation<TicketCommentEntity[]>;
+
     public toResponse(): TicketResponse {
         return {
             id: this.id,
@@ -141,6 +157,11 @@ export class TicketEntity {
             businessImpact: this.businessImpact,
             feedbackCh: this.feedbackCh,
             ticketLink: this.ticketLink,
+            topic: this.topic,
+            description: this.description,
+            createdAt: this.createdAt,
+            createdBy: this.createdBy,
+            comments: this.ticketComments?.map((comment) => comment.toResponse()),
         };
     }
 
@@ -153,6 +174,8 @@ export class TicketEntity {
         this.businessImpact = params.businessImpact;
         this.feedbackCh = params.feedbackCh;
         this.ticketLink = params.ticketLink;
+        this.topic = params.topic;
+        this.description = params.description;
     }
 
     public update(params: UpdateTicketParams) {
@@ -163,6 +186,8 @@ export class TicketEntity {
         this.businessImpact = params.businessImpact;
         this.feedbackCh = params.feedbackCh;
         this.ticketLink = params.ticketLink;
+        this.topic = params.topic;
+        this.description = params.description;
     }
 }
 
@@ -176,6 +201,8 @@ export interface CreateTicketParams {
     feedbackCh: FeedbackCh;
     ticketLink: string;
     status: TicketStatus;
+    topic: string;
+    description: string;
 }
 
 export interface UpdateTicketParams {
@@ -186,4 +213,6 @@ export interface UpdateTicketParams {
     businessImpact: BusinessImpact;
     feedbackCh: FeedbackCh;
     ticketLink: string;
+    topic: string;
+    description: string;
 }

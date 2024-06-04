@@ -30,7 +30,7 @@ export class TicketService {
     public getByTicketId(ticketId: string) {
         return this.ticketRepository.findOne({
             where: { ticketId },
-            relations: { assignAccount: true },
+            relations: { assignAccount: true, ticketComments: true },
         });
     }
 

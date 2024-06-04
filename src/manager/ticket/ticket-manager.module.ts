@@ -4,9 +4,10 @@ import { TicketManagerService } from './ticket-manager.service';
 import { TicketIdModule } from 'src/model/ticket-id/ticket-id.module';
 import { AccountEntity } from 'src/model/account/entities/account.entity';
 import { AccountModule } from 'src/model/account/account.module';
+import { TicketCommentModule } from 'src/model/ticket-comment/ticket-comment.module';
 
 @Module({
-    imports: [TicketModule, TicketIdModule, AccountModule],
+    imports: [TicketModule, TicketIdModule, AccountModule, TicketCommentModule],
     providers: [TicketManagerService],
     exports: [TicketManagerService],
 })

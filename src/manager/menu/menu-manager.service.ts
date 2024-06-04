@@ -20,7 +20,6 @@ export class MenuManagerService {
             newMenu.create({
                 menuName: body.menuName,
                 createdBy: body.createdBy,
-                updatedBy: body.updatedBy,
             });
         }
         await this.menuService.save(newMenu);

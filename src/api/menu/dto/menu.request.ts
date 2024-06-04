@@ -12,10 +12,10 @@ export class CreateMenuRequestBodyDTO {
     @IsString()
     createdBy: string;
 
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    updatedBy: string;
+    // @ApiProperty()
+    // @IsOptional()
+    // @IsString()
+    // updatedBy: string;
 }
 
 export class UpdateMenuRequestBodyDTO {

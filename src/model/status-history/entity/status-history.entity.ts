@@ -1,4 +1,10 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('status-history')
 export class StatusHistoryEntity {
@@ -22,5 +28,4 @@ export class StatusHistoryEntity {
         nullable: true,
     })
     updatedBy: string;
-
 }

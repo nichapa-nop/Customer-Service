@@ -8,6 +8,8 @@ import {
 import { TicketResponseBodyDTO } from 'src/api/ticket/dto/ticket.response';
 import { AccountService } from 'src/model/account/account.service';
 import { AccountEntity } from 'src/model/account/entities/account.entity';
+import { TicketCommentEntity } from 'src/model/ticket-comment/entities/ticket-comment.entity';
+import { TicketCommentService } from 'src/model/ticket-comment/ticket-comment.service';
 import { TicketIdService } from 'src/model/ticket-id/ticket-id.service';
 import { TicketEntity, TicketStatus } from 'src/model/ticket/entities/ticket.entity';
 import { TicketService } from 'src/model/ticket/ticket.service';
@@ -17,7 +19,8 @@ export class TicketManagerService {
     constructor(
         private readonly ticketService: TicketService,
         private readonly genTicketIdService: TicketIdService, // private readonly ticketIdEntity: TicketIdEntity
-        private readonly accountService: AccountService
+        private readonly accountService: AccountService,
+        private readonly ticketCommentService: TicketCommentService
     ) {}
 
     public async createNewTicket(body: CreateTicketRequestBodyDTO): Promise<TicketResponseBodyDTO> {
@@ -45,6 +48,8 @@ export class TicketManagerService {
             businessImpact: body.businessImpact,
             feedbackCh: body.feedbackCh,
             ticketLink: body.ticketLink,
+            topic: body.topic,
+            description: body.description,
         });
         let ticket = await this.ticketService.save(newTicket);
         await this.genTicketIdService.save(currentcount);
@@ -82,23 +87,35 @@ export class TicketManagerService {
         if (!currentTicket) {
             throw new BadRequestException('Ticket ID was incorrect or it does not exist.');
         }
-
-        let assignedAccount = await this.accountService.getByUuid(body.assignTo);
-        let assignAccountEntity: AccountEntity;
-        if (body.assignTo) {
+        if (currentTicket.assignAccount) {
+            let assignedAccount = await this.accountService.getByUuid(body.assignTo);
             if (!assignedAccount) {
-                throw new BadRequestException('Assign account uuid was invalid');
+                throw new BadRequestException('Assign account uuid was invalid.');
             }
-            assignAccountEntity = assignedAccount;
+            // let newTicketComment = new TicketCommentEntity();
+            // newTicketComment.comment = body.ticketComment;
+            // newTicketComment.ticket = currentTicket;
+            if (body.comment) {
+                let newComment = new TicketCommentEntity({
+                    accountOwner: currentTicket.assignAccount,
+                    comment: body.comment,
+                });
+                currentTicket.ticketComments.push(newComment);
+            }
+            currentTicket.assignedAt = new Date(Date.now());
+            let updatedTicket = await this.ticketService.save(currentTicket);
+            return updatedTicket.toResponse();
+        }
+        if (body.assignTo) {
+            let assignedAccount = await this.accountService.getByUuid(body.assignTo);
+            if (!assignedAccount) {
+                throw new BadRequestException('Assign account uuid was invalid.');
+            }
             currentTicket.status = TicketStatus.IN_PROGRESS;
             currentTicket.assignedAt = new Date(Date.now());
-            return await this.ticketService.save(currentTicket);
+            let updatedTicket = await this.ticketService.save(currentTicket);
+            return updatedTicket.toResponse();
         }
-
-        // if (param.status === TicketStatus.CLOSED) {
-        //     currentTicket.status = TicketStatus.CLOSED;
-        //     return await this.ticketService.save(currentTicket);
-        // }
     }
 
     public async closeTicket(param: TicketRequestParamDTO, body: CloseTicketRequestBodyDTO) {
