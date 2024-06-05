@@ -1,4 +1,5 @@
 import { AccountEntity } from 'src/model/account/entities/account.entity';
+import { StatusHistoryEntity } from 'src/model/status-history/entity/status-history.entity';
 import { TicketCommentEntity } from 'src/model/ticket-comment/entities/ticket-comment.entity';
 import { TicketResponse } from 'src/utils/utils.response.dto';
 import {
@@ -55,6 +56,7 @@ export class TicketEntity {
 
     @Column({
         type: 'varchar',
+        unique: true,
     })
     ticketId: string;
 
@@ -141,10 +143,13 @@ export class TicketEntity {
     })
     assignedBy: string;
 
-    @OneToMany(() => TicketCommentEntity, (ticketComment) => ticketComment.ticket, {
+    @OneToMany(() => TicketCommentEntity, (ticketComments) => ticketComments.ticket, {
         cascade: true,
     })
     ticketComments: Relation<TicketCommentEntity[]>;
+
+    @OneToMany(() => StatusHistoryEntity, (statusHistory) => statusHistory.ticket)
+    statusHistory: Relation<StatusHistoryEntity[]>;
 
     public toResponse(): TicketResponse {
         return {

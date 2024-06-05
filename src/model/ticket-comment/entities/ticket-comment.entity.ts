@@ -40,7 +40,7 @@ export class TicketCommentEntity {
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
     })
-    @JoinColumn({ name: 'ticketId' })
+    @JoinColumn({ name: 'ticketId', referencedColumnName: 'ticketId' })
     ticket: Relation<TicketEntity>;
 
     @ManyToOne(() => AccountEntity, (account) => account.ticketComments, {

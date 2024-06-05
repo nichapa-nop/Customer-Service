@@ -1,8 +1,12 @@
+import { TicketEntity } from 'src/model/ticket/entities/ticket.entity';
 import {
     Column,
     CreateDateColumn,
     Entity,
+    JoinColumn,
+    ManyToOne,
     PrimaryGeneratedColumn,
+    Relation,
     UpdateDateColumn,
 } from 'typeorm';
 
@@ -20,12 +24,17 @@ export class StatusHistoryEntity {
     })
     createdBy: string;
 
-    @UpdateDateColumn({ type: 'timestamp' })
-    updatedAt: Date;
+    @Column({
+        type: 'varchar',
+    })
+    currentStatus: string;
 
     @Column({
         type: 'varchar',
-        nullable: true,
     })
-    updatedBy: string;
+    beforeStatus: string;
+
+    @ManyToOne(() => TicketEntity, (ticket) => ticket.statusHistory)
+    @JoinColumn({ name: 'ticketId', referencedColumnName: 'ticketId' })
+    ticket: Relation<TicketEntity>;
 }

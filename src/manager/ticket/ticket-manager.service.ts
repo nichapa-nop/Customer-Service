@@ -8,6 +8,8 @@ import {
 import { TicketResponseBodyDTO } from 'src/api/ticket/dto/ticket.response';
 import { AccountService } from 'src/model/account/account.service';
 import { AccountEntity } from 'src/model/account/entities/account.entity';
+import { StatusHistoryEntity } from 'src/model/status-history/entity/status-history.entity';
+import { StatusHistoryService } from 'src/model/status-history/status-history.service';
 import { TicketCommentEntity } from 'src/model/ticket-comment/entities/ticket-comment.entity';
 import { TicketCommentService } from 'src/model/ticket-comment/ticket-comment.service';
 import { TicketIdService } from 'src/model/ticket-id/ticket-id.service';
@@ -20,7 +22,8 @@ export class TicketManagerService {
         private readonly ticketService: TicketService,
         private readonly genTicketIdService: TicketIdService, // private readonly ticketIdEntity: TicketIdEntity
         private readonly accountService: AccountService,
-        private readonly ticketCommentService: TicketCommentService
+        private readonly ticketCommentService: TicketCommentService,
+        private readonly statusHistoryService: StatusHistoryService
     ) {}
 
     public async createNewTicket(body: CreateTicketRequestBodyDTO): Promise<TicketResponseBodyDTO> {
@@ -37,6 +40,8 @@ export class TicketManagerService {
             }
             assignAccountEntity = assignedAccount;
             ticketStatus = TicketStatus.IN_PROGRESS;
+            // let statusHistory = new StatusHistoryEntity();
+            // statusHistory.currentStatus = TicketStatus.IN_PROGRESS.toString();
             newTicket.assignedAt = new Date(Date.now());
         }
         newTicket.create({
@@ -104,7 +109,7 @@ export class TicketManagerService {
             }
             currentTicket.assignedAt = new Date(Date.now());
             let updatedTicket = await this.ticketService.save(currentTicket);
-            return updatedTicket.toResponse();
+            // return updatedTicket.toResponse();
         }
         if (body.assignTo) {
             let assignedAccount = await this.accountService.getByUuid(body.assignTo);
@@ -113,6 +118,7 @@ export class TicketManagerService {
             }
             currentTicket.status = TicketStatus.IN_PROGRESS;
             currentTicket.assignedAt = new Date(Date.now());
+            currentTicket.assignAccount = assignedAccount;
             let updatedTicket = await this.ticketService.save(currentTicket);
             return updatedTicket.toResponse();
         }
