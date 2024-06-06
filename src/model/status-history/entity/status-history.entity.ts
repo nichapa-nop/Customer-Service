@@ -1,4 +1,5 @@
 import { TicketEntity } from 'src/model/ticket/entities/ticket.entity';
+import { TicketStatus } from 'src/utils/utils.enum';
 import {
     Column,
     CreateDateColumn,
@@ -7,7 +8,6 @@ import {
     ManyToOne,
     PrimaryGeneratedColumn,
     Relation,
-    UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('status-history')
@@ -25,14 +25,16 @@ export class StatusHistoryEntity {
     createdBy: string;
 
     @Column({
-        type: 'varchar',
+        type: 'enum',
+        enum: TicketStatus,
     })
-    currentStatus: string;
+    currentStatus: TicketStatus;
 
     @Column({
-        type: 'varchar',
+        type: 'enum',
+        enum: TicketStatus,
     })
-    beforeStatus: string;
+    previousStatus: TicketStatus;
 
     @ManyToOne(() => TicketEntity, (ticket) => ticket.statusHistory)
     @JoinColumn({ name: 'ticketId', referencedColumnName: 'ticketId' })

@@ -1,6 +1,7 @@
 import { AccountEntity } from 'src/model/account/entities/account.entity';
 import { StatusHistoryEntity } from 'src/model/status-history/entity/status-history.entity';
 import { TicketCommentEntity } from 'src/model/ticket-comment/entities/ticket-comment.entity';
+import { TicketStatus } from 'src/utils/utils.enum';
 import { TicketResponse } from 'src/utils/utils.response.dto';
 import {
     Column,
@@ -13,13 +14,6 @@ import {
     Relation,
     UpdateDateColumn,
 } from 'typeorm';
-
-export enum TicketStatus {
-    OPEN = 'open',
-    IN_PROGRESS = 'in progress',
-    CLOSED = 'closed',
-    DELETED = 'deleted',
-}
 
 export enum Platform {
     CDD = 'cdd',
@@ -171,7 +165,7 @@ export class TicketEntity {
     }
 
     public create(params: CreateTicketParams) {
-        this.ticketId = params.ticketId;
+        // this.ticketId = params.ticketId;
         this.status = params.status;
         this.assignAccount = params.assignTo;
         this.platform = params.platform;
@@ -184,7 +178,7 @@ export class TicketEntity {
     }
 
     public update(params: UpdateTicketParams) {
-        this.status = params.status;
+        // this.status = params.status;
         this.assignAccount = params.assignTo;
         this.platform = params.platform;
         this.incidentType = params.incidentType;
@@ -197,27 +191,26 @@ export class TicketEntity {
 }
 
 export interface CreateTicketParams {
-    ticketId: string;
-    // status: TicketStatus;
+    // ticketId: string;
+    status: TicketStatus;
     assignTo?: AccountEntity;
     platform: Platform;
     incidentType: IncidentType;
     businessImpact: BusinessImpact;
     feedbackCh: FeedbackCh;
     ticketLink: string;
-    status: TicketStatus;
     topic: string;
     description: string;
 }
 
 export interface UpdateTicketParams {
-    status: TicketStatus;
-    assignTo: AccountEntity;
-    platform: Platform;
-    incidentType: IncidentType;
-    businessImpact: BusinessImpact;
-    feedbackCh: FeedbackCh;
-    ticketLink: string;
-    topic: string;
-    description: string;
+    // status: TicketStatus;
+    assignTo?: AccountEntity;
+    platform?: Platform;
+    incidentType?: IncidentType;
+    businessImpact?: BusinessImpact;
+    feedbackCh?: FeedbackCh;
+    ticketLink?: string;
+    topic?: string;
+    description?: string;
 }

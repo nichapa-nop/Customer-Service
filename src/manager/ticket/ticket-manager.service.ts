@@ -11,18 +11,17 @@ import { AccountEntity } from 'src/model/account/entities/account.entity';
 import { StatusHistoryEntity } from 'src/model/status-history/entity/status-history.entity';
 import { StatusHistoryService } from 'src/model/status-history/status-history.service';
 import { TicketCommentEntity } from 'src/model/ticket-comment/entities/ticket-comment.entity';
-import { TicketCommentService } from 'src/model/ticket-comment/ticket-comment.service';
 import { TicketIdService } from 'src/model/ticket-id/ticket-id.service';
-import { TicketEntity, TicketStatus } from 'src/model/ticket/entities/ticket.entity';
+import { TicketEntity } from 'src/model/ticket/entities/ticket.entity';
 import { TicketService } from 'src/model/ticket/ticket.service';
+import { TicketStatus } from 'src/utils/utils.enum';
 
 @Injectable()
 export class TicketManagerService {
     constructor(
         private readonly ticketService: TicketService,
         private readonly genTicketIdService: TicketIdService, // private readonly ticketIdEntity: TicketIdEntity
-        private readonly accountService: AccountService,
-        private readonly ticketCommentService: TicketCommentService,
+        private readonly accountService: AccountService, // private readonly ticketCommentService: TicketCommentService,
         private readonly statusHistoryService: StatusHistoryService
     ) {}
 
@@ -33,6 +32,9 @@ export class TicketManagerService {
         let generateTicketId = this.ticketService.generateTicketId(currentcount.count);
         let assignAccountEntity: AccountEntity;
         let ticketStatus = TicketStatus.OPEN;
+        let statusHistory = new StatusHistoryEntity();
+        statusHistory.currentStatus = ticketStatus;
+        await this.statusHistoryService.save(statusHistory);
         if (body.assignTo) {
             let assignedAccount = await this.accountService.getByUuid(body.assignTo);
             if (!assignedAccount) {
@@ -44,8 +46,9 @@ export class TicketManagerService {
             // statusHistory.currentStatus = TicketStatus.IN_PROGRESS.toString();
             newTicket.assignedAt = new Date(Date.now());
         }
+        newTicket.ticketId = generateTicketId;
         newTicket.create({
-            ticketId: generateTicketId,
+            // ticketId: generateTicketId,
             status: ticketStatus,
             assignTo: assignAccountEntity,
             platform: body.platform,
@@ -56,6 +59,11 @@ export class TicketManagerService {
             topic: body.topic,
             description: body.description,
         });
+        if (newTicket.status !== null) {
+            let statusHistory = new StatusHistoryEntity();
+            statusHistory.currentStatus = newTicket.status;
+            await this.statusHistoryService.save(statusHistory);
+        }
         let ticket = await this.ticketService.save(newTicket);
         await this.genTicketIdService.save(currentcount);
 
@@ -88,40 +96,58 @@ export class TicketManagerService {
     }
 
     public async updateTicket(param: TicketRequestParamDTO, body: UpdateTicketRequestBodyDTO) {
-        let currentTicket = await this.ticketService.getByTicketId(param.ticketId);
+        let currentTicket = await this.ticketService.getByTicketId(param.ticketId); //check ticket ID ว่ามีมั้ย
         if (!currentTicket) {
+            //ticket ID not found.
             throw new BadRequestException('Ticket ID was incorrect or it does not exist.');
         }
         if (currentTicket.assignAccount) {
-            let assignedAccount = await this.accountService.getByUuid(body.assignTo);
+            //ticket เคย assign to
+            let assignedAccount = await this.accountService.getByUuid(body.assignTo); //check assign to ที่รับมากจาก body
             if (!assignedAccount) {
+                //account not found.
                 throw new BadRequestException('Assign account uuid was invalid.');
             }
-            // let newTicketComment = new TicketCommentEntity();
-            // newTicketComment.comment = body.ticketComment;
-            // newTicketComment.ticket = currentTicket;
+
             if (body.comment) {
+                //ถ้ามี comment
                 let newComment = new TicketCommentEntity({
                     accountOwner: currentTicket.assignAccount,
                     comment: body.comment,
                 });
-                currentTicket.ticketComments.push(newComment);
+                currentTicket.ticketComments.push(newComment); //push comment เข้า db
             }
+
             currentTicket.assignedAt = new Date(Date.now());
-            let updatedTicket = await this.ticketService.save(currentTicket);
+            // let updatedTicket = await this.ticketService.save(currentTicket);	//save ticket
             // return updatedTicket.toResponse();
         }
-        if (body.assignTo) {
-            let assignedAccount = await this.accountService.getByUuid(body.assignTo);
-            if (!assignedAccount) {
-                throw new BadRequestException('Assign account uuid was invalid.');
-            }
-            currentTicket.status = TicketStatus.IN_PROGRESS;
-            currentTicket.assignedAt = new Date(Date.now());
-            currentTicket.assignAccount = assignedAccount;
-            let updatedTicket = await this.ticketService.save(currentTicket);
-            return updatedTicket.toResponse();
+        //check ทำหยัง?
+        let assignedAccount = await this.accountService.getByUuid(body.assignTo); //check uuid
+        if (!assignedAccount) {
+            //not found
+            throw new BadRequestException('Assign account uuid was invalid.');
         }
+        currentTicket.status = TicketStatus.IN_PROGRESS; //change status to "in progress"
+        currentTicket.assignedAt = new Date(Date.now());
+        currentTicket.assignAccount = assignedAccount; //change assigned account to new account.
+        currentTicket.update({
+            // status: currentTicket.status,
+            assignTo: assignedAccount,
+            platform: body.platform,
+            incidentType: body.incidentType,
+            businessImpact: body.businessImpact,
+            feedbackCh: body.feedbackCh,
+            ticketLink: body.ticketLink,
+            topic: body.topic,
+            description: body.description,
+        });
+        if (assignedAccount === currentTicket.assignAccount) {
+            throw new BadRequestException('This ticket cannot be assigned to this user.');
+        }
+
+        let updatedTicket = await this.ticketService.save(currentTicket); //save ticket
+        return updatedTicket.toResponse(); //response
     }
 
     public async closeTicket(param: TicketRequestParamDTO, body: CloseTicketRequestBodyDTO) {

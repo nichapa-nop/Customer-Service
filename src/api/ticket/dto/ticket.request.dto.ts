@@ -1,19 +1,20 @@
 import { Optional } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDefined, IsEnum, IsOptional, IsString, IsUUID, isEnum, isString } from 'class-validator';
+import { platform } from 'os';
 import {
     BusinessImpact,
     FeedbackCh,
     IncidentType,
     Platform,
-    TicketStatus,
 } from 'src/model/ticket/entities/ticket.entity';
+import { TicketStatus } from 'src/utils/utils.enum';
 
 export class CreateTicketRequestBodyDTO {
-    @ApiProperty()
-    @IsDefined()
-    @IsString()
-    ticketId: string;
+    // @ApiProperty()
+    // @IsDefined()
+    // @IsString()
+    // ticketId: string;
 
     // @ApiProperty()
     // @IsDefined()
@@ -78,6 +79,46 @@ export class UpdateTicketRequestBodyDTO {
     @IsDefined()
     @IsString()
     comment: string;
+
+    // @ApiProperty()
+    // @IsOptional()
+    // @IsEnum(TicketStatus)
+    // status: TicketStatus;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsEnum(Platform)
+    platform: Platform;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsEnum(IncidentType)
+    incidentType: IncidentType;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsEnum(BusinessImpact)
+    businessImpact: BusinessImpact;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsEnum(FeedbackCh)
+    feedbackCh: FeedbackCh;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    ticketLink: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    topic: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    description: string;
 }
 
 export class CloseTicketRequestBodyDTO {

@@ -5,8 +5,8 @@ import {
     FeedbackCh,
     IncidentType,
     Platform,
-    TicketStatus,
 } from 'src/model/ticket/entities/ticket.entity';
+import { TicketStatus } from './utils.enum';
 
 export class AccountResponse {
     @ApiProperty()
@@ -122,7 +122,7 @@ export class TicketResponse {
     @ApiProperty()
     ticketId: string;
 
-    @ApiProperty()
+    @ApiProperty({ enum: TicketStatus })
     status: TicketStatus;
 
     @ApiProperty()
