@@ -32,9 +32,8 @@ export class TicketManagerService {
         let generateTicketId = this.ticketService.generateTicketId(currentcount.count);
         let assignAccountEntity: AccountEntity;
         let ticketStatus = TicketStatus.OPEN;
-        let statusHistory = new StatusHistoryEntity();
-        statusHistory.currentStatus = ticketStatus;
-        await this.statusHistoryService.save(statusHistory);
+        // let statusHistory = new StatusHistoryEntity();
+
         if (body.assignTo) {
             let assignedAccount = await this.accountService.getByUuid(body.assignTo);
             if (!assignedAccount) {
@@ -42,8 +41,6 @@ export class TicketManagerService {
             }
             assignAccountEntity = assignedAccount;
             ticketStatus = TicketStatus.IN_PROGRESS;
-            // let statusHistory = new StatusHistoryEntity();
-            // statusHistory.currentStatus = TicketStatus.IN_PROGRESS.toString();
             newTicket.assignedAt = new Date(Date.now());
         }
         newTicket.ticketId = generateTicketId;
@@ -59,14 +56,16 @@ export class TicketManagerService {
             topic: body.topic,
             description: body.description,
         });
-        if (newTicket.status !== null) {
-            let statusHistory = new StatusHistoryEntity();
-            statusHistory.currentStatus = newTicket.status;
-            await this.statusHistoryService.save(statusHistory);
-        }
+
+        // statusHistory.ticket = generateTicketId;
+
         let ticket = await this.ticketService.save(newTicket);
         await this.genTicketIdService.save(currentcount);
-
+        let statusHistory = new StatusHistoryEntity({
+            currentStatus: ticketStatus,
+            ticket: ticket,
+        });
+        await this.statusHistoryService.save(statusHistory);
         return { ticketDetail: ticket.toResponse() };
     }
 
@@ -97,10 +96,17 @@ export class TicketManagerService {
 
     public async updateTicket(param: TicketRequestParamDTO, body: UpdateTicketRequestBodyDTO) {
         let currentTicket = await this.ticketService.getByTicketId(param.ticketId); //check ticket ID ว่ามีมั้ย
+        let statusHistory = new StatusHistoryEntity();
+
         if (!currentTicket) {
             //ticket ID not found.
             throw new BadRequestException('Ticket ID was incorrect or it does not exist.');
         }
+        if (currentTicket.status !== null) {
+            statusHistory.previousStatus = currentTicket.status;
+        }
+        console.log(currentTicket.status);
+        console.log(statusHistory.previousStatus);
         if (currentTicket.assignAccount) {
             //ticket เคย assign to
             let assignedAccount = await this.accountService.getByUuid(body.assignTo); //check assign to ที่รับมากจาก body
@@ -130,6 +136,9 @@ export class TicketManagerService {
         }
         currentTicket.status = TicketStatus.IN_PROGRESS; //change status to "in progress"
         currentTicket.assignedAt = new Date(Date.now());
+        if (assignedAccount === currentTicket.assignAccount) {
+            throw new BadRequestException('This ticket cannot be assigned to this user.');
+        }
         currentTicket.assignAccount = assignedAccount; //change assigned account to new account.
         currentTicket.update({
             // status: currentTicket.status,
@@ -142,11 +151,15 @@ export class TicketManagerService {
             topic: body.topic,
             description: body.description,
         });
-        if (assignedAccount === currentTicket.assignAccount) {
-            throw new BadRequestException('This ticket cannot be assigned to this user.');
-        }
 
         let updatedTicket = await this.ticketService.save(currentTicket); //save ticket
+        statusHistory.currentStatus = currentTicket.status;
+        console.log(statusHistory.currentStatus);
+        statusHistory.ticket = updatedTicket;
+        if (statusHistory.currentStatus !== statusHistory.previousStatus) {
+            await this.statusHistoryService.save(statusHistory);
+        }
+
         return updatedTicket.toResponse(); //response
     }
 
@@ -155,6 +168,8 @@ export class TicketManagerService {
         if (!currentTicket) {
             throw new BadRequestException('Ticket ID was incorrect or it does not exist.');
         }
+        let statusHistory = new StatusHistoryEntity();
+        statusHistory.previousStatus = currentTicket.status;
         if (currentTicket.status !== TicketStatus.IN_PROGRESS) {
             if (currentTicket.status === TicketStatus.CLOSED) {
                 throw new BadRequestException('Ticket is already closed.');
@@ -163,7 +178,10 @@ export class TicketManagerService {
         }
         if (body.status === TicketStatus.CLOSED) {
             currentTicket.status = TicketStatus.CLOSED;
-            return await this.ticketService.save(currentTicket);
         }
+        statusHistory.currentStatus = currentTicket.status;
+        statusHistory.ticket = currentTicket;
+        await this.statusHistoryService.save(statusHistory);
+        return await this.ticketService.save(currentTicket);
     }
 }
