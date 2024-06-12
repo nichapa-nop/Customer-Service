@@ -3,11 +3,12 @@ import { ApiModule } from './api/api.module';
 import { DataStoreModule } from './store/store.module';
 import configService from './config/config.service';
 import { AuthenticationMiddleware } from './middleware/authentication/authentication.middleware';
+import { AccountModule } from './model/account/account.module';
 
 process.env.CLIENT_ID = configService.getConfig().clientId;
 
 @Module({
-    imports: [ApiModule, DataStoreModule],
+    imports: [ApiModule, DataStoreModule, AccountModule],
     providers: [
         {
             provide: 'CLIENT_ID',

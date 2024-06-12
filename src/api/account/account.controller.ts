@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Res } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    HttpCode,
+    Param,
+    Patch,
+    Post,
+    Put,
+    Req,
+    Res,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AccountManagerService } from 'src/manager/account/account-manager.service';
 import {
@@ -19,6 +31,7 @@ import {
 } from './dto/account.response.dto';
 import configService from 'src/config/config.service';
 import { Response } from 'express';
+import { RequestWithAccount } from 'src/utils/utils.interface';
 
 @ApiTags('Account Management')
 @Controller()
@@ -28,7 +41,9 @@ export class AccountApiController {
     @Post('/v1/account')
     @HttpCode(200)
     @ApiResponse({ type: AccountResponseBodyDTO })
-    public async createAccount(@Body() body: CreateAccountRequestBodyDTO): Promise<AccountResponseBodyDTO> {
+    public async createAccount(
+        @Body() body: CreateAccountRequestBodyDTO
+    ): Promise<AccountResponseBodyDTO> {
         return await this.accountManagerservice.createNewAccount(body);
     }
 
@@ -36,7 +51,8 @@ export class AccountApiController {
     @HttpCode(200)
     @ApiResponse({ type: GetAccountListResponseBodyDTO })
     @ApiBearerAuth()
-    public async getAllAccount() {
+    public async getAllAccount(@Req() req: RequestWithAccount) {
+        console.log(req.reqAccount);
         return await this.accountManagerservice.getAllAccount();
     }
 
@@ -81,7 +97,9 @@ export class AccountApiController {
 
         console.log(response);
         const expires = new Date();
-        expires.setMilliseconds(expires.getMilliseconds() + configService.getConfig().jwtExpiration);
+        expires.setMilliseconds(
+            expires.getMilliseconds() + configService.getConfig().jwtExpiration
+        );
         res.status(200)
             .cookie('access-token', response.accessToken, {
                 secure: true,
