@@ -12,8 +12,8 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     app.useGlobalPipes(new ValidationPipe({ transform: true }));
     const apiDocs = new DocumentBuilder()
-        .setTitle('NestJS Template API Documents') // Change This
-        .setDescription('This is a example for NestJS Template') // Change This
+        .setTitle('Customer Service') // Change This
+        .setDescription('  ') // Change This
         .addServer(configService.getConfig().serverEndpoint)
         .addBearerAuth({
             description: `Please enter the authentication token`,

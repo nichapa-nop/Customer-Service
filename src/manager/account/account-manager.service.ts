@@ -30,6 +30,7 @@ import { SendMailService } from 'src/service/mailer/mailer.service';
 import { generateRandomString } from 'src/utils/utils.function';
 import { v4 as uuidV4 } from 'uuid';
 import { RoleService } from 'src/model/role/role.service';
+import { RequestWithAccount } from 'src/utils/utils.interface';
 
 @Injectable()
 export class AccountManagerService {
@@ -42,8 +43,10 @@ export class AccountManagerService {
     ) {}
 
     public async createNewAccount(
-        body: CreateAccountRequestBodyDTO
+        body: CreateAccountRequestBodyDTO,
+        req: RequestWithAccount
     ): Promise<AccountResponseBodyDTO> {
+        console.log('Received reqAccount:', req.reqAccount);
         let newAccount = new AccountEntity();
         let email = await this.accountService.getByEmail(body.email);
         if (!email) {
@@ -55,9 +58,10 @@ export class AccountManagerService {
                 phoneNum: body.phoneNum,
                 companyName: body.companyName,
                 type: body.type,
-                createdBy: body.createdBy,
+                createdBy: req.reqAccount.uuid,
                 verifyToken: uuidV4(),
             });
+
             let role = await this.roleService.getByName('user'); // Adjust the role name as needed
             newAccount.role = role; // Assign the role to the account
             // newAccount.role = [];
@@ -95,7 +99,8 @@ export class AccountManagerService {
 
     public async updateAccount(
         param: AccountRequestParamDTO,
-        body: UpdateAccountRequestBodyDTO
+        body: UpdateAccountRequestBodyDTO,
+        req: RequestWithAccount
     ): Promise<UpdateAccountResponseBodyDTO> {
         let currentAccount = await this.accountService.getByUuid(param.uuid);
         if (!currentAccount) {
@@ -107,8 +112,11 @@ export class AccountManagerService {
                 email: body.email,
                 phoneNum: body.phoneNum,
                 type: body.type,
-                updatedBy: body.updatedBy,
+                // updatedBy: req.reqAccount.uuid,
             });
+            currentAccount.updatedBy = req.reqAccount.uuid;
+            console.log(req.reqAccount.uuid);
+            await this.accountService.save(currentAccount);
             return {
                 updateAccountDetail: currentAccount.toResponse(),
             };
@@ -161,6 +169,7 @@ export class AccountManagerService {
                 subject: 'Temporary Password',
                 text: `Your Account is Activate!\nYour temporary password: ${generatedPassword}`,
             });
+
             return await this.accountService.save(currentToken);
         }
     }

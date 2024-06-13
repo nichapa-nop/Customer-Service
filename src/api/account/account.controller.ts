@@ -41,10 +41,12 @@ export class AccountApiController {
     @Post('/v1/account')
     @HttpCode(200)
     @ApiResponse({ type: AccountResponseBodyDTO })
+    @ApiBearerAuth()
     public async createAccount(
-        @Body() body: CreateAccountRequestBodyDTO
+        @Body() body: CreateAccountRequestBodyDTO,
+        @Req() req: RequestWithAccount
     ): Promise<AccountResponseBodyDTO> {
-        return await this.accountManagerservice.createNewAccount(body);
+        return await this.accountManagerservice.createNewAccount(body, req);
     }
 
     @Get('/v1/account')
@@ -70,9 +72,10 @@ export class AccountApiController {
     @ApiBearerAuth()
     public async updateAccount(
         @Param() param: AccountRequestParamDTO,
-        @Body() body: UpdateAccountRequestBodyDTO
+        @Body() body: UpdateAccountRequestBodyDTO,
+        @Req() req: RequestWithAccount
     ): Promise<UpdateAccountResponseBodyDTO> {
-        return await this.accountManagerservice.updateAccount(param, body);
+        return await this.accountManagerservice.updateAccount(param, body, req);
     }
 
     @Delete('/v1/account/:uuid')

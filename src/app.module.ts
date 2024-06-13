@@ -27,7 +27,7 @@ export class AppModule implements NestModule {
             .exclude(
                 { path: '/v1/verify-email/:verifyToken', method: RequestMethod.GET },
                 { path: '/v1/login', method: RequestMethod.POST },
-                { path: '/v1/account', method: RequestMethod.POST },
+                // { path: '/v1/account', method: RequestMethod.POST },
                 { path: '/v1/reset-password', method: RequestMethod.POST },
                 { path: '/v1/reset-password/:token', method: RequestMethod.PUT }
             )
