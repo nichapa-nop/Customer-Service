@@ -222,4 +222,25 @@ export class AccountManagerService {
         await this.resetPasswordService.save(currentToken);
         return await this.accountService.save(currentAccount);
     }
+
+    public async disableAndEnableAccount(param: AccountRequestParamDTO, req: RequestWithAccount) {
+        let currentAccount = await this.accountService.getByUuid(param.uuid);
+        if (!currentAccount) {
+            throw new BadRequestException('Account was incorrect or it does not exist.');
+        }
+        if (currentAccount.status === AccountStatus.VERIFIED) {
+            currentAccount.status = AccountStatus.DISABLED;
+            console.log(currentAccount.status);
+
+            // await this.accountService.save(currentAccount);
+        } else if (currentAccount.status === AccountStatus.DISABLED) {
+            currentAccount.status = AccountStatus.VERIFIED;
+        }
+        console.log(currentAccount.status);
+        currentAccount.updatedBy = req.reqAccount.uuid;
+
+        return await this.accountService.save(currentAccount);
+    }
+
+    public async recoveryAccount() {}
 }

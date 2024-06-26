@@ -72,7 +72,7 @@ export class AccountEntity {
 
     @Column({
         type: 'varchar',
-        nullable: true,
+        // nullable: true,
     })
     createdBy: string;
 

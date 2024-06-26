@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Req } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TicketManagerService } from 'src/manager/ticket/ticket-manager.service';
 import {
@@ -8,6 +8,7 @@ import {
     UpdateTicketRequestBodyDTO,
 } from './dto/ticket.request.dto';
 import { GetTicketListResponseBodyDTO, TicketResponseBodyDTO } from './dto/ticket.response';
+import { RequestWithAccount } from 'src/utils/utils.interface';
 
 @ApiTags('Ticket Management')
 @Controller()
@@ -18,8 +19,11 @@ export class TicketApiController {
     @Post('/v1/ticket')
     @HttpCode(200)
     @ApiResponse({ type: TicketResponseBodyDTO })
-    public async createTicket(@Body() body: CreateTicketRequestBodyDTO) {
-        return await this.ticketManagerService.createNewTicket(body);
+    public async createTicket(
+        @Body() body: CreateTicketRequestBodyDTO,
+        @Req() req: RequestWithAccount
+    ) {
+        return await this.ticketManagerService.createNewTicket(body, req);
     }
 
     @Get('/v1/ticket')
@@ -39,23 +43,28 @@ export class TicketApiController {
     @HttpCode(200)
     public async updateTicket(
         @Param() param: TicketRequestParamDTO,
-        @Body() body: UpdateTicketRequestBodyDTO
+        @Body() body: UpdateTicketRequestBodyDTO,
+        @Req() req: RequestWithAccount
     ) {
-        return await this.ticketManagerService.updateTicket(param, body);
+        return await this.ticketManagerService.updateTicket(param, body, req);
     }
 
     @Put('/v1/closeticket/:ticketId')
     @HttpCode(200)
     public async closeTicket(
         @Param() param: TicketRequestParamDTO,
-        @Body() body: CloseTicketRequestBodyDTO
+        @Body() body: CloseTicketRequestBodyDTO,
+        @Req() req: RequestWithAccount
     ) {
-        return await this.ticketManagerService.closeTicket(param, body);
+        return await this.ticketManagerService.closeTicket(param, body, req);
     }
 
     @Delete('/v1/ticket/:ticketId')
     @HttpCode(200)
-    public async deleteTicket(@Param() param: TicketRequestParamDTO) {
-        return await this.ticketManagerService.deleteTicket(param);
+    public async deleteTicket(
+        @Param() param: TicketRequestParamDTO,
+        @Req() req: RequestWithAccount
+    ) {
+        return await this.ticketManagerService.deleteTicket(param, req);
     }
 }

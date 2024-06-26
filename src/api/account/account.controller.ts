@@ -130,4 +130,15 @@ export class AccountApiController {
     ) {
         return await this.accountManagerservice.resetPassword(param.token, body);
     }
+
+    @Put('/v1/disableAndEnable-account/:uuid')
+    @HttpCode(200)
+    @ApiOkResponse()
+    @ApiBearerAuth()
+    public async disableEnableAccount(
+        @Param() param: AccountRequestParamDTO,
+        @Req() req: RequestWithAccount
+    ) {
+        return await this.accountManagerservice.disableAndEnableAccount(param, req);
+    }
 }
