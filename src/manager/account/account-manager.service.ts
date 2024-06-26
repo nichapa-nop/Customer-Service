@@ -128,7 +128,8 @@ export class AccountManagerService {
         if (!currentAccount) {
             throw new BadRequestException('Account was incorrect or it does not exist.');
         } else {
-            return await this.accountService.delete(param.uuid);
+            currentAccount.status = AccountStatus.DELETED;
+            return await this.accountService.save(currentAccount);
         }
     }
 
@@ -242,5 +243,26 @@ export class AccountManagerService {
         return await this.accountService.save(currentAccount);
     }
 
-    public async recoveryAccount() {}
+    public async recoveryAccount(param: AccountRequestParamDTO, req: RequestWithAccount) {
+        let currentAccount = await this.accountService.getByUuid(param.uuid);
+        if (!currentAccount) {
+            throw new BadRequestException('Account was incorrect or it does not exist.');
+        }
+        if (currentAccount.status !== AccountStatus.DELETED) {
+            throw new BadRequestException('Account cannot recovery.');
+        }
+        currentAccount.status = AccountStatus.NOT_VERIFY;
+        currentAccount.verifyToken = uuidV4();
+        currentAccount.updatedBy = req.reqAccount.uuid;
+        await this.accountService.save(currentAccount);
+        this.emailService.postMail({
+            to: currentAccount.email,
+            from: 'no-reply <noreply.testnoreply@gmail.com>',
+            subject: 'Please Verify Your Email',
+            text: `To verify your email please follow the url\n 
+                ${configService.getConfig().serverEndpoint}/v1/verify-email/${
+                currentAccount.verifyToken
+            }`,
+        });
+    }
 }

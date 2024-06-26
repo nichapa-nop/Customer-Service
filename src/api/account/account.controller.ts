@@ -141,4 +141,15 @@ export class AccountApiController {
     ) {
         return await this.accountManagerservice.disableAndEnableAccount(param, req);
     }
+
+    @Put('/v1/recovery-account/:uuid')
+    @HttpCode(200)
+    @ApiOkResponse()
+    @ApiBearerAuth()
+    public async recoveryAccount(
+        @Param() param: AccountRequestParamDTO,
+        @Req() req: RequestWithAccount
+    ) {
+        return await this.accountManagerservice.recoveryAccount(param, req);
+    }
 }
