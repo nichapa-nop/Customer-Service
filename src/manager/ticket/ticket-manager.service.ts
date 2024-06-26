@@ -38,6 +38,7 @@ export class TicketManagerService {
         let generateTicketId = this.ticketService.generateTicketId(currentcount.count);
         let assignAccountEntity: AccountEntity;
         let ticketStatus = TicketStatus.OPEN;
+
         // let statusHistory = new StatusHistoryEntity();
 
         if (body.assignTo) {
@@ -75,6 +76,7 @@ export class TicketManagerService {
             currentStatus: ticketStatus,
             ticket: ticket,
         });
+        statusHistory.createdBy = req.reqAccount.uuid;
 
         await this.statusHistoryService.save(statusHistory);
         return { ticketDetail: ticket.toResponse() };
@@ -113,6 +115,7 @@ export class TicketManagerService {
     ) {
         let currentTicket = await this.ticketService.getByTicketId(param.ticketId); //check ticket ID ว่ามีมั้ย
         let statusHistory = new StatusHistoryEntity();
+        statusHistory.createdBy = req.reqAccount.uuid;
 
         if (!currentTicket) {
             //ticket ID not found.
@@ -180,6 +183,8 @@ export class TicketManagerService {
 
         let updatedTicket = await this.ticketService.save(currentTicket); //save ticket
         statusHistory.currentStatus = currentTicket.status;
+        // statusHistory.createdBy = req.reqAccount.uuid;
+        console.log(statusHistory.createdBy);
         console.log(statusHistory.currentStatus);
         statusHistory.ticket = updatedTicket;
         if (statusHistory.currentStatus !== statusHistory.previousStatus) {
@@ -200,6 +205,8 @@ export class TicketManagerService {
         }
         let statusHistory = new StatusHistoryEntity();
         statusHistory.previousStatus = currentTicket.status;
+        statusHistory.createdBy = req.reqAccount.uuid;
+
         if (currentTicket.status !== TicketStatus.IN_PROGRESS) {
             if (currentTicket.status === TicketStatus.CLOSED) {
                 throw new BadRequestException('Ticket is already closed.');
