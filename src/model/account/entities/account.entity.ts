@@ -44,6 +44,16 @@ export class AccountEntity {
     })
     lastName: string;
 
+    // @Column({
+    //     type: 'varchar',
+    // })
+    // firstNameTh: string;
+
+    // @Column({
+    //     type: 'varchar',
+    // })
+    // lastNameTh: string;
+
     @Column({
         type: 'varchar',
     })
@@ -137,6 +147,8 @@ export class AccountEntity {
     public create(params: CreateAccountParams) {
         this.firstName = params.firstName;
         this.lastName = params.lastName;
+        // this.firstNameTh = params.firstNameTh;
+        // this.lastNameTh = params.lastNameTh;
         this.email = params.email;
         this.phoneNum = params.phoneNum;
         this.companyName = params.companyName;
@@ -152,6 +164,8 @@ export class AccountEntity {
     public update(params: UpdateAccountParams) {
         this.firstName = params.firstName;
         this.lastName = params.lastName;
+        // this.firstNameTh = params.firstNameTh;
+        // this.lastNameTh = params.lastNameTh;
         this.email = params.email;
         this.phoneNum = params.phoneNum;
         this.type = params.type;
@@ -162,6 +176,8 @@ export class AccountEntity {
 export interface CreateAccountParams {
     firstName: string;
     lastName: string;
+    // firstNameTh: string;
+    // lastNameTh: string;
     email: string;
     phoneNum: string;
     companyName: string;
@@ -173,6 +189,8 @@ export interface CreateAccountParams {
 export interface UpdateAccountParams {
     firstName: string;
     lastName: string;
+    // firstNameTh: string;
+    // lastNameTh: string;
     phoneNum: string;
     email: string;
     type: CompanyType;
