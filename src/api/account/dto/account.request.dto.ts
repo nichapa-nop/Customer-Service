@@ -15,6 +15,16 @@ export class CreateAccountRequestBodyDTO {
 
     @ApiProperty()
     @IsDefined()
+    @IsString()
+    firstNameTh: string;
+
+    @ApiProperty()
+    @IsDefined()
+    @IsString()
+    lastNameTh: string;
+
+    @ApiProperty()
+    @IsDefined()
     @IsEmail()
     email: string;
 
@@ -59,6 +69,16 @@ export class UpdateAccountRequestBodyDTO {
     @IsDefined()
     @IsString()
     lastName: string;
+
+    @ApiProperty()
+    @IsDefined()
+    @IsString()
+    firstNameTh: string;
+
+    @ApiProperty()
+    @IsDefined()
+    @IsString()
+    lastNameTh: string;
 
     @ApiProperty()
     @IsDefined()

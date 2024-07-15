@@ -19,6 +19,12 @@ export class AccountResponse {
     lastName: string;
 
     @ApiProperty()
+    firstNameTh: string;
+
+    @ApiProperty()
+    lastNameTh: string;
+
+    @ApiProperty()
     email: string;
 
     @ApiProperty()

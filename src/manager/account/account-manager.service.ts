@@ -53,6 +53,8 @@ export class AccountManagerService {
             newAccount.create({
                 firstName: body.firstName,
                 lastName: body.lastName,
+                firstNameTh: body.firstNameTh,
+                lastNameTh: body.lastNameTh,
                 email: body.email,
                 // password: await hash(body.password, 10),
                 phoneNum: body.phoneNum,
@@ -109,6 +111,8 @@ export class AccountManagerService {
             currentAccount.update({
                 firstName: body.firstName,
                 lastName: body.lastName,
+                firstNameTh: body.firstNameTh,
+                lastNameTh: body.lastNameTh,
                 email: body.email,
                 phoneNum: body.phoneNum,
                 type: body.type,
