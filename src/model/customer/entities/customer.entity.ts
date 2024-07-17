@@ -87,6 +87,15 @@ export class CustomerEntity {
         this.companyName = params.companyName;
         this.type = params.type;
     }
+
+    public update(params: CreateCustomerParams) {
+        this.firstName = params.firstName;
+        this.lastName = params.lastName;
+        this.email = params.email;
+        this.phoneNum = params.phoneNum;
+        this.companyName = params.companyName;
+        this.type = params.type;
+    }
 }
 
 export interface CreateCustomerParams {
