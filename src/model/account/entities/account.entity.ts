@@ -23,11 +23,11 @@ export enum AccountStatus {
     DISABLED = 'disabled',
 }
 
-export enum CompanyType {
-    CDD = 'cdd',
-    HR = 'hr',
-    OTHER = 'other',
-}
+// export enum CompanyType {
+//     CDD = 'cdd',
+//     HR = 'hr',
+//     OTHER = 'other',
+// }
 
 @Entity('account')
 export class AccountEntity {
@@ -95,16 +95,16 @@ export class AccountEntity {
     })
     updatedBy: string;
 
-    @Column({
-        type: 'varchar',
-    })
-    companyName: string;
+    // @Column({
+    //     type: 'varchar',
+    // })
+    // companyName: string;
 
-    @Column({
-        type: 'enum',
-        enum: CompanyType,
-    })
-    type: CompanyType;
+    // @Column({
+    //     type: 'enum',
+    //     enum: CompanyType,
+    // })
+    // type: CompanyType;
 
     @Column({
         type: 'enum',
@@ -140,8 +140,8 @@ export class AccountEntity {
             email: this.email,
             phoneNum: this.phoneNum,
             // password: this.password,
-            companyName: this.companyName,
-            type: this.type,
+            // companyName: this.companyName,
+            // type: this.type,
             // verifyToken: this.verifyToken,
         };
     }
@@ -153,8 +153,8 @@ export class AccountEntity {
         this.lastNameTh = params.lastNameTh;
         this.email = params.email;
         this.phoneNum = params.phoneNum;
-        this.companyName = params.companyName;
-        this.type = params.type;
+        // this.companyName = params.companyName;
+        // this.type = params.type;
         this.verifyToken = params.verifyToken;
         this.createdBy = params.createdBy;
     }
@@ -170,7 +170,7 @@ export class AccountEntity {
         this.lastNameTh = params.lastNameTh;
         this.email = params.email;
         this.phoneNum = params.phoneNum;
-        this.type = params.type;
+        // this.type = params.type;
         // this.updatedBy = params.updatedBy;
     }
 }
@@ -182,8 +182,8 @@ export interface CreateAccountParams {
     lastNameTh: string;
     email: string;
     phoneNum: string;
-    companyName: string;
-    type: CompanyType;
+    // companyName: string;
+    // type: CompanyType;
     createdBy: string;
     verifyToken: string;
 }
@@ -195,7 +195,7 @@ export interface UpdateAccountParams {
     lastNameTh: string;
     phoneNum: string;
     email: string;
-    type: CompanyType;
+    // type: CompanyType;
     // updatedBy: string;
 }
 

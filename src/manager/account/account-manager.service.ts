@@ -58,8 +58,8 @@ export class AccountManagerService {
                 email: body.email,
                 // password: await hash(body.password, 10),
                 phoneNum: body.phoneNum,
-                companyName: body.companyName,
-                type: body.type,
+                // companyName: body.companyName,
+                // type: body.type,
                 createdBy: req.reqAccount.uuid,
                 verifyToken: uuidV4(),
             });
@@ -115,7 +115,7 @@ export class AccountManagerService {
                 lastNameTh: body.lastNameTh,
                 email: body.email,
                 phoneNum: body.phoneNum,
-                type: body.type,
+                // type: body.type,
                 // updatedBy: req.reqAccount.uuid,
             });
             currentAccount.updatedBy = req.reqAccount.uuid;
