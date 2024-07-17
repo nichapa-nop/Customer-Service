@@ -38,16 +38,6 @@ export class CreateAccountRequestBodyDTO {
     @IsString()
     password: string;
 
-    // @ApiProperty()
-    // @IsDefined()
-    // @IsString()
-    // companyName: string;
-
-    // @ApiProperty()
-    // @IsEnum(CompanyType)
-    // @IsDefined()
-    // type: CompanyType;
-
     @ApiProperty()
     @IsOptional()
     @IsString()

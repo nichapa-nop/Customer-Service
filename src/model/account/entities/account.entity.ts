@@ -23,12 +23,6 @@ export enum AccountStatus {
     DISABLED = 'disabled',
 }
 
-// export enum CompanyType {
-//     CDD = 'cdd',
-//     HR = 'hr',
-//     OTHER = 'other',
-// }
-
 @Entity('account')
 export class AccountEntity {
     @PrimaryGeneratedColumn('uuid')
@@ -94,17 +88,6 @@ export class AccountEntity {
         nullable: true,
     })
     updatedBy: string;
-
-    // @Column({
-    //     type: 'varchar',
-    // })
-    // companyName: string;
-
-    // @Column({
-    //     type: 'enum',
-    //     enum: CompanyType,
-    // })
-    // type: CompanyType;
 
     @Column({
         type: 'enum',

@@ -7,6 +7,7 @@ import {
     Platform,
 } from 'src/model/ticket/entities/ticket.entity';
 import { TicketStatus } from './utils.enum';
+import { CompanyType } from 'src/model/customer/entities/customer.entity';
 
 export class AccountResponse {
     @ApiProperty()
@@ -171,4 +172,27 @@ export class TicketIdResponse {
 
     @ApiProperty()
     count: number;
+}
+
+export class CustomerResponse {
+    @ApiProperty()
+    id: number;
+
+    @ApiProperty()
+    firstName: string;
+
+    @ApiProperty()
+    lastName: string;
+
+    @ApiProperty()
+    email: string;
+
+    @ApiProperty()
+    phoneNum: string;
+
+    @ApiProperty()
+    companyName: string;
+
+    @ApiProperty({ enum: CompanyType })
+    type: CompanyType;
 }
