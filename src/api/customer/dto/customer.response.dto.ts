@@ -5,3 +5,8 @@ export class CustomerResponseBodyDTO {
     @ApiProperty()
     customerDetail: CustomerResponse;
 }
+
+export class GetCustomerListResponseBodyDTO {
+    @ApiProperty({ type: CustomerResponse, isArray: true })
+    customer: CustomerResponse[];
+}
