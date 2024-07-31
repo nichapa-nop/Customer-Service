@@ -149,5 +149,5 @@ export class TicketRequestQueryDTO {
     @IsOptional()
     @Transform(({ value }) => Number(value))
     @IsNumber()
-    itemsPerPage: number = 10;
+    itemsPerPage: number = 8;
 }
