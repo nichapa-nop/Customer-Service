@@ -3,6 +3,7 @@ import {
     CloseTicketRequestBodyDTO,
     CreateTicketRequestBodyDTO,
     TicketRequestParamDTO,
+    TicketRequestQueryDTO,
     UpdateTicketRequestBodyDTO,
 } from 'src/api/ticket/dto/ticket.request.dto';
 import { TicketResponseBodyDTO } from 'src/api/ticket/dto/ticket.response';
@@ -95,6 +96,14 @@ export class TicketManagerService {
             throw new BadRequestException('Ticket ID was incorrect or does not exist.');
         }
         return { ticketDetail: ticket.toResponse() };
+    }
+
+    public async getWithPagination(query: TicketRequestQueryDTO) {
+        let [products, count] = await this.ticketService.getWithPagination(query);
+        return {
+            products,
+            pagination: { page: query.page, itemsPerPage: query.itemsPerPage, itemsCount: count },
+        };
     }
 
     public async deleteTicket(param: TicketRequestParamDTO, req: RequestWithAccount) {

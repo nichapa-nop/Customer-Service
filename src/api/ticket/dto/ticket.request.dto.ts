@@ -1,6 +1,16 @@
 import { Optional } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDefined, IsEnum, IsOptional, IsString, IsUUID, isEnum, isString } from 'class-validator';
+import { Transform } from 'class-transformer';
+import {
+    IsDefined,
+    IsEnum,
+    IsNumber,
+    IsOptional,
+    IsString,
+    IsUUID,
+    isEnum,
+    isString,
+} from 'class-validator';
 import { platform } from 'os';
 import {
     BusinessImpact,
@@ -126,4 +136,18 @@ export class CloseTicketRequestBodyDTO {
     @IsDefined()
     @IsEnum(TicketStatus)
     status: TicketStatus;
+}
+
+export class TicketRequestQueryDTO {
+    @ApiProperty({ required: false, default: 1 })
+    @IsOptional()
+    @Transform(({ value }) => Number(value))
+    @IsNumber()
+    page: number = 1;
+
+    @ApiProperty({ required: false, default: 10 })
+    @IsOptional()
+    @Transform(({ value }) => Number(value))
+    @IsNumber()
+    itemsPerPage: number = 10;
 }
