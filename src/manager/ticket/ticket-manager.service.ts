@@ -6,7 +6,10 @@ import {
     TicketRequestQueryDTO,
     UpdateTicketRequestBodyDTO,
 } from 'src/api/ticket/dto/ticket.request.dto';
-import { TicketResponseBodyDTO } from 'src/api/ticket/dto/ticket.response';
+import {
+    GetTicketListResponseBodyDTO,
+    TicketResponseBodyDTO,
+} from 'src/api/ticket/dto/ticket.response';
 import { AccountService } from 'src/model/account/account.service';
 import { AccountEntity, AccountStatus } from 'src/model/account/entities/account.entity';
 import { StatusHistoryEntity } from 'src/model/status-history/entity/status-history.entity';
@@ -83,10 +86,10 @@ export class TicketManagerService {
         return { ticketDetail: ticket.toResponse() };
     }
 
-    public async getAllTicket() {
+    public async getAllTicket(): Promise<GetTicketListResponseBodyDTO> {
         let tickets = await this.ticketService.getAll();
         return {
-            ticketDetail: tickets.map((ticket) => ticket.toResponse()),
+            tickets: tickets.map((ticket) => ticket.toResponse()),
         };
     }
 
@@ -99,9 +102,9 @@ export class TicketManagerService {
     }
 
     public async getWithPagination(query: TicketRequestQueryDTO) {
-        let [products, count] = await this.ticketService.getWithPagination(query);
+        let [tickets, count] = await this.ticketService.getWithPagination(query);
         return {
-            products,
+            tickets,
             pagination: { page: query.page, itemsPerPage: query.itemsPerPage, itemsCount: count },
         };
     }

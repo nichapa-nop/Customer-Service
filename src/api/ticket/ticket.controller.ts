@@ -29,7 +29,7 @@ export class TicketApiController {
     @Get('/v1/ticket')
     @HttpCode(200)
     @ApiResponse({ type: GetTicketListResponseBodyDTO })
-    public async getAllTicket() {
+    public async getAllTicket(): Promise<GetTicketListResponseBodyDTO> {
         return await this.ticketManagerService.getAllTicket();
     }
 
