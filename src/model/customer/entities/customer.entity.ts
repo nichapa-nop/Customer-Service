@@ -1,9 +1,13 @@
+import { TicketEntity } from 'src/model/ticket/entities/ticket.entity';
 import { CustomerResponse } from 'src/utils/utils.response.dto';
 import {
     Column,
     CreateDateColumn,
     Entity,
+    ManyToOne,
+    OneToOne,
     PrimaryGeneratedColumn,
+    Relation,
     UpdateDateColumn,
 } from 'typeorm';
 
@@ -66,6 +70,9 @@ export class CustomerEntity {
         nullable: true,
     })
     updatedBy: string;
+
+    @OneToOne(() => TicketEntity, (ticket) => ticket.customer, { cascade: true })
+    ticket: Relation<TicketEntity>;
 
     public toResponse(): CustomerResponse {
         return {

@@ -4,6 +4,7 @@ import { Transform } from 'class-transformer';
 import {
     IsDefined,
     IsEnum,
+    IsNotEmpty,
     IsNumber,
     IsOptional,
     IsString,
@@ -145,9 +146,16 @@ export class TicketRequestQueryDTO {
     @IsNumber()
     page: number = 1;
 
-    @ApiProperty({ required: false, default: 10 })
+    @ApiProperty({ required: false, default: 7 })
     @IsOptional()
     @Transform(({ value }) => Number(value))
     @IsNumber()
-    itemsPerPage: number = 8;
+    itemsPerPage: number = 7;
+
+    @ApiProperty({ required: false })
+    @IsOptional()
+    @IsString()
+    keyword?: string;
+
+    // x
 }

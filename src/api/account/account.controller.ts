@@ -110,7 +110,7 @@ export class AccountApiController {
                 sameSite: true,
             })
             .send(response);
-        // console.log(res.getHeaders());
+        console.log(res.getHeaders());
     }
 
     @Post('/v1/reset-password')

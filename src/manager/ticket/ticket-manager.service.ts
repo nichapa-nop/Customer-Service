@@ -104,7 +104,7 @@ export class TicketManagerService {
     public async getWithPagination(query: TicketRequestQueryDTO) {
         let [tickets, count] = await this.ticketService.getWithPagination(query);
         return {
-            tickets,
+            tickets: tickets.map((ticket) => ticket.toResponse()),
             pagination: { page: query.page, itemsPerPage: query.itemsPerPage, itemsCount: count },
         };
     }

@@ -151,6 +151,7 @@ export class AccountManagerService {
         }
         const payload = { uuid: currentAccount.uuid, email: currentAccount.email };
         let accessToken = await this.jwtService.signAsync(payload);
+        console.log(accessToken);
         return { accessToken };
     }
 

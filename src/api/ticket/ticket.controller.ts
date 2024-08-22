@@ -1,10 +1,22 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Req } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    HttpCode,
+    Param,
+    Post,
+    Put,
+    Query,
+    Req,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TicketManagerService } from 'src/manager/ticket/ticket-manager.service';
 import {
     CloseTicketRequestBodyDTO,
     CreateTicketRequestBodyDTO,
     TicketRequestParamDTO,
+    TicketRequestQueryDTO,
     UpdateTicketRequestBodyDTO,
 } from './dto/ticket.request.dto';
 import { GetTicketListResponseBodyDTO, TicketResponseBodyDTO } from './dto/ticket.response';
@@ -29,8 +41,8 @@ export class TicketApiController {
     @Get('/v1/ticket')
     @HttpCode(200)
     @ApiResponse({ type: GetTicketListResponseBodyDTO })
-    public async getAllTicket(): Promise<GetTicketListResponseBodyDTO> {
-        return await this.ticketManagerService.getAllTicket();
+    public async getAllTicket(@Query() query: TicketRequestQueryDTO) {
+        return await this.ticketManagerService.getWithPagination(query);
     }
 
     @Get('/v1/ticket/:ticketId')

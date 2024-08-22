@@ -1,4 +1,5 @@
 import { AccountEntity } from 'src/model/account/entities/account.entity';
+import { CustomerEntity } from 'src/model/customer/entities/customer.entity';
 import { StatusHistoryEntity } from 'src/model/status-history/entity/status-history.entity';
 import { TicketCommentEntity } from 'src/model/ticket-comment/entities/ticket-comment.entity';
 import { TicketStatus } from 'src/utils/utils.enum';
@@ -10,6 +11,7 @@ import {
     JoinColumn,
     ManyToOne,
     OneToMany,
+    OneToOne,
     PrimaryGeneratedColumn,
     Relation,
     UpdateDateColumn,
@@ -144,6 +146,14 @@ export class TicketEntity {
 
     @OneToMany(() => StatusHistoryEntity, (statusHistory) => statusHistory.ticket)
     statusHistory: Relation<StatusHistoryEntity[]>;
+
+    @OneToOne(() => CustomerEntity, (customer) => customer.ticket, {
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+        nullable: true,
+    })
+    @JoinColumn({ name: 'customerId' })
+    customer: Relation<CustomerEntity>;
 
     public toResponse(): TicketResponse {
         return {
