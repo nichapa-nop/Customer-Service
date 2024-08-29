@@ -58,6 +58,7 @@ export class TicketApiController {
         @Body() body: UpdateTicketRequestBodyDTO,
         @Req() req: RequestWithAccount
     ) {
+        console.log(body);
         return await this.ticketManagerService.updateTicket(param, body, req);
     }
 

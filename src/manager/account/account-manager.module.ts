@@ -8,7 +8,6 @@ import { RoleModule } from 'src/model/role/role.module';
 import { ResetPasswordModule } from 'src/model/reset-pass/reset-pass.module';
 import { MenuModule } from 'src/model/menu/menu.module';
 import { TicketModule } from 'src/model/ticket/ticket.module';
-import { CustomerModule } from 'src/model/customer/customer.module';
 
 @Module({
     imports: [
@@ -23,7 +22,6 @@ import { CustomerModule } from 'src/model/customer/customer.module';
         ResetPasswordModule,
         MenuModule,
         TicketModule,
-        CustomerModule,
     ],
     providers: [AccountManagerService],
     exports: [AccountManagerService],

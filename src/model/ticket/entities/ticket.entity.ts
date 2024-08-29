@@ -1,5 +1,4 @@
 import { AccountEntity } from 'src/model/account/entities/account.entity';
-import { CustomerEntity } from 'src/model/customer/entities/customer.entity';
 import { StatusHistoryEntity } from 'src/model/status-history/entity/status-history.entity';
 import { TicketCommentEntity } from 'src/model/ticket-comment/entities/ticket-comment.entity';
 import { TicketStatus } from 'src/utils/utils.enum';
@@ -11,7 +10,6 @@ import {
     JoinColumn,
     ManyToOne,
     OneToMany,
-    OneToOne,
     PrimaryGeneratedColumn,
     Relation,
     UpdateDateColumn,
@@ -20,6 +18,12 @@ import {
 export enum Platform {
     CDD = 'cdd',
     HR = 'hr',
+}
+
+export enum CompanyType {
+    CDD = 'cdd',
+    HR = 'hr',
+    OTHER = 'other',
 }
 
 export enum IncidentType {
@@ -62,6 +66,37 @@ export class TicketEntity {
         default: TicketStatus.OPEN,
     })
     status: TicketStatus;
+
+    @Column({
+        type: 'varchar',
+    })
+    cusFirstName: string;
+
+    @Column({
+        type: 'varchar',
+    })
+    cusLastName: string;
+
+    @Column({
+        type: 'varchar',
+    })
+    cusEmail: string;
+
+    @Column({
+        type: 'varchar',
+    })
+    cusPhoneNum: string;
+
+    @Column({
+        type: 'varchar',
+    })
+    cusCompanyName: string;
+
+    @Column({
+        type: 'enum',
+        enum: CompanyType,
+    })
+    cusCompanyType: CompanyType;
 
     @ManyToOne(() => AccountEntity, (account) => account.tickets, {
         onDelete: 'SET NULL',
@@ -147,19 +182,25 @@ export class TicketEntity {
     @OneToMany(() => StatusHistoryEntity, (statusHistory) => statusHistory.ticket)
     statusHistory: Relation<StatusHistoryEntity[]>;
 
-    @OneToOne(() => CustomerEntity, (customer) => customer.ticket, {
-        onDelete: 'SET NULL',
-        onUpdate: 'CASCADE',
-        nullable: true,
-    })
-    @JoinColumn({ name: 'customerId' })
-    customer: Relation<CustomerEntity>;
+    // @OneToOne(() => CustomerEntity, (customer) => customer.ticket, {
+    //     onDelete: 'SET NULL',
+    //     onUpdate: 'CASCADE',
+    //     nullable: true,
+    // })
+    // @JoinColumn({ name: 'customerId' })
+    // customer: Relation<CustomerEntity>;
 
     public toResponse(): TicketResponse {
         return {
             id: this.id,
             ticketId: this.ticketId,
             status: this.status,
+            cusFirstName: this.cusFirstName,
+            cusLastName: this.cusLastName,
+            cusEmail: this.cusEmail,
+            cusPhoneNum: this.cusPhoneNum,
+            cusCompanyName: this.cusCompanyName,
+            cusCompanyType: this.cusCompanyType,
             assignTo: this.assignAccount?.toResponse(),
             platform: this.platform,
             incidentType: this.incidentType,
@@ -176,6 +217,12 @@ export class TicketEntity {
 
     public create(params: CreateTicketParams) {
         // this.ticketId = params.ticketId;
+        this.cusFirstName = params.cusFirstName;
+        this.cusLastName = params.cusLastName;
+        this.cusPhoneNum = params.cusPhoneNum;
+        this.cusEmail = params.cusEmail;
+        this.cusCompanyName = params.cusCompanyName;
+        this.cusCompanyType = params.cusCompanyType;
         this.status = params.status;
         this.assignAccount = params.assignTo;
         this.platform = params.platform;
@@ -189,6 +236,12 @@ export class TicketEntity {
 
     public update(params: UpdateTicketParams) {
         // this.status = params.status;
+        this.cusFirstName = params.cusFirstName;
+        this.cusLastName = params.cusLastName;
+        this.cusPhoneNum = params.cusPhoneNum;
+        this.cusEmail = params.cusEmail;
+        this.cusCompanyName = params.cusCompanyName;
+        this.cusCompanyType = params.cusCompanyType;
         this.assignAccount = params.assignTo;
         this.platform = params.platform;
         this.incidentType = params.incidentType;
@@ -202,6 +255,12 @@ export class TicketEntity {
 
 export interface CreateTicketParams {
     // ticketId: string;
+    cusFirstName: string;
+    cusLastName: string;
+    cusPhoneNum: string;
+    cusEmail: string;
+    cusCompanyName: string;
+    cusCompanyType: CompanyType;
     status: TicketStatus;
     assignTo?: AccountEntity;
     platform: Platform;
@@ -215,6 +274,12 @@ export interface CreateTicketParams {
 
 export interface UpdateTicketParams {
     // status: TicketStatus;
+    cusFirstName: string;
+    cusLastName: string;
+    cusPhoneNum: string;
+    cusEmail: string;
+    cusCompanyName: string;
+    cusCompanyType: CompanyType;
     assignTo?: AccountEntity;
     platform?: Platform;
     incidentType?: IncidentType;

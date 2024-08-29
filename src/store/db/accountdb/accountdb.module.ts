@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import configService from 'src/config/config.service';
 import { AccountEntity } from 'src/model/account/entities/account.entity';
-import { CustomerEntity } from 'src/model/customer/entities/customer.entity';
 import { MenuEntity } from 'src/model/menu/entities/menu.entity';
 import { ResetPasswordEntity } from 'src/model/reset-pass/entities/reset-pass.entity';
 import { RoleEntity } from 'src/model/role/entities/role.entity';
@@ -25,7 +24,6 @@ import { TicketEntity } from 'src/model/ticket/entities/ticket.entity';
                 TicketIdEntity,
                 TicketCommentEntity,
                 StatusHistoryEntity,
-                CustomerEntity,
             ],
             synchronize: true,
         }),

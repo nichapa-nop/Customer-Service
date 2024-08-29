@@ -16,7 +16,7 @@ import { StatusHistoryEntity } from 'src/model/status-history/entity/status-hist
 import { StatusHistoryService } from 'src/model/status-history/status-history.service';
 import { TicketCommentEntity } from 'src/model/ticket-comment/entities/ticket-comment.entity';
 import { TicketIdService } from 'src/model/ticket-id/ticket-id.service';
-import { TicketEntity } from 'src/model/ticket/entities/ticket.entity';
+import { CompanyType, TicketEntity } from 'src/model/ticket/entities/ticket.entity';
 import { TicketService } from 'src/model/ticket/ticket.service';
 import { TicketStatus } from 'src/utils/utils.enum';
 import { RequestWithAccount } from 'src/utils/utils.interface';
@@ -46,7 +46,7 @@ export class TicketManagerService {
         // let statusHistory = new StatusHistoryEntity();
 
         if (body.assignTo) {
-            let assignedAccount = await this.accountService.getByUuid(body.assignTo);
+            let assignedAccount = await this.accountService.getByEmail(body.assignTo);
             if (!assignedAccount) {
                 throw new BadRequestException('Assign account uuid was invalid');
             }
@@ -61,6 +61,12 @@ export class TicketManagerService {
         newTicket.ticketId = generateTicketId;
         newTicket.create({
             // ticketId: generateTicketId,
+            cusFirstName: body.cusFirstName,
+            cusLastName: body.cusLastName,
+            cusEmail: body.cusEmail,
+            cusPhoneNum: body.cusPhoneNum,
+            cusCompanyName: body.cusCompanyName,
+            cusCompanyType: body.cusCompanyType,
             status: ticketStatus,
             assignTo: assignAccountEntity,
             platform: body.platform,
@@ -140,10 +146,10 @@ export class TicketManagerService {
         console.log(statusHistory.previousStatus);
         if (currentTicket.assignAccount) {
             //ticket เคย assign to
-            let assignedAccount = await this.accountService.getByUuid(body.assignTo); //check assign to ที่รับมากจาก body
+            let assignedAccount = await this.accountService.getByEmail(body.assignTo); //check assign to ที่รับมากจาก body
             if (!assignedAccount) {
                 //account not found.
-                throw new BadRequestException('Assign account uuid was invalid.');
+                throw new BadRequestException('Assign account was invalid.');
             }
             if (assignedAccount.status !== AccountStatus.VERIFIED) {
                 throw new BadRequestException('Ticket cannot assigned to this account.');
@@ -164,10 +170,10 @@ export class TicketManagerService {
             // return updatedTicket.toResponse();
         }
         //check ทำหยัง?
-        let assignedAccount = await this.accountService.getByUuid(body.assignTo); //check uuid
+        let assignedAccount = await this.accountService.getByEmail(body.assignTo); //check uuid
         if (!assignedAccount) {
             //not found
-            throw new BadRequestException('Assign account uuid was invalid.');
+            throw new BadRequestException('Assign account was invalid.');
         }
         currentTicket.status = TicketStatus.IN_PROGRESS; //change status to "in progress"
         currentTicket.assignedAt = new Date(Date.now());
@@ -182,6 +188,12 @@ export class TicketManagerService {
         currentTicket.assignAccount = assignedAccount; //change assigned account to new account.
         currentTicket.update({
             // status: currentTicket.status,
+            cusFirstName: body.cusFirstName,
+            cusLastName: body.cusLastName,
+            cusEmail: body.cusEmail,
+            cusPhoneNum: body.cusPhoneNum,
+            cusCompanyName: body.cusCompanyName,
+            cusCompanyType: body.cusCompanyType,
             assignTo: assignedAccount,
             platform: body.platform,
             incidentType: body.incidentType,

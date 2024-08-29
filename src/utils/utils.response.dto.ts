@@ -2,12 +2,13 @@ import { ApiProperty } from '@nestjs/swagger';
 // import { CompanyType } from 'src/model/account/entities/account.entity';
 import {
     BusinessImpact,
+    CompanyType,
     FeedbackCh,
     IncidentType,
     Platform,
 } from 'src/model/ticket/entities/ticket.entity';
 import { TicketStatus } from './utils.enum';
-import { CompanyType } from 'src/model/customer/entities/customer.entity';
+import { AccountStatus } from 'src/model/account/entities/account.entity';
 
 export class AccountResponse {
     @ApiProperty()
@@ -30,6 +31,9 @@ export class AccountResponse {
 
     @ApiProperty()
     phoneNum: string;
+
+    @ApiProperty({ enum: AccountStatus })
+    status: AccountStatus;
 
     // @ApiProperty()
     // companyName: string;
@@ -133,6 +137,24 @@ export class TicketResponse {
     status: TicketStatus;
 
     @ApiProperty()
+    cusFirstName: string;
+
+    @ApiProperty()
+    cusLastName: string;
+
+    @ApiProperty()
+    cusEmail: string;
+
+    @ApiProperty()
+    cusPhoneNum: string;
+
+    @ApiProperty()
+    cusCompanyName: string;
+
+    @ApiProperty({ enum: CompanyType })
+    cusCompanyType: CompanyType;
+
+    @ApiProperty()
     assignTo: AccountResponse;
 
     @ApiProperty()
@@ -172,27 +194,4 @@ export class TicketIdResponse {
 
     @ApiProperty()
     count: number;
-}
-
-export class CustomerResponse {
-    @ApiProperty()
-    id: number;
-
-    @ApiProperty()
-    firstName: string;
-
-    @ApiProperty()
-    lastName: string;
-
-    @ApiProperty()
-    email: string;
-
-    @ApiProperty()
-    phoneNum: string;
-
-    @ApiProperty()
-    companyName: string;
-
-    @ApiProperty({ enum: CompanyType })
-    type: CompanyType;
 }

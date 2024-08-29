@@ -122,6 +122,7 @@ export class AccountEntity {
             lastNameTh: this.lastNameTh,
             email: this.email,
             phoneNum: this.phoneNum,
+            status: this.status,
             // password: this.password,
             // companyName: this.companyName,
             // type: this.type,

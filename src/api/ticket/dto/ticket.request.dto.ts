@@ -3,11 +3,13 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
     IsDefined,
+    IsEmail,
     IsEnum,
     IsNotEmpty,
     IsNumber,
     IsOptional,
     IsString,
+    IsStrongPassword,
     IsUUID,
     isEnum,
     isString,
@@ -15,6 +17,7 @@ import {
 import { platform } from 'os';
 import {
     BusinessImpact,
+    CompanyType,
     FeedbackCh,
     IncidentType,
     Platform,
@@ -31,6 +34,36 @@ export class CreateTicketRequestBodyDTO {
     // @IsDefined()
     // @IsEnum(TicketStatus)
     // status: TicketStatus;
+
+    @ApiProperty()
+    @IsDefined()
+    @IsString()
+    cusFirstName: string;
+
+    @ApiProperty()
+    @IsDefined()
+    @IsString()
+    cusLastName: string;
+
+    @ApiProperty()
+    @IsDefined()
+    @IsEmail()
+    cusEmail: string;
+
+    @ApiProperty()
+    @IsDefined()
+    @IsString()
+    cusPhoneNum: string;
+
+    @ApiProperty()
+    @IsDefined()
+    @IsString()
+    cusCompanyName: string;
+
+    @ApiProperty()
+    @IsDefined()
+    @IsEnum(CompanyType)
+    cusCompanyType: CompanyType;
 
     @ApiProperty()
     @IsOptional()
@@ -82,12 +115,52 @@ export class TicketRequestParamDTO {
 
 export class UpdateTicketRequestBodyDTO {
     @ApiProperty()
-    @IsDefined()
-    @IsUUID()
-    assignTo: string;
+    @IsOptional()
+    @IsString()
+    cusFirstName: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    cusLastName: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsEmail()
+    cusEmail: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    cusPhoneNum: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    cusCompanyName: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsEnum(CompanyType)
+    cusCompanyType: CompanyType;
 
     @ApiProperty()
     @IsDefined()
+    @IsString()
+    assignTo: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    topic: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    description: string;
+
+    @ApiProperty()
+    @IsOptional()
     @IsString()
     comment: string;
 
@@ -120,16 +193,6 @@ export class UpdateTicketRequestBodyDTO {
     @IsOptional()
     @IsString()
     ticketLink: string;
-
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    topic: string;
-
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-    description: string;
 }
 
 export class CloseTicketRequestBodyDTO {

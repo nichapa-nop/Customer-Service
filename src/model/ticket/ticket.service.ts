@@ -18,7 +18,7 @@ export class TicketService {
     public getAll(): Promise<TicketEntity[]> {
         return this.ticketRepository.find({
             relations: { ticketComments: true },
-            order: { id: 'ASC' },
+            order: { id: 'DESC' },
         });
     }
 
@@ -47,7 +47,7 @@ export class TicketService {
             take: query.itemsPerPage,
             skip: query.itemsPerPage * (query.page - 1),
             relations: { assignAccount: true },
-            order: { id: 'ASC' },
+            order: { id: 'DESC' },
             where,
         });
     }
