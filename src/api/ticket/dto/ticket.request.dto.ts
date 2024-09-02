@@ -196,10 +196,20 @@ export class UpdateTicketRequestBodyDTO {
 }
 
 export class CloseTicketRequestBodyDTO {
+    // @ApiProperty()
+    // @IsDefined()
+    // @IsEnum(TicketStatus)
+    // status: TicketStatus;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsEmail()
+    email: string;
+
     @ApiProperty()
     @IsDefined()
-    @IsEnum(TicketStatus)
-    status: TicketStatus;
+    @IsString()
+    solution: string;
 }
 
 export class TicketRequestQueryDTO {

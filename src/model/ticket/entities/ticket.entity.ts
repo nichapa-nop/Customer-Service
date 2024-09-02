@@ -174,6 +174,18 @@ export class TicketEntity {
     })
     assignedBy: string;
 
+    @Column({
+        type: 'varchar',
+        nullable: true,
+    })
+    solution: string;
+
+    @Column({
+        type: 'varchar',
+        nullable: true,
+    })
+    email: string;
+
     @OneToMany(() => TicketCommentEntity, (ticketComments) => ticketComments.ticket, {
         cascade: true,
     })

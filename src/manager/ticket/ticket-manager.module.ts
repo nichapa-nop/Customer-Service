@@ -5,6 +5,7 @@ import { TicketIdModule } from 'src/model/ticket-id/ticket-id.module';
 import { AccountModule } from 'src/model/account/account.module';
 import { TicketCommentModule } from 'src/model/ticket-comment/ticket-comment.module';
 import { StatusHistoryModule } from 'src/model/status-history/status-history.module';
+import { SendMailModule } from 'src/service/mailer/mailer.module';
 
 @Module({
     imports: [
@@ -13,6 +14,7 @@ import { StatusHistoryModule } from 'src/model/status-history/status-history.mod
         AccountModule,
         TicketCommentModule,
         StatusHistoryModule,
+        SendMailModule,
     ],
     providers: [TicketManagerService],
     exports: [TicketManagerService],

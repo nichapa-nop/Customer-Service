@@ -18,6 +18,7 @@ import { TicketCommentEntity } from 'src/model/ticket-comment/entities/ticket-co
 import { TicketIdService } from 'src/model/ticket-id/ticket-id.service';
 import { CompanyType, TicketEntity } from 'src/model/ticket/entities/ticket.entity';
 import { TicketService } from 'src/model/ticket/ticket.service';
+import { SendMailService } from 'src/service/mailer/mailer.service';
 import { TicketStatus } from 'src/utils/utils.enum';
 import { RequestWithAccount } from 'src/utils/utils.interface';
 
@@ -27,7 +28,8 @@ export class TicketManagerService {
         private readonly ticketService: TicketService,
         private readonly genTicketIdService: TicketIdService, // private readonly ticketIdEntity: TicketIdEntity
         private readonly accountService: AccountService, // private readonly ticketCommentService: TicketCommentService,
-        private readonly statusHistoryService: StatusHistoryService
+        private readonly statusHistoryService: StatusHistoryService,
+        private readonly emailService: SendMailService
     ) {}
 
     public async createNewTicket(
@@ -237,9 +239,17 @@ export class TicketManagerService {
             }
             throw new BadRequestException('Permission Denied.');
         }
-        if (body.status === TicketStatus.CLOSED) {
-            currentTicket.status = TicketStatus.CLOSED;
-        }
+        currentTicket.status = TicketStatus.CLOSED;
+        currentTicket.solution = body.solution;
+        currentTicket.email = body.email;
+        console.log(body.email);
+        this.emailService.postMail({
+            to: currentTicket.email,
+            from: 'no-reply <noreply.testnoreply@gmail.com>',
+            subject: 'Inform solution',
+            text: `${currentTicket.solution}`,
+        });
+
         currentTicket.updatedBy = req.reqAccount.uuid;
 
         statusHistory.currentStatus = currentTicket.status;
