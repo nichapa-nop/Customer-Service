@@ -91,7 +91,7 @@ export class CreateTicketRequestBodyDTO {
     feedbackCh: FeedbackCh;
 
     @ApiProperty()
-    @IsDefined()
+    @IsOptional()
     @IsString()
     ticketLink: string;
 
