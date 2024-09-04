@@ -13,6 +13,7 @@ import {
     UpdateAccountRequestBodyDTO,
     ConfirmResetPasswordRequestBodyDTO,
     ResetPasswordRequestBodyDTO,
+    AccountRequestQueryDTO,
 } from 'src/api/account/dto/account.request.dto';
 import {
     AccountResponseBodyDTO,
@@ -61,6 +62,7 @@ export class AccountManagerService {
                 // companyName: body.companyName,
                 // type: body.type,
                 createdBy: req.reqAccount.uuid,
+                // createdBy: 'root account',
                 verifyToken: uuidV4(),
             });
 
@@ -97,6 +99,14 @@ export class AccountManagerService {
             throw new BadRequestException('UUID was incorrect or it does not exist.');
         }
         return { accountDetail: account.toResponse() };
+    }
+
+    public async getWithPagination(query: AccountRequestQueryDTO) {
+        let [accounts, count] = await this.accountService.getWithPagination(query);
+        return {
+            accounts: accounts.map((account) => account.toResponse()),
+            pagination: { page: query.page, itemsPerPage: query.itemsPerPage, itemsCount: count },
+        };
     }
 
     public async updateAccount(

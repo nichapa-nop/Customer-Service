@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AccountEntity } from './entities/account.entity';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, ILike, Repository } from 'typeorm';
+import { query } from 'express';
+import { AccountRequestQueryDTO } from 'src/api/account/dto/account.request.dto';
 
 @Injectable()
 export class AccountService {
@@ -24,6 +26,26 @@ export class AccountService {
 
     public getByEmail(email: string) {
         return this.accountRepository.findOneBy({ email });
+    }
+
+    public getWithPagination(query: AccountRequestQueryDTO) {
+        // let where: FindOptionsWhere<AccountEntity>[] = [];
+        // if (query.keyword) {
+        //     where.push({
+        //         uuid: ILike(`%${query.keyword}%`),
+        //     });
+        //     where.push({
+        //         topic: ILike(`%${query.keyword}%`),
+        //     });
+        // }
+
+        return this.accountRepository.findAndCount({
+            take: query.itemsPerPage,
+            skip: query.itemsPerPage * (query.page - 1),
+            // relations: { assignAccount: true },
+            order: { uuid: 'DESC' },
+            // where,
+        });
     }
 
     public delete(uuid: string) {

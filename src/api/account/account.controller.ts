@@ -7,6 +7,7 @@ import {
     Param,
     Post,
     Put,
+    Query,
     Req,
     Res,
 } from '@nestjs/common';
@@ -21,6 +22,7 @@ import {
     ResetPasswordRequestBodyDTO,
     AccountResetPassRequestParamDTO,
     ConfirmResetPasswordRequestBodyDTO,
+    AccountRequestQueryDTO,
 } from './dto/account.request.dto';
 import {
     AccountResponseBodyDTO,
@@ -52,9 +54,9 @@ export class AccountApiController {
     @HttpCode(200)
     @ApiResponse({ type: GetAccountListResponseBodyDTO })
     @ApiBearerAuth()
-    public async getAllAccount(@Req() req: RequestWithAccount) {
-        console.log(req.reqAccount);
-        return await this.accountManagerservice.getAllAccount();
+    public async getAllAccount(@Query() query: AccountRequestQueryDTO) {
+        // console.log(req.reqAccount);
+        return await this.accountManagerservice.getWithPagination(query);
     }
 
     @Get('/v1/account/:uuid')

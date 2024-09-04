@@ -1,5 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDefined, IsEmail, IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
+import { Transform } from 'class-transformer';
+import {
+    IsDefined,
+    IsEmail,
+    IsEnum,
+    IsNumber,
+    IsOptional,
+    IsString,
+    IsUUID,
+} from 'class-validator';
 // import { CompanyType } from 'src/model/account/entities/account.entity';
 
 export class CreateAccountRequestBodyDTO {
@@ -134,4 +143,23 @@ export class ConfirmResetPasswordRequestBodyDTO {
     @ApiProperty()
     @IsString()
     password: string;
+}
+
+export class AccountRequestQueryDTO {
+    @ApiProperty({ required: false, default: 1 })
+    @IsOptional()
+    @Transform(({ value }) => Number(value))
+    @IsNumber()
+    page: number = 1;
+
+    @ApiProperty({ required: false })
+    @IsOptional()
+    @Transform(({ value }) => Number(value))
+    @IsNumber()
+    itemsPerPage: number = 6;
+
+    @ApiProperty({ required: false })
+    @IsOptional()
+    @IsString()
+    keyword?: string;
 }
