@@ -219,16 +219,14 @@ export class TicketRequestQueryDTO {
     @IsNumber()
     page: number = 1;
 
-    @ApiProperty({ required: false, default: 7 })
+    @ApiProperty({ required: false, default: 6 })
     @IsOptional()
     @Transform(({ value }) => Number(value))
     @IsNumber()
-    itemsPerPage: number = 7;
+    itemsPerPage: number = 6;
 
     @ApiProperty({ required: false })
     @IsOptional()
     @IsString()
     keyword?: string;
-
-    // x
 }

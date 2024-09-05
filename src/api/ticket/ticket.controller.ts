@@ -80,4 +80,13 @@ export class TicketApiController {
     ) {
         return await this.ticketManagerService.deleteTicket(param, req);
     }
+
+    @Put('/v1/reopenticket/:ticketId')
+    @HttpCode(200)
+    public async reOpenTicket(
+        @Param() param: TicketRequestParamDTO,
+        @Req() req: RequestWithAccount
+    ) {
+        return await this.ticketManagerService.reOpenTicket(param, req);
+    }
 }

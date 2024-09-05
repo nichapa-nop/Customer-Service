@@ -233,15 +233,17 @@ export class TicketManagerService {
         statusHistory.previousStatus = currentTicket.status;
         statusHistory.createdBy = req.reqAccount.uuid;
 
+        //Check Ticket Status
         if (currentTicket.status !== TicketStatus.IN_PROGRESS) {
             if (currentTicket.status === TicketStatus.CLOSED) {
                 throw new BadRequestException('Ticket is already closed.');
             }
             throw new BadRequestException('Permission Denied.');
         }
+        //if (ticket status = in_progress) =>
         currentTicket.status = TicketStatus.CLOSED;
         currentTicket.solution = body.solution;
-        currentTicket.email = body.email;
+        currentTicket.email = body.email; //optional
         console.log(body.email);
         this.emailService.postMail({
             to: currentTicket.email,
@@ -252,6 +254,35 @@ export class TicketManagerService {
 
         currentTicket.updatedBy = req.reqAccount.uuid;
 
+        statusHistory.currentStatus = currentTicket.status;
+        statusHistory.ticket = currentTicket;
+        await this.statusHistoryService.save(statusHistory);
+        return await this.ticketService.save(currentTicket);
+    }
+
+    public async reOpenTicket(param: TicketRequestParamDTO, req: RequestWithAccount) {
+        let currentTicket = await this.ticketService.getByTicketId(param.ticketId);
+        if (!currentTicket) {
+            throw new BadRequestException('Ticket ID was incorrect or it does not exist.');
+        }
+        let statusHistory = new StatusHistoryEntity();
+        statusHistory.previousStatus = currentTicket.status;
+        statusHistory.createdBy = req.reqAccount.uuid;
+        if (currentTicket.status !== TicketStatus.CLOSED) {
+            throw new BadRequestException('Permission Denied.');
+        }
+        if (currentTicket.status === TicketStatus.CLOSED) {
+            currentTicket.status = TicketStatus.IN_PROGRESS;
+            console.log(currentTicket.assignAccount);
+            this.emailService.postMail({
+                to: currentTicket.assignAccount.email,
+                from: 'no-reply <noreply.testnoreply@gmail.com>',
+                subject: `Ticket ${currentTicket.ticketId} is re-open`,
+                text: `${currentTicket.ticketId} is re-open`,
+            });
+        }
+        currentTicket.updatedBy = req.reqAccount.uuid;
+        //set status history
         statusHistory.currentStatus = currentTicket.status;
         statusHistory.ticket = currentTicket;
         await this.statusHistoryService.save(statusHistory);

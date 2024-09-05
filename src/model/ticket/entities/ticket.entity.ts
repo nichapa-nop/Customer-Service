@@ -41,12 +41,12 @@ export enum BusinessImpact {
 }
 
 export enum FeedbackCh {
-    HELPCRUNCH = 'help crunch',
+    HELPCRUNCH = 'help_crunch',
     PHONE = 'phone',
     EMAIL = 'email',
     LINE = 'line',
     TICKET = 'ticket',
-    BASE_EMPLOYEE = 'base employee',
+    BASE_EMPLOYEE = 'base_employee',
 }
 
 @Entity('ticket')
