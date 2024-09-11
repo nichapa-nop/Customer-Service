@@ -1,3 +1,4 @@
+import { GroupMenuBindingEntity } from 'src/model/group-menu/entities/group-menu.binding.entity';
 import { RoleEntity } from 'src/model/role/entities/role.entity';
 import { MenuResponse } from 'src/utils/utils.response.dto';
 import {
@@ -6,6 +7,7 @@ import {
     Entity,
     JoinColumn,
     ManyToMany,
+    OneToMany,
     PrimaryGeneratedColumn,
     Relation,
     UpdateDateColumn,
@@ -37,9 +39,8 @@ export class MenuEntity {
     })
     updatedBy: string;
 
-    @ManyToMany(() => RoleEntity, (role) => role.menu, { cascade: true })
-    @JoinColumn({ name: 'roleMenu' })
-    role: Relation<RoleEntity[]>;
+    @OneToMany(() => GroupMenuBindingEntity, (binding) => binding.menu, { cascade: true })
+    bindings: Relation<GroupMenuBindingEntity[]>;
 
     public toResponse(): MenuResponse {
         return {

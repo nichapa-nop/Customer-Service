@@ -1,4 +1,6 @@
 import { AccountEntity } from 'src/model/account/entities/account.entity';
+import { GroupMenuBindingEntity } from 'src/model/group-menu/entities/group-menu.binding.entity';
+import { GroupMenuEntity } from 'src/model/group-menu/entities/group-menu.entity';
 import { MenuEntity } from 'src/model/menu/entities/menu.entity';
 import { RoleResponse } from 'src/utils/utils.response.dto';
 import {
@@ -7,6 +9,7 @@ import {
     Entity,
     JoinColumn,
     ManyToMany,
+    ManyToOne,
     OneToMany,
     OneToOne,
     PrimaryGeneratedColumn,
@@ -52,8 +55,12 @@ export class RoleEntity {
     account: AccountEntity[];
     // account: Relation<AccountEntity>;
 
-    @ManyToMany(() => MenuEntity, (menu) => menu.role, { onDelete: 'CASCADE' })
-    menu: Relation<MenuEntity[]>;
+    @ManyToOne(() => GroupMenuEntity, (groupMenu) => groupMenu.roles, {
+        nullable: true,
+        onDelete: 'SET NULL',
+    })
+    @JoinColumn({ name: 'groupMenuId' })
+    groupMenu: Relation<GroupMenuEntity>;
 
     public create(params: CreateRoleParams) {
         this.roleName = params.roleName;
