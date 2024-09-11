@@ -154,6 +154,7 @@ export class AccountEntity {
         this.lastNameTh = params.lastNameTh;
         this.email = params.email;
         this.phoneNum = params.phoneNum;
+        this.status = params.status;
         // this.type = params.type;
         // this.updatedBy = params.updatedBy;
     }
@@ -179,6 +180,7 @@ export interface UpdateAccountParams {
     lastNameTh: string;
     phoneNum: string;
     email: string;
+    status: AccountStatus;
     // type: CompanyType;
     // updatedBy: string;
 }

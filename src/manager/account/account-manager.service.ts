@@ -73,7 +73,7 @@ export class AccountManagerService {
         }
     }
 
-    public async SentMailVerifyAccount(param: AccountRequestParamDTO) {
+    public async SendMailVerifyAccount(param: AccountRequestParamDTO) {
         let currentAccount = await this.accountService.getByUuid(param.uuid);
         if (!currentAccount) {
             throw new BadRequestException('UUID was incorrect or it does not exist.');
@@ -87,6 +87,7 @@ export class AccountManagerService {
                 currentAccount.verifyToken
             }`,
         });
+        return { accountDetail: currentAccount.toResponse() };
     }
 
     public async getAllAccount() {
@@ -128,11 +129,11 @@ export class AccountManagerService {
                 lastNameTh: body.lastNameTh,
                 email: body.email,
                 phoneNum: body.phoneNum,
+                status: body.status,
                 // type: body.type,
                 // updatedBy: req.reqAccount.uuid,
             });
             currentAccount.updatedBy = req.reqAccount.uuid;
-            console.log(req.reqAccount.uuid);
             await this.accountService.save(currentAccount);
             return {
                 updateAccountDetail: currentAccount.toResponse(),
@@ -272,15 +273,17 @@ export class AccountManagerService {
         currentAccount.status = AccountStatus.NOT_VERIFY;
         currentAccount.verifyToken = uuidV4();
         currentAccount.updatedBy = req.reqAccount.uuid;
-        await this.accountService.save(currentAccount);
-        this.emailService.postMail({
-            to: currentAccount.email,
-            from: 'no-reply <noreply.testnoreply@gmail.com>',
-            subject: 'Please Verify Your Email',
-            text: `To verify your email please follow the url\n 
-                ${configService.getConfig().serverEndpoint}/v1/verify-email/${
-                currentAccount.verifyToken
-            }`,
-        });
+        // this.emailService.postMail({
+        //     to: currentAccount.email,
+        //     from: 'no-reply <noreply.testnoreply@gmail.com>',
+        //     subject: 'Please Verify Your Email',
+        //     text: `To verify your email please follow the url\n
+        //         ${configService.getConfig().serverEndpoint}/v1/verify-email/${
+        //         currentAccount.verifyToken
+        //     }`,
+        // });
+        let updatedAccount = await this.accountService.save(currentAccount);
+        console.log(updatedAccount);
+        return { account: updatedAccount.toResponse() };
     }
 }

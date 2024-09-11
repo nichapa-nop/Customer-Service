@@ -50,11 +50,11 @@ export class AccountApiController {
         return await this.accountManagerservice.createNewAccount(body, req);
     }
 
-    @Post('/v1/sent-verifyemail/:uuid')
+    @Post('/v1/send-verifyemail/:uuid')
     @HttpCode(200)
     @ApiBearerAuth()
     public async sendVerifyEmail(@Param() param: AccountRequestParamDTO) {
-        return await this.accountManagerservice.SentMailVerifyAccount(param);
+        return await this.accountManagerservice.SendMailVerifyAccount(param);
     }
 
     @Get('/v1/account')

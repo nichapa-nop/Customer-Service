@@ -9,6 +9,7 @@ import {
     IsString,
     IsUUID,
 } from 'class-validator';
+import { AccountStatus } from 'src/utils/utils.enum';
 // import { CompanyType } from 'src/model/account/entities/account.entity';
 
 export class CreateAccountRequestBodyDTO {
@@ -98,6 +99,11 @@ export class UpdateAccountRequestBodyDTO {
     @IsOptional()
     @IsString()
     updatedBy: string;
+
+    @ApiProperty({ enum: AccountStatus })
+    @IsDefined()
+    @IsEnum(AccountStatus)
+    status: AccountStatus;
 }
 
 export class AccountRequestParamDTO {
