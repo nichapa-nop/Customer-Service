@@ -50,12 +50,18 @@ export class AccountApiController {
         return await this.accountManagerservice.createNewAccount(body, req);
     }
 
+    @Post('/v1/sent-verifyemail/:uuid')
+    @HttpCode(200)
+    @ApiBearerAuth()
+    public async sendVerifyEmail(@Param() param: AccountRequestParamDTO) {
+        return await this.accountManagerservice.SentMailVerifyAccount(param);
+    }
+
     @Get('/v1/account')
     @HttpCode(200)
     @ApiResponse({ type: GetAccountListResponseBodyDTO })
     @ApiBearerAuth()
     public async getAllAccount(@Query() query: AccountRequestQueryDTO) {
-        // console.log(req.reqAccount);
         return await this.accountManagerservice.getWithPagination(query);
     }
 

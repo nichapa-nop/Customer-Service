@@ -57,33 +57,36 @@ export class AccountManagerService {
                 firstNameTh: body.firstNameTh,
                 lastNameTh: body.lastNameTh,
                 email: body.email,
-                // password: await hash(body.password, 10),
                 phoneNum: body.phoneNum,
-                // companyName: body.companyName,
-                // type: body.type,
                 createdBy: req.reqAccount.uuid,
                 // createdBy: 'root account',
                 verifyToken: uuidV4(),
             });
-
             let role = await this.roleService.getByName('user'); // Adjust the role name as needed
             newAccount.role = role; // Assign the role to the account
             // newAccount.role = [];
             let createAccount = await this.accountService.save(newAccount);
-            this.emailService.postMail({
-                to: createAccount.email,
-                from: 'no-reply <noreply.testnoreply@gmail.com>',
-                subject: 'Please Verify Your Email',
-                text: `To verify your email please follow the url\n 
-                    ${configService.getConfig().serverEndpoint}/v1/verify-email/${
-                    newAccount.verifyToken
-                }`,
-            });
 
             return { accountDetail: createAccount.toResponse() };
         } else {
             throw new ForbiddenException('Email is already exist.');
         }
+    }
+
+    public async SentMailVerifyAccount(param: AccountRequestParamDTO) {
+        let currentAccount = await this.accountService.getByUuid(param.uuid);
+        if (!currentAccount) {
+            throw new BadRequestException('UUID was incorrect or it does not exist.');
+        }
+        this.emailService.postMail({
+            to: currentAccount.email,
+            from: 'no-reply <noreply.testnoreply@gmail.com>',
+            subject: 'Please Verify Your Email',
+            text: `To verify your email please follow the url\n 
+                ${configService.getConfig().serverEndpoint}/v1/verify-email/${
+                currentAccount.verifyToken
+            }`,
+        });
     }
 
     public async getAllAccount() {

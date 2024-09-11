@@ -42,10 +42,10 @@ export class CreateAccountRequestBodyDTO {
     @IsString()
     phoneNum: string;
 
-    @ApiProperty()
-    @IsDefined()
-    @IsString()
-    password: string;
+    // @ApiProperty()
+    // @IsDefined()
+    // @IsString()
+    // password: string;
 
     @ApiProperty()
     @IsOptional()
