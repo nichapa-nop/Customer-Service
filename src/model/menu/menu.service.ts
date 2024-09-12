@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { MenuEntity } from './entities/menu.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
@@ -20,6 +20,10 @@ export class MenuService {
 
     public getById(id: number) {
         return this.menuRepository.findOneBy({ id });
+    }
+
+    public getByIds(ids: number[]) {
+        return this.menuRepository.findBy({ id: In(ids) });
     }
 
     public getAll(): Promise<MenuEntity[]> {

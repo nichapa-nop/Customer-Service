@@ -2,6 +2,7 @@ import {
     Body,
     Controller,
     Delete,
+    ForbiddenException,
     Get,
     HttpCode,
     Param,
@@ -33,6 +34,8 @@ import {
 import configService from 'src/config/config.service';
 import { Response } from 'express';
 import { RequestWithAccount } from 'src/utils/utils.interface';
+import { verifyPermission } from 'src/utils/utils.function';
+import { MenuPermission } from 'src/model/group-menu/entities/group-menu.binding.entity';
 
 @ApiTags('Account Management')
 @Controller()
@@ -47,13 +50,22 @@ export class AccountApiController {
         @Body() body: CreateAccountRequestBodyDTO,
         @Req() req: RequestWithAccount
     ): Promise<AccountResponseBodyDTO> {
+        if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'account', MenuPermission.CREATE)) {
+            throw new ForbiddenException('Permission Denined');
+        }
         return await this.accountManagerservice.createNewAccount(body, req);
     }
 
     @Post('/v1/send-verifyemail/:uuid')
     @HttpCode(200)
     @ApiBearerAuth()
-    public async sendVerifyEmail(@Param() param: AccountRequestParamDTO) {
+    public async sendVerifyEmail(
+        @Param() param: AccountRequestParamDTO,
+        @Req() req: RequestWithAccount
+    ) {
+        if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'account', MenuPermission.UPDATE)) {
+            throw new ForbiddenException('Permission Denined');
+        }
         return await this.accountManagerservice.SendMailVerifyAccount(param);
     }
 
@@ -61,7 +73,13 @@ export class AccountApiController {
     @HttpCode(200)
     @ApiResponse({ type: GetAccountListResponseBodyDTO })
     @ApiBearerAuth()
-    public async getAllAccount(@Query() query: AccountRequestQueryDTO) {
+    public async getAllAccount(
+        @Query() query: AccountRequestQueryDTO,
+        @Req() req: RequestWithAccount
+    ) {
+        if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'account', MenuPermission.READ)) {
+            throw new ForbiddenException('Permission Denined');
+        }
         return await this.accountManagerservice.getWithPagination(query);
     }
 
@@ -69,7 +87,13 @@ export class AccountApiController {
     @HttpCode(200)
     @ApiResponse({ type: AccountResponseBodyDTO })
     @ApiBearerAuth()
-    public async getAccount(@Param() param: AccountRequestParamDTO) {
+    public async getAccount(
+        @Param() param: AccountRequestParamDTO,
+        @Req() req: RequestWithAccount
+    ) {
+        if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'account', MenuPermission.READ)) {
+            throw new ForbiddenException('Permission Denined');
+        }
         return await this.accountManagerservice.getAccount(param);
     }
 
@@ -82,13 +106,22 @@ export class AccountApiController {
         @Body() body: UpdateAccountRequestBodyDTO,
         @Req() req: RequestWithAccount
     ): Promise<UpdateAccountResponseBodyDTO> {
+        if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'account', MenuPermission.UPDATE)) {
+            throw new ForbiddenException('Permission Denined');
+        }
         return await this.accountManagerservice.updateAccount(param, body, req);
     }
 
     @Delete('/v1/account/:uuid')
     @ApiBearerAuth()
-    public async deleteAccount(@Param() param: AccountRequestParamDTO) {
-        return await this.accountManagerservice.deleteAccount(param);
+    public async deleteAccount(
+        @Param() param: AccountRequestParamDTO,
+        @Req() req: RequestWithAccount
+    ) {
+        if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'account', MenuPermission.DELETE)) {
+            throw new ForbiddenException('Permission Denined');
+        }
+        return await this.accountManagerservice.deleteAccount(param, req);
     }
 
     @Get('/v1/verify-email/:verifyToken')
@@ -146,6 +179,9 @@ export class AccountApiController {
         @Param() param: AccountRequestParamDTO,
         @Req() req: RequestWithAccount
     ) {
+        if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'account', MenuPermission.UPDATE)) {
+            throw new ForbiddenException('Permission Denined');
+        }
         return await this.accountManagerservice.disableAndEnableAccount(param, req);
     }
 
@@ -157,6 +193,9 @@ export class AccountApiController {
         @Param() param: AccountRequestParamDTO,
         @Req() req: RequestWithAccount
     ) {
+        if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'account', MenuPermission.UPDATE)) {
+            throw new ForbiddenException('Permission Denined');
+        }
         return await this.accountManagerservice.recoveryAccount(param, req);
     }
 }

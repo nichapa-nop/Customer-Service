@@ -1,21 +1,29 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateRoleRequestBodyDTO, RoleRequestParamDTO, UpdateRoleRequestBodyDTO } from 'src/api/role/dto/role.request';
+import {
+    CreateRoleRequestBodyDTO,
+    RoleRequestParamDTO,
+    UpdateRoleRequestBodyDTO,
+} from 'src/api/role/dto/role.request';
 import { RoleResponseBodyDTO, UpdateRoleResponseBodyDTO } from 'src/api/role/dto/role.response';
 import { RoleEntity } from 'src/model/role/entities/role.entity';
 import { RoleService } from 'src/model/role/role.service';
+import { RequestWithAccount } from 'src/utils/utils.interface';
 
 @Injectable()
 export class RoleManagerService {
     constructor(private readonly roleService: RoleService) {}
 
-    public async createNewRole(body: CreateRoleRequestBodyDTO): Promise<RoleResponseBodyDTO> {
+    public async createNewRole(
+        body: CreateRoleRequestBodyDTO,
+        req: RequestWithAccount
+    ): Promise<RoleResponseBodyDTO> {
         let newRole = new RoleEntity();
         let roleName = await this.roleService.getByName(body.roleName);
         if (!roleName) {
             newRole.create({
                 roleName: body.roleName,
                 priority: body.priority,
-                createdBy: body.createdBy,
+                createdBy: req.reqAccount.uuid,
             });
             let role = await this.roleService.save(newRole);
             return { roleDetail: role.toResponse() };
@@ -41,7 +49,8 @@ export class RoleManagerService {
 
     public async updateRole(
         param: RoleRequestParamDTO,
-        body: UpdateRoleRequestBodyDTO
+        body: UpdateRoleRequestBodyDTO,
+        req: RequestWithAccount
     ): Promise<UpdateRoleResponseBodyDTO> {
         let currentRole = await this.roleService.getByUuid(param.id);
         if (!currentRole) {
@@ -50,7 +59,7 @@ export class RoleManagerService {
             currentRole.update({
                 roleName: body.roleName,
                 priority: body.priority,
-                updatedBy: body.updatedBy,
+                updatedBy: req.reqAccount.uuid,
             });
             return {
                 updateRoleDetail: currentRole.toResponse(),

@@ -1,8 +1,30 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Delete,
+    ForbiddenException,
+    Get,
+    HttpCode,
+    Param,
+    Post,
+    Put,
+    Req,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RoleManagerService } from 'src/manager/role/role-manager.service';
-import { GetRoleListResponseBodyDTO, RoleResponseBodyDTO, UpdateRoleResponseBodyDTO } from './dto/role.response';
-import { CreateRoleRequestBodyDTO, RoleRequestParamDTO, UpdateRoleRequestBodyDTO } from './dto/role.request';
+import {
+    GetRoleListResponseBodyDTO,
+    RoleResponseBodyDTO,
+    UpdateRoleResponseBodyDTO,
+} from './dto/role.response';
+import {
+    CreateRoleRequestBodyDTO,
+    RoleRequestParamDTO,
+    UpdateRoleRequestBodyDTO,
+} from './dto/role.request';
+import { RequestWithAccount } from 'src/utils/utils.interface';
+import { verifyPermission } from 'src/utils/utils.function';
+import { MenuPermission } from 'src/model/group-menu/entities/group-menu.binding.entity';
 
 @ApiTags('Role Management')
 @Controller()
@@ -13,21 +35,33 @@ export class RoleApiController {
     @Post('/v1/role')
     @HttpCode(200)
     @ApiResponse({ type: RoleResponseBodyDTO })
-    public async createRole(@Body() body: CreateRoleRequestBodyDTO): Promise<RoleResponseBodyDTO> {
-        return await this.roleManagerService.createNewRole(body);
+    public async createRole(
+        @Body() body: CreateRoleRequestBodyDTO,
+        @Req() req: RequestWithAccount
+    ): Promise<RoleResponseBodyDTO> {
+        if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'role', MenuPermission.CREATE)) {
+            throw new ForbiddenException('Permission Denined');
+        }
+        return await this.roleManagerService.createNewRole(body, req);
     }
 
     @Get('v1/role')
     @HttpCode(200)
     @ApiResponse({ type: GetRoleListResponseBodyDTO })
-    public async getAllRole() {
+    public async getAllRole(@Req() req: RequestWithAccount) {
+        if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'role', MenuPermission.READ)) {
+            throw new ForbiddenException('Permission Denined');
+        }
         return await this.roleManagerService.getAllRole();
     }
 
     @Get('/v1/role/:uuid')
     @HttpCode(200)
     @ApiResponse({ type: RoleResponseBodyDTO })
-    public async getRole(@Param() param: RoleRequestParamDTO) {
+    public async getRole(@Param() param: RoleRequestParamDTO, @Req() req: RequestWithAccount) {
+        if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'role', MenuPermission.READ)) {
+            throw new ForbiddenException('Permission Denined');
+        }
         return await this.roleManagerService.getRole(param);
     }
 
@@ -36,13 +70,20 @@ export class RoleApiController {
     @ApiResponse({ type: UpdateRoleResponseBodyDTO })
     public async updateRole(
         @Param() param: RoleRequestParamDTO,
-        @Body() body: UpdateRoleRequestBodyDTO
+        @Body() body: UpdateRoleRequestBodyDTO,
+        @Req() req: RequestWithAccount
     ): Promise<UpdateRoleResponseBodyDTO> {
-        return await this.roleManagerService.updateRole(param, body);
+        if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'role', MenuPermission.UPDATE)) {
+            throw new ForbiddenException('Permission Denined');
+        }
+        return await this.roleManagerService.updateRole(param, body, req);
     }
 
     @Delete('/v1/role/:uuid')
-    public async deleteRole(@Param() param: RoleRequestParamDTO) {
+    public async deleteRole(@Param() param: RoleRequestParamDTO, @Req() req: RequestWithAccount) {
+        if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'role', MenuPermission.DELETE)) {
+            throw new ForbiddenException('Permission Denined');
+        }
         return await this.roleManagerService.deleteRole(param);
     }
 }

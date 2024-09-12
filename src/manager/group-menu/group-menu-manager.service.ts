@@ -1,11 +1,32 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { CreateGroupMenuRequestBodyDTO } from 'src/api/group-menu/dto/group-menu.request.dto';
+import { GroupMenuBindingEntity } from 'src/model/group-menu/entities/group-menu.binding.entity';
 import { GroupMenuEntity } from 'src/model/group-menu/entities/group-menu.entity';
+import { GroupMenuService } from 'src/model/group-menu/group-menu.service';
+import { MenuService } from 'src/model/menu/menu.service';
 
 @Injectable()
 export class GroupMenuManagerService {
-    // constructor(private readonly groupMenuService: GroupMenuService) {}
+    constructor(
+        private readonly groupMenuService: GroupMenuService,
+        private readonly menuService: MenuService
+    ) {}
 
-    public async createGroupMenu() {
+    public async createGroupMenu(body: CreateGroupMenuRequestBodyDTO) {
+        let menus = await this.menuService.getByIds(body.menus.map((menu) => menu.menuId));
+        if (menus.length !== body.menus.length) {
+            throw new BadRequestException('Some menus are incorrect or its do not exist');
+        }
         let newGroupMenu = new GroupMenuEntity();
+        newGroupMenu.name = body.name;
+        newGroupMenu.bindings = body.menus.map((menu) => {
+            let targetMenu = menus.find((m) => m.id === menu.menuId);
+            let newMenuBinding = new GroupMenuBindingEntity();
+            newMenuBinding.menu = targetMenu;
+            newMenuBinding.permissions = menu.permissions;
+            return newMenuBinding;
+        });
+        let groupMenu = await this.groupMenuService.save(newGroupMenu);
+        return groupMenu;
     }
 }

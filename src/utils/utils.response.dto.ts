@@ -195,3 +195,11 @@ export class TicketIdResponse {
     @ApiProperty()
     count: number;
 }
+
+export class GroupMenuResponse {
+    @ApiProperty()
+    id: number;
+
+    @ApiProperty()
+    name: string;
+}

@@ -21,7 +21,10 @@ export class AccountService {
     }
 
     public getByUuid(uuid: string) {
-        return this.accountRepository.findOneBy({ uuid });
+        return this.accountRepository.findOne({
+            where: { uuid },
+            relations: { role: { groupMenu: { bindings: { menu: true } } } },
+        });
     }
 
     public getByEmail(email: string) {

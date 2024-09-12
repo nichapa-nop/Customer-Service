@@ -8,12 +8,16 @@ import {
 import { MenuResponseBodyDTO } from 'src/api/menu/dto/menu.response';
 import { MenuEntity } from 'src/model/menu/entities/menu.entity';
 import { MenuService } from 'src/model/menu/menu.service';
+import { RequestWithAccount } from 'src/utils/utils.interface';
 
 @Injectable()
 export class MenuManagerService {
     constructor(private readonly menuService: MenuService) {}
 
-    public async createNewMenu(body: CreateMenuRequestBodyDTO): Promise<MenuResponseBodyDTO> {
+    public async createNewMenu(
+        body: CreateMenuRequestBodyDTO,
+        req: RequestWithAccount
+    ): Promise<MenuResponseBodyDTO> {
         let newMenu = new MenuEntity();
         let newName = await this.menuService.getByName(body.menuName);
         if (!newName) {
@@ -22,13 +26,15 @@ export class MenuManagerService {
                 createdBy: body.createdBy,
             });
         }
+        newMenu.createdBy = req.reqAccount.uuid;
         await this.menuService.save(newMenu);
         return { menuDetail: newMenu.toResponse() };
     }
 
     public async updateMenu(
         param: MenuRequestParamDTO,
-        body: UpdateMenuRequestBodyDTO
+        body: UpdateMenuRequestBodyDTO,
+        req: RequestWithAccount
     ): Promise<MenuResponseBodyDTO> {
         let currentId = await this.menuService.getById(param.id);
         if (!currentId) {
@@ -38,6 +44,7 @@ export class MenuManagerService {
                 menuName: body.menuName,
                 updatedBy: body.updatedBy,
             });
+            currentId.createdBy = req.reqAccount.uuid;
             return {
                 menuDetail: currentId.toResponse(),
             };

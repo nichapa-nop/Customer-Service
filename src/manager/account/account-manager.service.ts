@@ -141,12 +141,13 @@ export class AccountManagerService {
         }
     }
 
-    public async deleteAccount(param: AccountRequestParamDTO) {
+    public async deleteAccount(param: AccountRequestParamDTO, req: RequestWithAccount) {
         let currentAccount = await this.accountService.getByUuid(param.uuid);
         if (!currentAccount) {
             throw new BadRequestException('Account was incorrect or it does not exist.');
         } else {
             currentAccount.status = AccountStatus.DELETED;
+            currentAccount.updatedBy = req.reqAccount.uuid;
             return await this.accountService.save(currentAccount);
         }
     }

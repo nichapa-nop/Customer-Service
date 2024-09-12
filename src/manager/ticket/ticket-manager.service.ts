@@ -206,7 +206,6 @@ export class TicketManagerService {
             description: body.description,
         });
         currentTicket.updatedBy = req.reqAccount.uuid;
-
         let updatedTicket = await this.ticketService.save(currentTicket); //save ticket
         statusHistory.currentStatus = currentTicket.status;
         // statusHistory.createdBy = req.reqAccount.uuid;
@@ -253,7 +252,6 @@ export class TicketManagerService {
         });
 
         currentTicket.updatedBy = req.reqAccount.uuid;
-
         statusHistory.currentStatus = currentTicket.status;
         statusHistory.ticket = currentTicket;
         await this.statusHistoryService.save(statusHistory);

@@ -2,6 +2,7 @@ import {
     Body,
     Controller,
     Delete,
+    ForbiddenException,
     Get,
     HttpCode,
     Param,
@@ -21,6 +22,8 @@ import {
 } from './dto/ticket.request.dto';
 import { GetTicketListResponseBodyDTO, TicketResponseBodyDTO } from './dto/ticket.response';
 import { RequestWithAccount } from 'src/utils/utils.interface';
+import { verifyPermission } from 'src/utils/utils.function';
+import { MenuPermission } from 'src/model/group-menu/entities/group-menu.binding.entity';
 
 @ApiTags('Ticket Management')
 @Controller()
@@ -35,19 +38,31 @@ export class TicketApiController {
         @Body() body: CreateTicketRequestBodyDTO,
         @Req() req: RequestWithAccount
     ) {
+        if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'ticket', MenuPermission.CREATE)) {
+            throw new ForbiddenException('Permission Denined');
+        }
         return await this.ticketManagerService.createNewTicket(body, req);
     }
 
     @Get('/v1/ticket')
     @HttpCode(200)
     @ApiResponse({ type: GetTicketListResponseBodyDTO })
-    public async getAllTicket(@Query() query: TicketRequestQueryDTO) {
+    public async getAllTicket(
+        @Query() query: TicketRequestQueryDTO,
+        @Req() req: RequestWithAccount
+    ) {
+        if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'ticket', MenuPermission.READ)) {
+            throw new ForbiddenException('Permission Denined');
+        }
         return await this.ticketManagerService.getWithPagination(query);
     }
 
     @Get('/v1/ticket/:ticketId')
     @HttpCode(200)
-    public async getTicket(@Param() param: TicketRequestParamDTO) {
+    public async getTicket(@Param() param: TicketRequestParamDTO, @Req() req: RequestWithAccount) {
+        if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'ticket', MenuPermission.READ)) {
+            throw new ForbiddenException('Permission Denined');
+        }
         return await this.ticketManagerService.getTicket(param);
     }
 
@@ -58,7 +73,9 @@ export class TicketApiController {
         @Body() body: UpdateTicketRequestBodyDTO,
         @Req() req: RequestWithAccount
     ) {
-        console.log(body);
+        if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'ticket', MenuPermission.UPDATE)) {
+            throw new ForbiddenException('Permission Denined');
+        }
         return await this.ticketManagerService.updateTicket(param, body, req);
     }
 
@@ -69,6 +86,9 @@ export class TicketApiController {
         @Body() body: CloseTicketRequestBodyDTO,
         @Req() req: RequestWithAccount
     ) {
+        if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'ticket', MenuPermission.UPDATE)) {
+            throw new ForbiddenException('Permission Denined');
+        }
         return await this.ticketManagerService.closeTicket(param, body, req);
     }
 
@@ -78,6 +98,9 @@ export class TicketApiController {
         @Param() param: TicketRequestParamDTO,
         @Req() req: RequestWithAccount
     ) {
+        if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'ticket', MenuPermission.DELETE)) {
+            throw new ForbiddenException('Permission Denined');
+        }
         return await this.ticketManagerService.deleteTicket(param, req);
     }
 
@@ -87,6 +110,9 @@ export class TicketApiController {
         @Param() param: TicketRequestParamDTO,
         @Req() req: RequestWithAccount
     ) {
+        if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'ticket', MenuPermission.UPDATE)) {
+            throw new ForbiddenException('Permission Denined');
+        }
         return await this.ticketManagerService.reOpenTicket(param, req);
     }
 }

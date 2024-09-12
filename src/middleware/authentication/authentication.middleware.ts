@@ -31,6 +31,7 @@ export class AuthenticationMiddleware implements NestMiddleware {
             if (!account) {
                 throw 'Account not found';
             }
+            console.log(account);
             req.reqAccount = account;
             return next();
         } catch (e) {

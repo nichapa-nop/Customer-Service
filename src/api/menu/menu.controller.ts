@@ -1,4 +1,15 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Delete,
+    ForbiddenException,
+    Get,
+    HttpCode,
+    Param,
+    Post,
+    Put,
+    Req,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { MenuResponseBodyDTO } from './dto/menu.response';
 import {
@@ -8,6 +19,9 @@ import {
     UpdateMenuRequestBodyDTO,
 } from './dto/menu.request';
 import { MenuManagerService } from 'src/manager/menu/menu-manager.service';
+import { verifyPermission } from 'src/utils/utils.function';
+import { MenuPermission } from 'src/model/group-menu/entities/group-menu.binding.entity';
+import { RequestWithAccount } from 'src/utils/utils.interface';
 
 @ApiTags('Menu Management')
 @Controller()
@@ -18,8 +32,14 @@ export class MenuApiController {
     @Post('/v1/menu')
     @HttpCode(200)
     @ApiResponse({ type: MenuResponseBodyDTO })
-    public async createMenu(@Body() body: CreateMenuRequestBodyDTO) {
-        return await this.menuManagerService.createNewMenu(body);
+    public async createMenu(
+        @Body() body: CreateMenuRequestBodyDTO,
+        @Req() req: RequestWithAccount
+    ) {
+        if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'menu', MenuPermission.CREATE)) {
+            throw new ForbiddenException('Permission Denined');
+        }
+        return await this.menuManagerService.createNewMenu(body, req);
     }
 
     @Put('/v1/menu/:id')
@@ -27,36 +47,55 @@ export class MenuApiController {
     @ApiResponse({ type: MenuResponseBodyDTO })
     public async updateMenu(
         @Param() param: MenuRequestParamDTO,
-        @Body() body: UpdateMenuRequestBodyDTO
+        @Body() body: UpdateMenuRequestBodyDTO,
+        @Req() req: RequestWithAccount
     ) {
-        return await this.menuManagerService.updateMenu(param, body);
+        if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'menu', MenuPermission.UPDATE)) {
+            throw new ForbiddenException('Permission Denined');
+        }
+        return await this.menuManagerService.updateMenu(param, body, req);
     }
 
     @Delete('/v1/menu/:id')
     @HttpCode(200)
     // @ApiResponse
-    public async deleteMenu(@Param() param: MenuRequestParamDTO) {
+    public async deleteMenu(@Param() param: MenuRequestParamDTO, @Req() req: RequestWithAccount) {
+        if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'menu', MenuPermission.DELETE)) {
+            throw new ForbiddenException('Permission Denined');
+        }
         return await this.menuManagerService.deleteMenu(param);
     }
 
     @Get('/v1/menu')
     @HttpCode(200)
     @ApiResponse({ type: MenuResponseBodyDTO })
-    public async getAllMenu() {
+    public async getAllMenu(@Req() req: RequestWithAccount) {
+        if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'menu', MenuPermission.READ)) {
+            throw new ForbiddenException('Permission Denined');
+        }
         return await this.menuManagerService.getAllMenu();
     }
 
     @Get('/v1/menu:id')
     @HttpCode(200)
     @ApiResponse({ type: MenuResponseBodyDTO })
-    public async getMenuById(@Param() param: MenuRequestParamDTO) {
+    public async getMenuById(@Param() param: MenuRequestParamDTO, @Req() req: RequestWithAccount) {
+        if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'menu', MenuPermission.READ)) {
+            throw new ForbiddenException('Permission Denined');
+        }
         return await this.menuManagerService.getMenuById(param);
     }
 
     @Get('/v1/menu/:menuName')
     @HttpCode(200)
     @ApiResponse({ type: MenuResponseBodyDTO })
-    public async getMenuByName(@Param() param: GetMenuByNameRequestParamDTO) {
+    public async getMenuByName(
+        @Param() param: GetMenuByNameRequestParamDTO,
+        @Req() req: RequestWithAccount
+    ) {
+        if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'menu', MenuPermission.READ)) {
+            throw new ForbiddenException('Permission Denined');
+        }
         return await this.menuManagerService.getMenuByName(param);
     }
 }
