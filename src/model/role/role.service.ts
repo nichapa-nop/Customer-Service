@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { RoleEntity } from './entities/role.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { RoleRequestQueryDTO } from 'src/api/role/dto/role.request';
 
 @Injectable()
 export class RoleService {
@@ -28,5 +29,15 @@ export class RoleService {
 
     public getByName(roleName: string) {
         return this.roleRepository.findOneBy({ roleName });
+    }
+
+    public getWithPagination(query: RoleRequestQueryDTO) {
+        return this.roleRepository.findAndCount({
+            take: query.itemsPerPage,
+            skip: query.itemsPerPage * (query.page - 1),
+            relations: { groupMenu: true },
+            order: { id: 'DESC' },
+            // where,
+        });
     }
 }

@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import { IsDefined, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class CreateRoleRequestBodyDTO {
@@ -45,4 +46,23 @@ export class UpdateRoleRequestBodyDTO {
     @IsOptional()
     @IsString()
     updatedBy: string;
+}
+
+export class RoleRequestQueryDTO {
+    @ApiProperty({ required: false, default: 1 })
+    @IsOptional()
+    @Transform(({ value }) => Number(value))
+    @IsNumber()
+    page: number = 1;
+
+    @ApiProperty({ required: false })
+    @IsOptional()
+    @Transform(({ value }) => Number(value))
+    @IsNumber()
+    itemsPerPage: number = 6;
+
+    @ApiProperty({ required: false })
+    @IsOptional()
+    @IsString()
+    keyword?: string;
 }

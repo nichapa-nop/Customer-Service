@@ -8,6 +8,7 @@ import {
     Param,
     Post,
     Put,
+    Query,
     Req,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -20,6 +21,7 @@ import {
 import {
     CreateRoleRequestBodyDTO,
     RoleRequestParamDTO,
+    RoleRequestQueryDTO,
     UpdateRoleRequestBodyDTO,
 } from './dto/role.request';
 import { RequestWithAccount } from 'src/utils/utils.interface';
@@ -48,11 +50,11 @@ export class RoleApiController {
     @Get('v1/role')
     @HttpCode(200)
     @ApiResponse({ type: GetRoleListResponseBodyDTO })
-    public async getAllRole(@Req() req: RequestWithAccount) {
+    public async getAllRole(@Query() query: RoleRequestQueryDTO, @Req() req: RequestWithAccount) {
         if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'role', MenuPermission.READ)) {
             throw new ForbiddenException('Permission Denined');
         }
-        return await this.roleManagerService.getAllRole();
+        return await this.roleManagerService.getWithPagination(query);
     }
 
     @Get('/v1/role/:uuid')

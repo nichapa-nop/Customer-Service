@@ -1,5 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateGroupMenuRequestBodyDTO } from 'src/api/group-menu/dto/group-menu.request.dto';
+import { error } from 'console';
+import {
+    CreateGroupMenuRequestBodyDTO,
+    GroupMenuRequestParamDTO,
+    UpdateGroupMenuRequestBodyDTO,
+} from 'src/api/group-menu/dto/group-menu.request.dto';
 import { GroupMenuBindingEntity } from 'src/model/group-menu/entities/group-menu.binding.entity';
 import { GroupMenuEntity } from 'src/model/group-menu/entities/group-menu.entity';
 import { GroupMenuService } from 'src/model/group-menu/group-menu.service';
@@ -28,5 +33,25 @@ export class GroupMenuManagerService {
         });
         let groupMenu = await this.groupMenuService.save(newGroupMenu);
         return groupMenu;
+    }
+
+    public async updateGroupMenu(
+        body: UpdateGroupMenuRequestBodyDTO,
+        param: GroupMenuRequestParamDTO
+    ) {
+        let currentGroup = await this.groupMenuService.getById(param.id);
+        if (!currentGroup) {
+            throw new BadRequestException('Group Menu was incorrect or it does not exist.');
+        }
+        //update group menu function
+        // let menus = await this.menuService.getById()
+    }
+
+    public async deleteGroupMenu(param: GroupMenuRequestParamDTO) {
+        let currentGroup = await this.groupMenuService.getById(param.id);
+        if (!currentGroup) {
+            throw new BadRequestException('Group Menu was incorrect or it does not exist.');
+        }
+        return await this.groupMenuService.delete(param.id);
     }
 }

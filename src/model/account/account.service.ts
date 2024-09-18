@@ -32,20 +32,10 @@ export class AccountService {
     }
 
     public getWithPagination(query: AccountRequestQueryDTO) {
-        // let where: FindOptionsWhere<AccountEntity>[] = [];
-        // if (query.keyword) {
-        //     where.push({
-        //         uuid: ILike(`%${query.keyword}%`),
-        //     });
-        //     where.push({
-        //         topic: ILike(`%${query.keyword}%`),
-        //     });
-        // }
-
         return this.accountRepository.findAndCount({
             take: query.itemsPerPage,
             skip: query.itemsPerPage * (query.page - 1),
-            // relations: { assignAccount: true },
+            relations: { role: { groupMenu: true } },
             order: { uuid: 'DESC' },
             // where,
         });

@@ -21,4 +21,8 @@ export class GroupMenuService {
     public getById(id: number) {
         return this.groupMenuRepository.findOneBy({ id });
     }
+
+    public delete(id: number) {
+        return this.groupMenuRepository.delete({ id });
+    }
 }

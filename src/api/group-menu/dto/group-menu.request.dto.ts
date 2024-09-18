@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
     IsArray,
     IsDefined,
@@ -21,6 +21,7 @@ export class GroupMenuRequestBodyDTO {
 export class GroupMenuRequestParamDTO {
     @ApiProperty()
     @IsDefined()
+    @Transform(({ value }) => Number(value))
     @IsNumber()
     id: number;
 }
@@ -39,6 +40,20 @@ export class BindingMenuRequestBodyDTO {
 }
 
 export class CreateGroupMenuRequestBodyDTO {
+    @ApiProperty()
+    @IsDefined()
+    @IsString()
+    name: string;
+
+    @ApiProperty({ type: BindingMenuRequestBodyDTO, isArray: true })
+    @IsOptional()
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => BindingMenuRequestBodyDTO)
+    menus: BindingMenuRequestBodyDTO[];
+}
+
+export class UpdateGroupMenuRequestBodyDTO {
     @ApiProperty()
     @IsDefined()
     @IsString()

@@ -123,6 +123,7 @@ export class AccountEntity {
             email: this.email,
             phoneNum: this.phoneNum,
             status: this.status,
+            role: this.role,
             // password: this.password,
             // companyName: this.companyName,
             // type: this.type,
@@ -137,6 +138,7 @@ export class AccountEntity {
         this.lastNameTh = params.lastNameTh;
         this.email = params.email;
         this.phoneNum = params.phoneNum;
+        // this.role = params.role,
         // this.companyName = params.companyName;
         // this.type = params.type;
         this.verifyToken = params.verifyToken;

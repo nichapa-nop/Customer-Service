@@ -25,12 +25,4 @@ export class GroupMenuEntity {
             name: this.name,
         };
     }
-
-    public create(params: CreateGroupMenuParams) {
-        this.name = params.name;
-    }
-}
-
-export interface CreateGroupMenuParams {
-    name: string;
 }

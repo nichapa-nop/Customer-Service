@@ -79,6 +79,7 @@ export class RoleEntity {
             id: this.id,
             roleName: this.roleName,
             priority: this.priority,
+            groupMenu: this.groupMenu,
             createdBy: this.createdBy,
             updatedBy: this.updatedBy,
         };

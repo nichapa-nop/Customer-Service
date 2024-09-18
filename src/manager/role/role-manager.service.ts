@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import {
     CreateRoleRequestBodyDTO,
     RoleRequestParamDTO,
+    RoleRequestQueryDTO,
     UpdateRoleRequestBodyDTO,
 } from 'src/api/role/dto/role.request';
 import { RoleResponseBodyDTO, UpdateRoleResponseBodyDTO } from 'src/api/role/dto/role.response';
@@ -74,5 +75,13 @@ export class RoleManagerService {
         } else {
             return await this.roleService.delete(param.id);
         }
+    }
+
+    public async getWithPagination(query: RoleRequestQueryDTO) {
+        let [roles, count] = await this.roleService.getWithPagination(query);
+        return {
+            roles: roles.map((role) => role.toResponse()),
+            pagination: { page: query.page, itemsPerPage: query.itemsPerPage, itemsCount: count },
+        };
     }
 }
