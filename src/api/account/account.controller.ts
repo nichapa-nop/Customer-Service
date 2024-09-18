@@ -128,7 +128,7 @@ export class AccountApiController {
     @HttpCode(200)
     @ApiOkResponse()
     public async verifyToken(@Param() param: VerifyTokenRequestParamDTO) {
-        console.log(param);
+        // console.log(param);
         return await this.accountManagerservice.verifyAccount(param.verifyToken);
     }
 
@@ -138,7 +138,7 @@ export class AccountApiController {
     public async login(@Body() body: LoginUserRequestBodyDTO, @Res() res: Response): Promise<void> {
         const response = await this.accountManagerservice.loginAccount(body);
 
-        console.log(response);
+        // console.log(response);
         const expires = new Date();
         expires.setMilliseconds(
             expires.getMilliseconds() + configService.getConfig().jwtExpiration

@@ -102,6 +102,7 @@ export class AccountManagerService {
         if (!account) {
             throw new BadRequestException('UUID was incorrect or it does not exist.');
         }
+        console.log('edit', account);
         return { accountDetail: account.toResponse() };
     }
 
@@ -135,6 +136,7 @@ export class AccountManagerService {
             });
             currentAccount.updatedBy = req.reqAccount.uuid;
             await this.accountService.save(currentAccount);
+            console.log(currentAccount);
             return {
                 updateAccountDetail: currentAccount.toResponse(),
             };

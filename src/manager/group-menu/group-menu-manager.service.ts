@@ -32,7 +32,7 @@ export class GroupMenuManagerService {
             return newMenuBinding;
         });
         let groupMenu = await this.groupMenuService.save(newGroupMenu);
-        return groupMenu;
+        return { groupMenuDetail: groupMenu.toResponse() };
     }
 
     public async updateGroupMenu(

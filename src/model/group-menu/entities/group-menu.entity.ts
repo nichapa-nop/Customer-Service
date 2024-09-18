@@ -23,6 +23,7 @@ export class GroupMenuEntity {
         return {
             id: this.id,
             name: this.name,
+            // bindings: this.bindings,
         };
     }
 }
