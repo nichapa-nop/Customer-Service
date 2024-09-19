@@ -31,7 +31,23 @@ export class AccountService {
         return this.accountRepository.findOneBy({ email });
     }
 
+    public isEmailExist(email: string) {
+        return this.accountRepository.exists({ where: { email } });
+    }
+
     public getWithPagination(query: AccountRequestQueryDTO) {
+        let where: FindOptionsWhere<AccountEntity>[] = [];
+        if (query.keyword) {
+            where.push({
+                firstName: ILike(`%${query.keyword}%`),
+            });
+            where.push({
+                lastName: ILike(`%${query.keyword}%`),
+            });
+            where.push({
+                email: ILike(`%${query.keyword}%`),
+            });
+        }
         return this.accountRepository.findAndCount({
             take: query.itemsPerPage,
             skip: query.itemsPerPage * (query.page - 1),

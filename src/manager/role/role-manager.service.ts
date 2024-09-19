@@ -41,7 +41,7 @@ export class RoleManagerService {
     }
 
     public async getRole(param: RoleRequestParamDTO) {
-        let role = await this.roleService.getByUuid(param.id);
+        let role = await this.roleService.getById(param.id);
         if (!role) {
             throw new BadRequestException('UUID was incorrect or it does not exist.');
         }
@@ -53,7 +53,7 @@ export class RoleManagerService {
         body: UpdateRoleRequestBodyDTO,
         req: RequestWithAccount
     ): Promise<UpdateRoleResponseBodyDTO> {
-        let currentRole = await this.roleService.getByUuid(param.id);
+        let currentRole = await this.roleService.getById(param.id);
         if (!currentRole) {
             throw new BadRequestException('ID was incorrect or it does not exist.');
         } else {
@@ -69,7 +69,7 @@ export class RoleManagerService {
     }
 
     public async deleteRole(param: RoleRequestParamDTO) {
-        let currentRole = await this.roleService.getByUuid(param.id);
+        let currentRole = await this.roleService.getById(param.id);
         if (!currentRole) {
             throw new BadRequestException('Role was incorrect or does not exist.');
         } else {

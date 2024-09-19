@@ -9,6 +9,7 @@ import {
     IsString,
     IsUUID,
 } from 'class-validator';
+import { RoleEntity } from 'src/model/role/entities/role.entity';
 import { AccountStatus } from 'src/utils/utils.enum';
 // import { CompanyType } from 'src/model/account/entities/account.entity';
 
@@ -43,10 +44,10 @@ export class CreateAccountRequestBodyDTO {
     @IsString()
     phoneNum: string;
 
-    // @ApiProperty()
-    // @IsDefined()
-    // @IsString()
-    // password: string;
+    @ApiProperty()
+    @IsDefined()
+    @IsNumber()
+    roleId: number;
 
     @ApiProperty()
     @IsOptional()
@@ -90,10 +91,10 @@ export class UpdateAccountRequestBodyDTO {
     @IsString()
     phoneNum: string;
 
-    // @ApiProperty()
-    // @IsDefined()
-    // @IsString()
-    // type: CompanyType;
+    @ApiProperty()
+    @IsDefined()
+    @IsNumber()
+    roleId: number;
 
     @ApiProperty()
     @IsOptional()

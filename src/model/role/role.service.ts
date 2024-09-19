@@ -19,7 +19,7 @@ export class RoleService {
         return this.roleRepository.find();
     }
 
-    public getByUuid(id: number) {
+    public getById(id: number) {
         return this.roleRepository.findOneBy({ id });
     }
 

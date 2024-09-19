@@ -31,6 +31,9 @@ export class TicketService {
             where.push({
                 topic: ILike(`%${query.keyword}%`),
             });
+            // where.push({
+            //     assignAccount: ILike(`%${query.keyword}%`),
+            // });
         }
         // if (query.incidentType) {
         //     if (where.length) {

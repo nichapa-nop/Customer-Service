@@ -1,5 +1,6 @@
 import {
     BadRequestException,
+    ConflictException,
     ForbiddenException,
     Injectable,
     ServiceUnavailableException,
@@ -49,28 +50,29 @@ export class AccountManagerService {
     ): Promise<AccountResponseBodyDTO> {
         console.log('Received reqAccount:', req.reqAccount);
         let newAccount = new AccountEntity();
-        let email = await this.accountService.getByEmail(body.email);
-        if (!email) {
-            newAccount.create({
-                firstName: body.firstName,
-                lastName: body.lastName,
-                firstNameTh: body.firstNameTh,
-                lastNameTh: body.lastNameTh,
-                email: body.email,
-                phoneNum: body.phoneNum,
-                createdBy: req.reqAccount.uuid,
-                // createdBy: 'root account',
-                verifyToken: uuidV4(),
-            });
-            let role = await this.roleService.getByName('user'); // Adjust the role name as needed
-            newAccount.role = role; // Assign the role to the account
-            // newAccount.role = [];
-            let createAccount = await this.accountService.save(newAccount);
-
-            return { accountDetail: createAccount.toResponse() };
-        } else {
-            throw new ForbiddenException('Email is already exist.');
+        let isEmailExist = await this.accountService.isEmailExist(body.email.toLowerCase());
+        if (isEmailExist) {
+            throw new ConflictException('This email is already in used');
         }
+        let role = await this.roleService.getById(body.roleId);
+        if (!role) {
+            throw new BadRequestException('Role id was incorrect or it does not exist');
+        }
+        newAccount.create({
+            firstName: body.firstName,
+            lastName: body.lastName,
+            firstNameTh: body.firstNameTh,
+            lastNameTh: body.lastNameTh,
+            email: body.email,
+            phoneNum: body.phoneNum,
+            createdBy: req.reqAccount.uuid,
+            // createdBy: 'root account',
+            role,
+            verifyToken: uuidV4(),
+        });
+        let createAccount = await this.accountService.save(newAccount);
+
+        return { accountDetail: createAccount.toResponse() };
     }
 
     public async SendMailVerifyAccount(param: AccountRequestParamDTO) {
@@ -123,6 +125,10 @@ export class AccountManagerService {
         if (!currentAccount) {
             throw new BadRequestException('UUID was incorrect or it does not exist.');
         } else {
+            let role = await this.roleService.getById(body.roleId);
+            if (!role) {
+                throw new BadRequestException('Role id was incorrect or it does not exist');
+            }
             currentAccount.update({
                 firstName: body.firstName,
                 lastName: body.lastName,
@@ -131,8 +137,7 @@ export class AccountManagerService {
                 email: body.email,
                 phoneNum: body.phoneNum,
                 status: body.status,
-                // type: body.type,
-                // updatedBy: req.reqAccount.uuid,
+                role,
             });
             currentAccount.updatedBy = req.reqAccount.uuid;
             await this.accountService.save(currentAccount);

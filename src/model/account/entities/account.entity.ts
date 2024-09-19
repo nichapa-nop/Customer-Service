@@ -138,9 +138,7 @@ export class AccountEntity {
         this.lastNameTh = params.lastNameTh;
         this.email = params.email;
         this.phoneNum = params.phoneNum;
-        // this.role = params.role,
-        // this.companyName = params.companyName;
-        // this.type = params.type;
+        this.role = params.role;
         this.verifyToken = params.verifyToken;
         this.createdBy = params.createdBy;
     }
@@ -157,8 +155,7 @@ export class AccountEntity {
         this.email = params.email;
         this.phoneNum = params.phoneNum;
         this.status = params.status;
-        // this.type = params.type;
-        // this.updatedBy = params.updatedBy;
+        this.role = params.role;
     }
 }
 
@@ -169,6 +166,7 @@ export interface CreateAccountParams {
     lastNameTh: string;
     email: string;
     phoneNum: string;
+    role: RoleEntity;
     // companyName: string;
     // type: CompanyType;
     createdBy: string;
@@ -182,9 +180,8 @@ export interface UpdateAccountParams {
     lastNameTh: string;
     phoneNum: string;
     email: string;
+    role: RoleEntity;
     status: AccountStatus;
-    // type: CompanyType;
-    // updatedBy: string;
 }
 
 export interface UpdatePassAccountParam {
