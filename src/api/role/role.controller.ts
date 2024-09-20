@@ -13,11 +13,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RoleManagerService } from 'src/manager/role/role-manager.service';
-import {
-    GetRoleListResponseBodyDTO,
-    RoleResponseBodyDTO,
-    UpdateRoleResponseBodyDTO,
-} from './dto/role.response';
+import { GetRoleListResponseBodyDTO, RoleResponseBodyDTO } from './dto/role.response';
 import {
     CreateRoleRequestBodyDTO,
     RoleRequestParamDTO,
@@ -57,7 +53,7 @@ export class RoleApiController {
         return await this.roleManagerService.getWithPagination(query);
     }
 
-    @Get('/v1/role/:uuid')
+    @Get('/v1/role/:id')
     @HttpCode(200)
     @ApiResponse({ type: RoleResponseBodyDTO })
     public async getRole(@Param() param: RoleRequestParamDTO, @Req() req: RequestWithAccount) {
@@ -67,21 +63,21 @@ export class RoleApiController {
         return await this.roleManagerService.getRole(param);
     }
 
-    @Put('/v1/role/:uuid')
+    @Put('/v1/role/:id')
     @HttpCode(200)
-    @ApiResponse({ type: UpdateRoleResponseBodyDTO })
+    @ApiResponse({ type: RoleResponseBodyDTO })
     public async updateRole(
         @Param() param: RoleRequestParamDTO,
         @Body() body: UpdateRoleRequestBodyDTO,
         @Req() req: RequestWithAccount
-    ): Promise<UpdateRoleResponseBodyDTO> {
+    ): Promise<RoleResponseBodyDTO> {
         if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'role', MenuPermission.UPDATE)) {
             throw new ForbiddenException('Permission Denined');
         }
         return await this.roleManagerService.updateRole(param, body, req);
     }
 
-    @Delete('/v1/role/:uuid')
+    @Delete('/v1/role/:id')
     public async deleteRole(@Param() param: RoleRequestParamDTO, @Req() req: RequestWithAccount) {
         if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'role', MenuPermission.DELETE)) {
             throw new ForbiddenException('Permission Denined');

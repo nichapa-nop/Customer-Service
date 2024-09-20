@@ -29,6 +29,7 @@ export class RoleEntity {
 
     @Column({
         type: 'integer',
+        nullable: true,
     })
     priority: number;
 
@@ -53,7 +54,6 @@ export class RoleEntity {
     @OneToMany(() => AccountEntity, (account) => account.role, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'accountRole' })
     account: AccountEntity[];
-    // account: Relation<AccountEntity>;
 
     @ManyToOne(() => GroupMenuEntity, (groupMenu) => groupMenu.roles, {
         nullable: true,
@@ -64,13 +64,15 @@ export class RoleEntity {
 
     public create(params: CreateRoleParams) {
         this.roleName = params.roleName;
-        this.priority = params.priority;
+        this.groupMenu = params.groupMenu;
+        // this.priority = params.priority;
         this.createdBy = params.createdBy;
     }
 
     public update(params: UpdateRoleParams) {
         this.roleName = params.roleName;
-        this.priority = params.priority;
+        this.groupMenu = params.groupMenu;
+        // this.priority = params.priority;
         this.updatedBy = params.updatedBy;
     }
 
@@ -78,7 +80,7 @@ export class RoleEntity {
         return {
             id: this.id,
             roleName: this.roleName,
-            priority: this.priority,
+            // priority: this.priority,
             groupMenu: this.groupMenu,
             createdBy: this.createdBy,
             updatedBy: this.updatedBy,
@@ -88,12 +90,14 @@ export class RoleEntity {
 
 export interface CreateRoleParams {
     roleName: string;
-    priority: number;
+    groupMenu: GroupMenuEntity;
+    // priority: number;
     createdBy: string;
 }
 
 export interface UpdateRoleParams {
     roleName: string;
-    priority: number;
+    groupMenu: GroupMenuEntity;
+    // priority: number;
     updatedBy: string;
 }

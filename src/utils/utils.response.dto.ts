@@ -9,7 +9,6 @@ import {
 } from 'src/model/ticket/entities/ticket.entity';
 import { TicketStatus } from './utils.enum';
 import { AccountStatus } from 'src/model/account/entities/account.entity';
-import { GroupMenuEntity } from 'src/model/group-menu/entities/group-menu.entity';
 import { RoleEntity } from 'src/model/role/entities/role.entity';
 
 export class AccountResponse {
@@ -79,8 +78,8 @@ export class RoleResponse {
     @ApiProperty()
     roleName: string;
 
-    @ApiProperty()
-    priority: number;
+    // @ApiProperty()
+    // priority: number;
 
     @ApiProperty()
     groupMenu: GroupMenuResponse;
@@ -91,21 +90,6 @@ export class RoleResponse {
     @ApiProperty()
     updatedBy: string;
 }
-
-export class UpdateRoleResponse {
-    @ApiProperty()
-    id: number;
-
-    @ApiProperty()
-    roleName: string;
-
-    @ApiProperty()
-    priority: number;
-
-    @ApiProperty()
-    updatedBy: string;
-}
-
 export class ResetPasswordResponse {
     @ApiProperty()
     id: number;

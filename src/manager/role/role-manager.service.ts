@@ -5,14 +5,18 @@ import {
     RoleRequestQueryDTO,
     UpdateRoleRequestBodyDTO,
 } from 'src/api/role/dto/role.request';
-import { RoleResponseBodyDTO, UpdateRoleResponseBodyDTO } from 'src/api/role/dto/role.response';
+import { RoleResponseBodyDTO } from 'src/api/role/dto/role.response';
+import { GroupMenuService } from 'src/model/group-menu/group-menu.service';
 import { RoleEntity } from 'src/model/role/entities/role.entity';
 import { RoleService } from 'src/model/role/role.service';
 import { RequestWithAccount } from 'src/utils/utils.interface';
 
 @Injectable()
 export class RoleManagerService {
-    constructor(private readonly roleService: RoleService) {}
+    constructor(
+        private readonly roleService: RoleService,
+        private readonly groupMenuService: GroupMenuService
+    ) {}
 
     public async createNewRole(
         body: CreateRoleRequestBodyDTO,
@@ -20,10 +24,15 @@ export class RoleManagerService {
     ): Promise<RoleResponseBodyDTO> {
         let newRole = new RoleEntity();
         let roleName = await this.roleService.getByName(body.roleName);
+        let groupMenu = await this.groupMenuService.getById(body.groupMenuId);
+        if (!groupMenu) {
+            throw new BadRequestException('Group Menu was incorrect or it does not exist');
+        }
         if (!roleName) {
             newRole.create({
                 roleName: body.roleName,
-                priority: body.priority,
+                groupMenu,
+                // priority: body.priority,
                 createdBy: req.reqAccount.uuid,
             });
             let role = await this.roleService.save(newRole);
@@ -52,20 +61,24 @@ export class RoleManagerService {
         param: RoleRequestParamDTO,
         body: UpdateRoleRequestBodyDTO,
         req: RequestWithAccount
-    ): Promise<UpdateRoleResponseBodyDTO> {
+    ): Promise<RoleResponseBodyDTO> {
         let currentRole = await this.roleService.getById(param.id);
         if (!currentRole) {
             throw new BadRequestException('ID was incorrect or it does not exist.');
-        } else {
-            currentRole.update({
-                roleName: body.roleName,
-                priority: body.priority,
-                updatedBy: req.reqAccount.uuid,
-            });
-            return {
-                updateRoleDetail: currentRole.toResponse(),
-            };
         }
+        let groupMenu = await this.groupMenuService.getById(body.groupMenuId);
+        if (!groupMenu) {
+            throw new BadRequestException('Group Menu was incorrect or it does not exist');
+        }
+        currentRole.update({
+            roleName: body.roleName,
+            groupMenu,
+            // priority: body.priority,
+            updatedBy: req.reqAccount.uuid,
+        });
+        return {
+            roleDetail: currentRole.toResponse(),
+        };
     }
 
     public async deleteRole(param: RoleRequestParamDTO) {
