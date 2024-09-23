@@ -63,12 +63,29 @@ export class UpdateAccountResponse {
     // type: CompanyType;
 }
 
+export class MenuResponse {
+    @ApiProperty()
+    id: number;
+
+    @ApiProperty()
+    menuName: string;
+
+    @ApiProperty()
+    createdBy: string;
+
+    // @ApiProperty()
+    // updatedBy: string;
+}
+
 export class GroupMenuResponse {
     @ApiProperty()
     id: number;
 
     @ApiProperty()
     name: string;
+
+    @ApiProperty({ type: MenuResponse, isArray: true })
+    menus: MenuResponse[];
 }
 
 export class RoleResponse {
@@ -96,20 +113,6 @@ export class ResetPasswordResponse {
 
     @ApiProperty()
     resetPassToken: string;
-}
-
-export class MenuResponse {
-    @ApiProperty()
-    id: number;
-
-    @ApiProperty()
-    menuName: string;
-
-    @ApiProperty()
-    createdBy: string;
-
-    // @ApiProperty()
-    // updatedBy: string;
 }
 
 export class TicketCommentResponse {

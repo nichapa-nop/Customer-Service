@@ -24,6 +24,7 @@ export class GroupMenuEntity {
             id: this.id,
             name: this.name,
             // bindings: this.bindings,
+            menus: this.bindings?.map((binding) => binding.menu?.toResponse()),
         };
     }
 }
