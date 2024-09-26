@@ -32,6 +32,7 @@ export class CreateRoleRequestBodyDTO {
 export class RoleRequestParamDTO {
     @ApiProperty()
     @IsDefined()
+    @Transform(({ value }) => Number(value))
     @IsNumber()
     id: number;
 }

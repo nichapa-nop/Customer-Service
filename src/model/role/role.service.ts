@@ -16,11 +16,14 @@ export class RoleService {
     }
 
     public getAll(): Promise<RoleEntity[]> {
-        return this.roleRepository.find();
+        return this.roleRepository.find({ relations: { groupMenu: { bindings: { menu: true } } } });
     }
 
     public getById(id: number) {
-        return this.roleRepository.findOneBy({ id });
+        return this.roleRepository.findOne({
+            where: { id },
+            relations: { groupMenu: { bindings: { menu: true } } },
+        });
     }
 
     public delete(id: number) {
@@ -35,7 +38,7 @@ export class RoleService {
         return this.roleRepository.findAndCount({
             take: query.itemsPerPage,
             skip: query.itemsPerPage * (query.page - 1),
-            relations: { groupMenu: true },
+            relations: { groupMenu: { bindings: { menu: true } } },
             order: { id: 'DESC' },
             // where,
         });
