@@ -40,6 +40,7 @@ export class RoleApiController {
         if (!verifyPermission(req.reqAccount?.role?.groupMenu, 'role', MenuPermission.CREATE)) {
             throw new ForbiddenException('Permission Denined');
         }
+        console.log(body);
         return await this.roleManagerService.createNewRole(body, req);
     }
 

@@ -17,6 +17,11 @@ export class GroupMenuManagerService {
         private readonly menuService: MenuService
     ) {}
 
+    public async getAll() {
+        let groupMenus = await this.groupMenuService.getAll();
+        return { groupMenus: groupMenus.map((groupMenu) => groupMenu.toResponse()) };
+    }
+
     public async createGroupMenu(body: CreateGroupMenuRequestBodyDTO) {
         let menus = await this.menuService.getByIds(body.menus.map((menu) => menu.menuId));
         if (menus.length !== body.menus.length) {

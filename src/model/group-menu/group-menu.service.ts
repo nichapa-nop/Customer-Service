@@ -15,7 +15,7 @@ export class GroupMenuService {
     }
 
     public getAll(): Promise<GroupMenuEntity[]> {
-        return this.groupMenuRepository.find();
+        return this.groupMenuRepository.find({ relations: { bindings: { menu: true } } });
     }
 
     public getById(id: number) {

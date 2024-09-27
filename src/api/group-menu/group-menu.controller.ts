@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, HttpCode, Param, Post, Redirect, Req } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    HttpCode,
+    Param,
+    Post,
+    Redirect,
+    Req,
+} from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { GroupMenuManagerService } from 'src/manager/group-menu/group-menu-manager.service';
 import {
@@ -11,6 +21,17 @@ import { RequestWithAccount } from 'src/utils/utils.interface';
 @Controller()
 export class GroupMenuApiController {
     constructor(private readonly groupMenuManagerService: GroupMenuManagerService) {}
+
+    @Get('/v1/group-menu')
+    @HttpCode(200)
+    @ApiOkResponse()
+    public async getAllGroupMenu() {
+        try {
+            return await this.groupMenuManagerService.getAll();
+        } catch (e) {
+            throw e;
+        }
+    }
 
     @Post('/v1/group-menu')
     @HttpCode(200)

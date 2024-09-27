@@ -13,10 +13,10 @@ export class CreateRoleRequestBodyDTO {
     @IsNumber()
     groupMenuId: number;
 
-    @ApiProperty()
-    @IsDefined()
-    @IsNumber()
-    priority: number;
+    // @ApiProperty()
+    // @IsDefined()
+    // @IsNumber()
+    // priority: number;
 
     @ApiProperty()
     @IsOptional()
