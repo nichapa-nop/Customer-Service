@@ -13,11 +13,6 @@ export class CreateRoleRequestBodyDTO {
     @IsNumber()
     groupMenuId: number;
 
-    // @ApiProperty()
-    // @IsDefined()
-    // @IsNumber()
-    // priority: number;
-
     @ApiProperty()
     @IsOptional()
     @IsString()
@@ -45,13 +40,9 @@ export class UpdateRoleRequestBodyDTO {
 
     @ApiProperty()
     @IsDefined()
+    @Transform(({ value }) => Number(value))
     @IsNumber()
     groupMenuId: number;
-
-    @ApiProperty()
-    @IsDefined()
-    @IsNumber()
-    priority: number;
 
     @ApiProperty()
     @IsOptional()

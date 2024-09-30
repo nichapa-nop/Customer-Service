@@ -8,10 +8,8 @@ import {
     CreateDateColumn,
     Entity,
     JoinColumn,
-    ManyToMany,
     ManyToOne,
     OneToMany,
-    OneToOne,
     PrimaryGeneratedColumn,
     Relation,
     UpdateDateColumn,
@@ -56,7 +54,7 @@ export class RoleEntity {
     account: AccountEntity[];
 
     @ManyToOne(() => GroupMenuEntity, (groupMenu) => groupMenu.roles, {
-        nullable: true,
+        // nullable: true,
         onDelete: 'SET NULL',
     })
     @JoinColumn({ name: 'groupMenuId' })

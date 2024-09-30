@@ -76,8 +76,10 @@ export class RoleManagerService {
             // priority: body.priority,
             updatedBy: req.reqAccount.uuid,
         });
+        let role = await this.roleService.save(currentRole);
+
         return {
-            roleDetail: currentRole.toResponse(),
+            roleDetail: role.toResponse(),
         };
     }
 
