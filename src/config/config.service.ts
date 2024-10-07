@@ -8,9 +8,8 @@ const config: ConfigSchema = {
     database: _.get('database'),
     jwtExpiration: _.get('jwtExpiration'),
     jwtConstants: _.get('jwtConstants'),
+    customerServiceFrontendEndpoint: _.get('customerServiceFrontendEndpoint'),
 };
-
-function updateConfig() {}
 
 function getConfig() {
     return config;

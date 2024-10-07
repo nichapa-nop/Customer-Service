@@ -47,6 +47,7 @@ export class CreateTicketRequestBodyDTO {
 
     @ApiProperty()
     @IsDefined()
+    //optional
     @IsEmail()
     cusEmail: string;
 
@@ -229,4 +230,9 @@ export class TicketRequestQueryDTO {
     @IsOptional()
     @IsString()
     keyword?: string;
+
+    @ApiProperty({ required: false })
+    @IsOptional()
+    @IsEnum(IncidentType)
+    incidentType: IncidentType;
 }

@@ -223,11 +223,23 @@ export class AccountManagerService {
             from: 'no-reply <noreply.testnoreply@gmail.com>',
             subject: 'Reset Password Link',
             text: `To verify your email please follow the url\n${
-                configService.getConfig().serverEndpoint
-            }/v1/reset-password/${generatedToken} `,
+                configService.getConfig().customerServiceFrontendEndpoint
+            }/reset-password?token=${generatedToken} `,
         });
         const payload = { uuid: currentEmail.uuid, email: currentEmail.email };
         return { payload };
+    }
+
+    public async getResetPasswordTokenInformation(token: string) {
+        let currentToken = await this.resetPasswordService.getByToken(token);
+        if (!currentToken?.account) {
+            throw new BadRequestException('Reset password token is incorrect');
+        }
+        return {
+            isValid: true,
+            isExpired: new Date(currentToken.expiredAt).valueOf() < Date.now(),
+            email: currentToken.account.email,
+        };
     }
 
     public async resetPassword(token: string, body: ConfirmResetPasswordRequestBodyDTO) {

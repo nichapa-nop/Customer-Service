@@ -161,6 +161,15 @@ export class AccountApiController {
         return await this.accountManagerservice.sendMailResetPassword(body);
     }
 
+    @Get('/v1/reset-password/:token')
+    @HttpCode(200)
+    @ApiOkResponse()
+    public async getResetPasswordTokenInformation(
+        @Param() params: AccountResetPassRequestParamDTO
+    ) {
+        return await this.accountManagerservice.getResetPasswordTokenInformation(params.token);
+    }
+
     @Put('/v1/reset-password/:token')
     @HttpCode(200)
     @ApiOkResponse()

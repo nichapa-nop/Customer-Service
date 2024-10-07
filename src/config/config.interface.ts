@@ -5,6 +5,7 @@ export interface ConfigSchema {
     database: DatabaseConfig;
     jwtExpiration: number;
     jwtConstants: string;
+    customerServiceFrontendEndpoint: string;
 }
 
 export interface DatabaseConfig {

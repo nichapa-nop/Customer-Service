@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TicketEntity } from './entities/ticket.entity';
-import { FindOptionsWhere, ILike, Repository } from 'typeorm';
+import { FindOptionsWhere, ILike, Or, Repository } from 'typeorm';
 import { TicketRequestQueryDTO } from 'src/api/ticket/dto/ticket.request.dto';
 
 @Injectable()
@@ -31,21 +31,28 @@ export class TicketService {
             where.push({
                 topic: ILike(`%${query.keyword}%`),
             });
-            // where.push({
-            //     assignAccount: ILike(`%${query.keyword}%`),
-            // });
+            where.push({
+                assignAccount: [
+                    {
+                        firstName: ILike(`%${query.keyword}%`),
+                    },
+                    {
+                        lastName: ILike(`%${query.keyword}%`),
+                    },
+                ],
+            });
         }
-        // if (query.incidentType) {
-        //     if (where.length) {
-        //         where.forEach(condition => {
-        //             condition.incidentType = query.incidentType;
-        //         })
-        //     } else {
-        //         where.push({
-        //             incidentType: query.incidentType;
-        //         })
-        //     }
-        // }
+        if (query.incidentType) {
+            if (where.length) {
+                where.forEach((condition) => {
+                    condition.incidentType = query.incidentType;
+                });
+            } else {
+                where.push({
+                    incidentType: query.incidentType,
+                });
+            }
+        }
         return this.ticketRepository.findAndCount({
             take: query.itemsPerPage,
             skip: query.itemsPerPage * (query.page - 1),
