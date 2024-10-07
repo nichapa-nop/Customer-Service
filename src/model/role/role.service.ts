@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { RoleEntity } from './entities/role.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { RoleRequestQueryDTO } from 'src/api/role/dto/role.request';
 
 @Injectable()
@@ -35,12 +35,18 @@ export class RoleService {
     }
 
     public getWithPagination(query: RoleRequestQueryDTO) {
+        let where: FindOptionsWhere<RoleEntity>[] = [];
+        if (query.keyword) {
+            where.push({
+                roleName: ILike(`%${query.keyword}%`),
+            });
+        }
         return this.roleRepository.findAndCount({
             take: query.itemsPerPage,
             skip: query.itemsPerPage * (query.page - 1),
             relations: { groupMenu: { bindings: { menu: true } } },
             order: { id: 'DESC' },
-            // where,
+            where,
         });
     }
 }

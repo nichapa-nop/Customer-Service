@@ -47,13 +47,19 @@ export class AccountService {
             where.push({
                 email: ILike(`%${query.keyword}%`),
             });
+            where.push({
+                phoneNum: ILike(`%${query.keyword}%`),
+            });
+            where.push({
+                role: [{ roleName: ILike(`%${query.keyword}%`) }],
+            });
         }
         return this.accountRepository.findAndCount({
             take: query.itemsPerPage,
             skip: query.itemsPerPage * (query.page - 1),
             relations: { role: { groupMenu: true } },
             order: { uuid: 'DESC' },
-            // where,
+            where,
         });
     }
 
