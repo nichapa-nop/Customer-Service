@@ -11,6 +11,8 @@ import {
     Query,
     Req,
     Res,
+    UnauthorizedException,
+    UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AccountManagerService } from 'src/manager/account/account-manager.service';
@@ -35,6 +37,7 @@ import configService from 'src/config/config.service';
 import { Response } from 'express';
 import { RequestWithAccount } from 'src/utils/utils.interface';
 import { verifyPermission } from 'src/utils/utils.function';
+import { AuthGuard } from '@nestjs/passport';
 import { MenuPermission } from 'src/model/group-menu/entities/group-menu.binding.entity';
 
 @ApiTags('Account Management')
@@ -206,5 +209,21 @@ export class AccountApiController {
             throw new ForbiddenException('Permission Denined');
         }
         return await this.accountManagerservice.recoveryAccount(param, req);
+    }
+
+    @Get('/v1/account-info')
+    @ApiBearerAuth()
+    @ApiOkResponse({ description: 'Returns account information from token' })
+    getAccountFromToken(@Req() req: RequestWithAccount) {
+        if (!req.reqAccount) {
+            throw new UnauthorizedException('No account information found');
+        }
+        // return {
+        //     firstName: req.reqAccount.firstName,
+        //     lastName: req.reqAccount.lastName,
+        //     role: req.reqAccount.role.roleName,
+        //     // สามารถส่งข้อมูลอื่นๆ จาก account entity ได้ตามต้องการ
+        // };
+        return req.reqAccount.toResponse();
     }
 }

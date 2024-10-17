@@ -39,6 +39,12 @@ export class MenuEntity {
     })
     updatedBy: string;
 
+    @Column({
+        type: 'varchar',
+        default: '/',
+    })
+    path: string;
+
     @OneToMany(() => GroupMenuBindingEntity, (binding) => binding.menu, { cascade: true })
     bindings: Relation<GroupMenuBindingEntity[]>;
 
@@ -48,6 +54,7 @@ export class MenuEntity {
             menuName: this.menuName,
             createdBy: this.createdBy,
             // updatedBy: this.updatedBy,
+            path: this.path,
         };
     }
 

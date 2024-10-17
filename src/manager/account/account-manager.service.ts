@@ -4,6 +4,7 @@ import {
     ForbiddenException,
     Injectable,
     ServiceUnavailableException,
+    UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from 'bcrypt';
@@ -231,7 +232,10 @@ export class AccountManagerService {
     }
 
     public async getResetPasswordTokenInformation(token: string) {
-        let currentToken = await this.resetPasswordService.getByToken(token);
+        let currentToken = await this.resetPasswordService.getByToken(
+            token,
+            ResetPasswordStatus.PENDING
+        );
         if (!currentToken?.account) {
             throw new BadRequestException('Reset password token is incorrect');
         }
@@ -243,7 +247,10 @@ export class AccountManagerService {
     }
 
     public async resetPassword(token: string, body: ConfirmResetPasswordRequestBodyDTO) {
-        let currentToken = await this.resetPasswordService.getByToken(token);
+        let currentToken = await this.resetPasswordService.getByToken(
+            token,
+            ResetPasswordStatus.PENDING
+        );
         if (!currentToken) {
             throw new BadRequestException('Token was incorrect.');
         }
@@ -305,5 +312,25 @@ export class AccountManagerService {
         let updatedAccount = await this.accountService.save(currentAccount);
         console.log(updatedAccount);
         return { account: updatedAccount.toResponse() };
+    }
+
+    // ฟังก์ชันสำหรับตรวจสอบและรับข้อมูลผู้ใช้จาก token
+    public async validateUser(token: string): Promise<AccountEntity> {
+        try {
+            const payload = this.jwtService.verify(token); // ตรวจสอบ token
+            const account = await this.accountService.getByUuid(payload.uuid);
+            if (!account) {
+                throw new UnauthorizedException('User not found');
+            }
+            return account;
+        } catch (error) {
+            throw new UnauthorizedException('Invalid token');
+        }
+    }
+
+    public async getProfile(req: RequestWithAccount): Promise<any> {
+        const token = req.headers.authorization.split(' ')[1]; // ดึง token จาก header
+        const account = await this.validateUser(token);
+        return { username: account.firstName }; // ส่งข้อมูลที่ต้องการ
     }
 }

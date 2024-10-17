@@ -11,41 +11,6 @@ import { TicketStatus } from './utils.enum';
 import { AccountStatus } from 'src/model/account/entities/account.entity';
 import { RoleEntity } from 'src/model/role/entities/role.entity';
 
-export class AccountResponse {
-    @ApiProperty()
-    uuid: string;
-
-    @ApiProperty()
-    firstName: string;
-
-    @ApiProperty()
-    lastName: string;
-
-    @ApiProperty()
-    firstNameTh: string;
-
-    @ApiProperty()
-    lastNameTh: string;
-
-    @ApiProperty()
-    email: string;
-
-    @ApiProperty()
-    phoneNum: string;
-
-    @ApiProperty({ enum: AccountStatus })
-    status: AccountStatus;
-
-    @ApiProperty()
-    role: RoleEntity;
-
-    // @ApiProperty()
-    // companyName: string;
-
-    // @ApiProperty()
-    // type: CompanyType;
-}
-
 export class UpdateAccountResponse {
     @ApiProperty()
     firstName: string;
@@ -72,6 +37,9 @@ export class MenuResponse {
 
     @ApiProperty()
     createdBy: string;
+
+    @ApiProperty()
+    path: string;
 
     // @ApiProperty()
     // updatedBy: string;
@@ -113,6 +81,41 @@ export class ResetPasswordResponse {
 
     @ApiProperty()
     resetPassToken: string;
+}
+
+export class AccountResponse {
+    @ApiProperty()
+    uuid: string;
+
+    @ApiProperty()
+    firstName: string;
+
+    @ApiProperty()
+    lastName: string;
+
+    @ApiProperty()
+    firstNameTh: string;
+
+    @ApiProperty()
+    lastNameTh: string;
+
+    @ApiProperty()
+    email: string;
+
+    @ApiProperty()
+    phoneNum: string;
+
+    @ApiProperty({ enum: AccountStatus })
+    status: AccountStatus;
+
+    @ApiProperty()
+    role: RoleResponse;
+
+    // @ApiProperty()
+    // companyName: string;
+
+    // @ApiProperty()
+    // type: CompanyType;
 }
 
 export class TicketCommentResponse {

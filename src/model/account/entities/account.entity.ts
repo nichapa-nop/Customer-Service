@@ -123,7 +123,7 @@ export class AccountEntity {
             email: this.email,
             phoneNum: this.phoneNum,
             status: this.status,
-            role: this.role,
+            role: this.role?.toResponse(),
             // password: this.password,
             // companyName: this.companyName,
             // type: this.type,

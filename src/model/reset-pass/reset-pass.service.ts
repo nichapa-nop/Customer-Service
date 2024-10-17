@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ResetPasswordEntity } from './entities/reset-pass.entity';
-import { Repository } from 'typeorm';
+import { ResetPasswordEntity, ResetPasswordStatus } from './entities/reset-pass.entity';
+import { FindOptionsWhere, Repository } from 'typeorm';
 
 @Injectable()
 export class ResetPasswordService {
@@ -14,7 +14,11 @@ export class ResetPasswordService {
         return this.resetPasswordRepository.save(reset);
     }
 
-    public getByToken(resetPassToken: string) {
-        return this.resetPasswordRepository.findOne({ where: { resetPassToken }, relations: { account: true } });
+    public getByToken(resetPassToken: string, status?: ResetPasswordStatus) {
+        let where: FindOptionsWhere<ResetPasswordEntity> = { resetPassToken };
+        if (status) {
+            where.status = status;
+        }
+        return this.resetPasswordRepository.findOne({ where, relations: { account: true } });
     }
 }
