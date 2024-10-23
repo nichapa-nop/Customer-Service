@@ -4,6 +4,7 @@ import {
     IsDefined,
     IsEmail,
     IsEnum,
+    IsNotEmpty,
     IsNumber,
     IsOptional,
     IsString,
@@ -169,4 +170,15 @@ export class AccountRequestQueryDTO {
     @IsOptional()
     @IsString()
     keyword?: string;
+
+    @ApiProperty({ required: false })
+    @IsOptional()
+    @IsString()
+    @IsNotEmpty()
+    roleName?: string;
+
+    // @ApiProperty({ required: false })
+    // @IsOptional()
+    // @IsString()
+    // role: RoleEntity;
 }

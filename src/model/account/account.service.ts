@@ -50,9 +50,20 @@ export class AccountService {
             where.push({
                 phoneNum: ILike(`%${query.keyword}%`),
             });
-            where.push({
-                role: [{ roleName: ILike(`%${query.keyword}%`) }],
-            });
+            // where.push({
+            //     role: [{ roleName: ILike(`%${query.keyword}%`) }],
+            // });
+        }
+        if (query.roleName) {
+            if (where.length) {
+                where.forEach((condition) => {
+                    condition.role = { roleName: query.roleName };
+                });
+            } else {
+                where.push({
+                    role: { roleName: query.roleName },
+                });
+            }
         }
         return this.accountRepository.findAndCount({
             take: query.itemsPerPage,

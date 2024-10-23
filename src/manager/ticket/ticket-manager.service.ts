@@ -110,6 +110,7 @@ export class TicketManagerService {
     }
 
     public async getWithPagination(query: TicketRequestQueryDTO) {
+        console.log(query);
         let [tickets, count] = await this.ticketService.getWithPagination(query);
         return {
             tickets: tickets.map((ticket) => ticket.toResponse()),

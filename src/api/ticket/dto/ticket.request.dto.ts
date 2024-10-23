@@ -235,4 +235,19 @@ export class TicketRequestQueryDTO {
     @IsOptional()
     @IsEnum(IncidentType)
     incidentType: IncidentType;
+
+    @ApiProperty({ required: false, enum: Platform })
+    // @IsOptional()
+    // @IsEnum(Platform)
+    platform: Platform;
+
+    @ApiProperty({ required: false, enum: TicketStatus })
+    @IsOptional()
+    @IsEnum(TicketStatus)
+    status: TicketStatus;
+
+    @ApiProperty({ required: false, enum: BusinessImpact })
+    @IsOptional()
+    @IsEnum(BusinessImpact)
+    businessImpact: BusinessImpact;
 }
