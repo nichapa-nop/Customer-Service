@@ -65,6 +65,17 @@ export class AccountService {
                 });
             }
         }
+        if (query.status) {
+            if (where.length) {
+                where.forEach((condition) => {
+                    condition.status = query.status;
+                });
+            } else {
+                where.push({
+                    status: query.status,
+                });
+            }
+        }
         return this.accountRepository.findAndCount({
             take: query.itemsPerPage,
             skip: query.itemsPerPage * (query.page - 1),

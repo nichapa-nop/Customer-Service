@@ -181,4 +181,9 @@ export class AccountRequestQueryDTO {
     // @IsOptional()
     // @IsString()
     // role: RoleEntity;
+
+    @ApiProperty({ required: false })
+    @IsOptional()
+    @IsEnum(AccountStatus)
+    status: AccountStatus;
 }
