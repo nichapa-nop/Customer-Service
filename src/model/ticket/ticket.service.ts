@@ -42,6 +42,9 @@ export class TicketService {
                     },
                 ],
             });
+            where.push({
+                ticketLink: ILike(`%${query.keyword}%`),
+            });
         }
         if (query.incidentType) {
             if (where.length) {
