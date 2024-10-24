@@ -36,7 +36,7 @@ export class TicketManagerService {
         body: CreateTicketRequestBodyDTO,
         req: RequestWithAccount
     ): Promise<TicketResponseBodyDTO> {
-        console.log('Received reqAccount:', req.reqAccount);
+        //console.log('Received reqAccount:', req.reqAccount);
 
         let newTicket = new TicketEntity();
         let [currentcount] = await this.genTicketIdService.getCount();
@@ -110,7 +110,7 @@ export class TicketManagerService {
     }
 
     public async getWithPagination(query: TicketRequestQueryDTO) {
-        console.log(query);
+        //console.log(query);
         let [tickets, count] = await this.ticketService.getWithPagination(query);
         return {
             tickets: tickets.map((ticket) => ticket.toResponse()),
@@ -145,8 +145,8 @@ export class TicketManagerService {
         if (currentTicket.status !== null) {
             statusHistory.previousStatus = currentTicket.status;
         }
-        console.log(currentTicket.status);
-        console.log(statusHistory.previousStatus);
+        //console.log(currentTicket.status);
+        //console.log(statusHistory.previousStatus);
         if (currentTicket.assignAccount) {
             //ticket เคย assign to
             let assignedAccount = await this.accountService.getByEmail(body.assignTo); //check assign to ที่รับมากจาก body
@@ -210,8 +210,8 @@ export class TicketManagerService {
         let updatedTicket = await this.ticketService.save(currentTicket); //save ticket
         statusHistory.currentStatus = currentTicket.status;
         // statusHistory.createdBy = req.reqAccount.uuid;
-        console.log(statusHistory.createdBy);
-        console.log(statusHistory.currentStatus);
+        //console.log(statusHistory.createdBy);
+        //console.log(statusHistory.currentStatus);
         statusHistory.ticket = updatedTicket;
         if (statusHistory.currentStatus !== statusHistory.previousStatus) {
             await this.statusHistoryService.save(statusHistory);
@@ -244,7 +244,7 @@ export class TicketManagerService {
         currentTicket.status = TicketStatus.CLOSED;
         currentTicket.solution = body.solution;
         currentTicket.email = body.email; //optional
-        console.log(body.email);
+        //console.log(body.email);
         this.emailService.postMail({
             to: currentTicket.email,
             from: 'no-reply <noreply.testnoreply@gmail.com>',
@@ -272,7 +272,7 @@ export class TicketManagerService {
         }
         if (currentTicket.status === TicketStatus.CLOSED) {
             currentTicket.status = TicketStatus.IN_PROGRESS;
-            console.log(currentTicket.assignAccount);
+            //console.log(currentTicket.assignAccount);
             this.emailService.postMail({
                 to: currentTicket.assignAccount.email,
                 from: 'no-reply <noreply.testnoreply@gmail.com>',

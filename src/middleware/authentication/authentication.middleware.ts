@@ -16,7 +16,7 @@ export class AuthenticationMiddleware implements NestMiddleware {
         private readonly accountService: AccountService
     ) {}
     public async use(req: RequestWithAccount, res: Response, next: NextFunction) {
-        // console.log(req.headers.authorization);
+        // //console.log(req.headers.authorization);
         if (!req.headers.authorization) {
             throw new UnauthorizedException('Missing Authorization token.');
         }
@@ -31,12 +31,12 @@ export class AuthenticationMiddleware implements NestMiddleware {
             if (!account) {
                 throw 'Account not found';
             }
-            // console.log(account);
+            // //console.log(account);
             req.reqAccount = account;
             return next();
         } catch (e) {
-            console.log(req.headers.authorization);
-            console.log(e);
+            //console.log(req.headers.authorization);
+            //console.log(e);
             throw new ForbiddenException('Token is in valid.');
         }
     }

@@ -29,7 +29,7 @@ export function generateRandomString(
 
 export function verifyPermission(groupMenu: GroupMenuEntity, menu: string, action: MenuPermission) {
     if (groupMenu) {
-        // console.log(groupMenu);
+        // //console.log(groupMenu);
         let targetMenu = groupMenu.bindings.find(
             (binding) => binding.menu.menuName?.toLowerCase() === menu.toLowerCase()
         );

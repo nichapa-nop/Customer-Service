@@ -49,7 +49,7 @@ export class AccountManagerService {
         body: CreateAccountRequestBodyDTO,
         req: RequestWithAccount
     ): Promise<AccountResponseBodyDTO> {
-        console.log('Received reqAccount:', req.reqAccount);
+        //console.log('Received reqAccount:', req.reqAccount);
         let newAccount = new AccountEntity();
         let isEmailExist = await this.accountService.isEmailExist(body.email.toLowerCase());
         if (isEmailExist) {
@@ -105,7 +105,7 @@ export class AccountManagerService {
         if (!account) {
             throw new BadRequestException('UUID was incorrect or it does not exist.');
         }
-        console.log('edit', account);
+        //console.log('edit', account);
         return { accountDetail: account.toResponse() };
     }
 
@@ -142,7 +142,7 @@ export class AccountManagerService {
             });
             currentAccount.updatedBy = req.reqAccount.uuid;
             await this.accountService.save(currentAccount);
-            console.log(currentAccount);
+            //console.log(currentAccount);
             return {
                 updateAccountDetail: currentAccount.toResponse(),
             };
@@ -174,7 +174,7 @@ export class AccountManagerService {
         }
         const payload = { uuid: currentAccount.uuid, email: currentAccount.email };
         let accessToken = await this.jwtService.signAsync(payload);
-        console.log(accessToken);
+        //console.log(accessToken);
         return { accessToken };
     }
 
@@ -190,7 +190,7 @@ export class AccountManagerService {
             currentToken.status = AccountStatus.VERIFIED;
             // password: await hash(body.password, 10),
             let generatedPassword = generateRandomString(10);
-            console.log(generatedPassword);
+            //console.log(generatedPassword);
             currentToken.password = await hash(generatedPassword, 10);
             this.emailService.postMail({
                 to: currentToken.email,
@@ -277,13 +277,13 @@ export class AccountManagerService {
         }
         if (currentAccount.status === AccountStatus.VERIFIED) {
             currentAccount.status = AccountStatus.DISABLED;
-            console.log(currentAccount.status);
+            //console.log(currentAccount.status);
 
             // await this.accountService.save(currentAccount);
         } else if (currentAccount.status === AccountStatus.DISABLED) {
             currentAccount.status = AccountStatus.VERIFIED;
         }
-        console.log(currentAccount.status);
+        //console.log(currentAccount.status);
         currentAccount.updatedBy = req.reqAccount.uuid;
 
         return await this.accountService.save(currentAccount);
@@ -310,7 +310,7 @@ export class AccountManagerService {
         //     }`,
         // });
         let updatedAccount = await this.accountService.save(currentAccount);
-        console.log(updatedAccount);
+        //console.log(updatedAccount);
         return { account: updatedAccount.toResponse() };
     }
 

@@ -24,7 +24,7 @@ export class TicketService {
 
     public getWithPagination(query: TicketRequestQueryDTO) {
         let where: FindOptionsWhere<TicketEntity>[] = [];
-        console.log(query);
+        //console.log(query);
         if (query.keyword) {
             where.push({
                 ticketId: ILike(`%${query.keyword}%`),
@@ -87,7 +87,7 @@ export class TicketService {
                 });
             }
         }
-        console.log(where);
+        //console.log(where);
         return this.ticketRepository.findAndCount({
             take: query.itemsPerPage,
             skip: query.itemsPerPage * (query.page - 1),

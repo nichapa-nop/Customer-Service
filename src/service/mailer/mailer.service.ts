@@ -17,7 +17,7 @@ export class SendMailService {
                 message: 'send success',
             };
         } catch (e) {
-            console.log(e);
+            //console.log(e);
         }
     }
 }
